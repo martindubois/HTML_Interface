@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Includes", "Includes", "{5B921471-4E1C-4E70-8A13-30A75AA411C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HI", "HI", "{97B3B0A6-608C-4516-94D3-CEC74B8AAA7B}"
+	ProjectSection(SolutionItems) = preProject
+		Includes\HI\Browser.h = Includes\HI\Browser.h
+		Includes\HI\CSS_Colors.h = Includes\HI\CSS_Colors.h
+		Includes\HI\CSS_Document.h = Includes\HI\CSS_Document.h
+		Includes\HI\CSS_Properties.h = Includes\HI\CSS_Properties.h
+		Includes\HI\Document.h = Includes\HI\Document.h
+		Includes\HI\HTML_Attributes.h = Includes\HI\HTML_Attributes.h
+		Includes\HI\HTML_Document.h = Includes\HI\HTML_Document.h
+		Includes\HI\HTML_Tags.h = Includes\HI\HTML_Tags.h
+		Includes\HI\JS_Document.h = Includes\HI\JS_Document.h
+		Includes\HI\Server.h = Includes\HI\Server.h
+		Includes\HI\Types.h = Includes\HI\Types.h
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HILib", "HILib\HILib.vcxproj", "{51712226-EC62-4CBC-8916-BF0B427DBE3D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GenDoc", "GenDoc\GenDoc.vcxproj", "{0366F18D-3DEC-4213-A12C-D86F643839D3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{51712226-EC62-4CBC-8916-BF0B427DBE3D} = {51712226-EC62-4CBC-8916-BF0B427DBE3D}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AA9B71A5-ABDC-4279-80C6-59F3900E2886}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{51712226-EC62-4CBC-8916-BF0B427DBE3D}.Debug|x64.ActiveCfg = Debug|x64
+		{51712226-EC62-4CBC-8916-BF0B427DBE3D}.Debug|x64.Build.0 = Debug|x64
+		{51712226-EC62-4CBC-8916-BF0B427DBE3D}.Debug|x86.ActiveCfg = Debug|Win32
+		{51712226-EC62-4CBC-8916-BF0B427DBE3D}.Debug|x86.Build.0 = Debug|Win32
+		{51712226-EC62-4CBC-8916-BF0B427DBE3D}.Release|x64.ActiveCfg = Release|x64
+		{51712226-EC62-4CBC-8916-BF0B427DBE3D}.Release|x64.Build.0 = Release|x64
+		{51712226-EC62-4CBC-8916-BF0B427DBE3D}.Release|x86.ActiveCfg = Release|Win32
+		{51712226-EC62-4CBC-8916-BF0B427DBE3D}.Release|x86.Build.0 = Release|Win32
+		{0366F18D-3DEC-4213-A12C-D86F643839D3}.Debug|x64.ActiveCfg = Debug|x64
+		{0366F18D-3DEC-4213-A12C-D86F643839D3}.Debug|x64.Build.0 = Debug|x64
+		{0366F18D-3DEC-4213-A12C-D86F643839D3}.Debug|x86.ActiveCfg = Debug|Win32
+		{0366F18D-3DEC-4213-A12C-D86F643839D3}.Debug|x86.Build.0 = Debug|Win32
+		{0366F18D-3DEC-4213-A12C-D86F643839D3}.Release|x64.ActiveCfg = Release|x64
+		{0366F18D-3DEC-4213-A12C-D86F643839D3}.Release|x64.Build.0 = Release|x64
+		{0366F18D-3DEC-4213-A12C-D86F643839D3}.Release|x86.ActiveCfg = Release|Win32
+		{0366F18D-3DEC-4213-A12C-D86F643839D3}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{97B3B0A6-608C-4516-94D3-CEC74B8AAA7B} = {5B921471-4E1C-4E70-8A13-30A75AA411C1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F422AB75-8A78-47B0-924D-90265ECF390C}
+	EndGlobalSection
+EndGlobal
