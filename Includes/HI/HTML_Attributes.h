@@ -2,7 +2,7 @@
 // Product  HTML_Interface
 
 /// \author KMS - Martin Dubois, P.Eng.
-/// \file   Includes/HTML_Attributes.h
+/// \file   Includes/HI/HTML_Attributes.h
 
 #pragma once
 
@@ -32,9 +32,9 @@ namespace HI
 
     public:
 
-        HTML_Attribute mAttribute;
-        const char   * mIdName   ;
-        const char   * mName     ;
+        const char * mIdName;
+        unsigned int mIndex ;
+        const char * mName  ;
 
     };
 
@@ -54,9 +54,9 @@ namespace HI
 
         static void GetLast(HTML_AttributeInfo * aOut);
 
-        static void GetNext(HTML_AttributeInfo * aInOut);
+        static bool GetNext(HTML_AttributeInfo * aInOut);
 
-        static void GetPrevious(HTML_AttributeInfo * aInOut);
+        static bool GetPrevious(HTML_AttributeInfo * aInOut);
 
     };
 

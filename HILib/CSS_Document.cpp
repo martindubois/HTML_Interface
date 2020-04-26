@@ -4,6 +4,8 @@
 // Product    HTML_Interface
 // File       HILib/CSS_Document.cpp
 
+// CODE REVIEW 2020-04-26 KMS - Martin Dubois. P.Eng.
+
 // Includes
 /////////////////////////////////////////////////////////////////////////////
 
@@ -11,8 +13,10 @@
 #include <assert.h>
 
 // ===== Includes ===========================================================
-
 #include <HI/CSS_Document.h>
+
+// ===== HILib ==============================================================
+#include "Utils.h"
 
 namespace HI
 {
@@ -49,6 +53,31 @@ namespace HI
         Property_Set(aProp, lValue);
     }
 
+    // NOT TESTED CSS_Document.Property.UnsignedInt
+    void CSS_Document::Property_Set(CSS_Property aProp, unsigned int aValue, UnitName aUnit)
+    {
+        assert(PROP_QTY > aProp);
+
+        const char * lUnit = NULL;
+
+        switch (aValue)
+        {
+        case UNIT_MS: lUnit = "ms"; break;
+        case UNIT_PX: lUnit = "px"; break;
+        case UNIT_S : lUnit = "s" ; break;
+
+        default: assert(false);
+        }
+
+        char lStr[64];
+
+        int lRet = sprintf_s(lStr, "%u %s", aValue, lUnit);
+        Utl_VerifyReturn(lRet, sizeof(lStr));
+
+        Property_Set(aProp, lStr);
+    }
+
+    // aValue [---;R--]
     void CSS_Document::Property_Set(CSS_Property aProp, const char * aValue)
     {
         CSS_PropertyInfo lPI;
@@ -56,28 +85,20 @@ namespace HI
         CSS_Properties::FindByIndex(&lPI, aProp);
 
         int lRet = fprintf(GetFile(), "%s: %s;", lPI.mName, aValue);
-        if (0 >= lRet)
-        {
-            throw std::exception("fprintf( , , ,  ) failed", lRet);
-        }
+        Utl_VerifyReturn(lRet);
     }
 
+    // aElement [---;R--]
     void CSS_Document::Rule_Begin_Element(const char * aElement)
     {
         int lRet = fprintf(GetFile(), "%s {", aElement);
-        if (0 >= lRet)
-        {
-            throw std::exception("fprintf( , , ) failed", lRet);
-        }
+        Utl_VerifyReturn(lRet);
     }
 
     void CSS_Document::Rule_End()
     {
         int lRet = fprintf(GetFile(), "}");
-        if (0 >= lRet)
-        {
-            throw std::exception("fprintf( ,  ) failed", lRet);
-        }
+        Utl_VerifyReturn(lRet);
     }
 
     // ===== Document =======================================================
@@ -86,21 +107,20 @@ namespace HI
     {
     }
 
+    // TODO CSS_Document.Comment
+
+    // aText [---;R--]
     void CSS_Document::Comment(const char * aText)
     {
         assert(NULL != aText);
-
-        // TODO
     }
 
     void CSS_Document::Comment_Begin()
     {
-        // TODO
     }
 
     void CSS_Document::Comment_End()
     {
-        // TODO
     }
 
 }

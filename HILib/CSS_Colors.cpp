@@ -4,6 +4,10 @@
 // Product    HTML_Interface
 // File       HILib/CSS_Colors.cpp
 
+// CODE REVIEW 2020-04-26 KMS - Martin Dubois, P.Eng.
+
+// TEST COVERAGE 2020-04-26 KMS - Martin Dubois, P.Eng.
+
 // Includes
 /////////////////////////////////////////////////////////////////////////////
 
@@ -223,6 +227,7 @@ namespace HI
     uint8_t CSS_ColorInfo::GetGreen() const { return GREEN(mValue); }
     uint8_t CSS_ColorInfo::GetRed  () const { return RED  (mValue); }
 
+    // aOut [---;-W-]
     void CSS_Colors::GetFirst(CSS_ColorInfo * aOut, Order aOrder)
     {
         assert(NULL != aOut);
@@ -257,6 +262,7 @@ namespace HI
         aOut->mValue   = lData->mValue ;
     }
 
+    // aInOut [---;RW-]
     bool CSS_Colors::GetNext(CSS_ColorInfo * aInOut)
     {
         assert(NULL != aInOut);

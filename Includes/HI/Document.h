@@ -2,7 +2,7 @@
 // Product  HTML_Interface
 
 /// \author KMS - Martin Dubois, P.Eng.
-/// \file   Includes/Browser.h
+/// \file   Includes/HI/Browser.h
 
 #pragma once
 

@@ -2,9 +2,15 @@
 // Product  HTML_Interface
 
 /// \author KMS - Martin Dubois, P.Eng.
-/// \file   Includes/Browser.h
+/// \file   Includes/HI/Browser.h
 
 #pragma once
+
+// Includes
+/////////////////////////////////////////////////////////////////////////////
+
+// ===== Includes ===========================================================
+#include <HI/Types.h>
 
 namespace HI
 {
@@ -22,21 +28,25 @@ namespace HI
 
         ~Browser();
 
-        bool Close();
+        void Close();
 
-        bool Open(FolderId aFolder, const char * aName);
+        void Open(FolderId aFolder, const char * aName);
 
-        bool Open(const char * aFolder, const char * aName);
+        void Open(const char * aFolder, const char * aName);
 
-        bool Open(HTML_Document * aDocument);
+        void Open(HTML_Document * aDocument);
 
-        bool Open(Server * aServer);
+        void Open(Server * aServer);
 
-        bool Start(const char * aFileName);
+        void ParseArguments(int aCount, const char ** aVector);
 
-        bool Start(HTM_Document * aDocument);
+        void Start(FolderId aFolder, const char * aName);
 
-        bool Wait();
+        void Start(const char * aFolder, const char * aName);
+
+        void Start(HTML_Document * aDocument);
+
+        void Wait();
 
     private:
 

@@ -2,7 +2,7 @@
 // Product  HTML_Interface
 
 /// \author KMS - Martin Dubois, P.Eng.
-/// \file   Includes/HTML_Document.h
+/// \file   Includes/HI/HTML_Document.h
 
 #pragma once
 
@@ -187,7 +187,7 @@ namespace HI
 
         void Tag_Begin(HTML_Tag aTag);
 
-        void Tag_End(HTML_Tag aTag);
+        void Tag_End();
 
         // ===== Document ===================================================
 
@@ -204,10 +204,11 @@ namespace HI
 
     private:
 
-        typedef std::list<std::string> AttributeList;
+        typedef std::list<std::string> StringList;
 
-        AttributeList mAttributes;
-        bool          mEndBody   ;
+        StringList mAttributes;
+        bool       mEndBody   ;
+        StringList mTags      ;
 
     };
 

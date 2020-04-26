@@ -2,7 +2,7 @@
 // Product  HTML_Interface
 
 /// \author KMS - Martin Dubois, P.Eng.
-/// \file   Includes/JS_Document.h
+/// \file   Includes/HI/JS_Document.h
 
 #pragma once
 

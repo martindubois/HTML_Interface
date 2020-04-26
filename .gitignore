@@ -5,7 +5,10 @@
 # File       .gitignore
 
 /.vs/
+/Import/
+/doxygen_en/
 
 Debug/
+Release/
 
 *.vcxproj.user

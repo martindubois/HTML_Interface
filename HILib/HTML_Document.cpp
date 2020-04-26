@@ -4,6 +4,10 @@
 // Product    HTML_Interface
 // File       HILib/HTML_Document.cpp
 
+// CODE REVIEW 2020-04-26 KMS - Martin Dubois, P.Eng.
+
+// TEST COVERAGE 2020-04-26 KMS - Martin Dubois, P.Eng.
+
 // Includes
 /////////////////////////////////////////////////////////////////////////////
 
@@ -11,8 +15,10 @@
 #include <assert.h>
 
 // ===== Includes ===========================================================
-
 #include <HI/HTML_Document.h>
+
+// ===== HILib ==============================================================
+#include "Utils.h"
 
 namespace HI
 {
@@ -24,6 +30,8 @@ namespace HI
     {
     }
 
+    // aName  [---;R--]
+    // aTitle [---;R--]
     void HTML_Document::Create(FolderId aFolder, const char * aName, const char * aTitle)
     {
         assert(FOLDER_QTY >  aFolder);
@@ -32,12 +40,17 @@ namespace HI
         Create(aFolder, aName);
 
         Tag(TAG_TITLE, aTitle);
-        Tag_End(TAG_HEAD);
+        Tag_End();
         Tag_Begin(TAG_BODY);
 
         mEndBody = true;
     }
 
+    // NOT TESTED HTML_Document.Create.Folder
+
+    // aFolder [---;R--]
+    // aName   [---;R--]
+    // aTitle  [---;R--]
     void HTML_Document::Create(const char * aFolder, const char * aName, const char * aTitle)
     {
         assert(NULL != aName);
@@ -45,12 +58,13 @@ namespace HI
         Create(aFolder, aName);
 
         Tag(TAG_TITLE, aTitle);
-        Tag_End(TAG_HEAD);
+        Tag_End();
         Tag_Begin(TAG_BODY);
 
         mEndBody = true;
     }
 
+    // aValue [---;R--]
     void HTML_Document::Attribute_Set(HTML_Attribute aAttr, const char * aValue)
     {
         assert(ATTR_QTY >  aAttr );
@@ -62,11 +76,13 @@ namespace HI
 
         char lStr[128];
 
-        sprintf_s(lStr, " %s=\"%s\"", lAI.mName, aValue);
+        int lRet = sprintf_s(lStr, " %s=\"%s\"", lAI.mName, aValue);
+        Utl_VerifyReturn(lRet, sizeof(lStr));
 
         mAttributes.push_back(lStr);
     }
 
+    // aText [---;R--]
     void HTML_Document::Tag(HTML_Tag aTag, const char * aText)
     {
         Tag_Begin(aTag);
@@ -74,10 +90,12 @@ namespace HI
             int lRet = fprintf(GetFile(), "%s", aText);
             if (0 > lRet)
             {
-                throw std::exception("fprintf( , ,  ) failed", lRet);
+                // NOT TESTED HTML_Document.Error
+                //            fprintf fail
+                throw std::exception("ERROR  fprintf( , ,  )  failed");
             }
 
-        Tag_End(aTag);
+        Tag_End();
     }
 
     void HTML_Document::Tag_Begin(HTML_Tag aTag)
@@ -89,10 +107,7 @@ namespace HI
         HTML_Tags::FindByIndex(&lTI, aTag);
 
         int lRet = fprintf(GetFile(), "<%s", lTI.mName);
-        if (0 >= lRet)
-        {
-            throw std::exception("fprintf( , ,  ) failed", lRet);
-        }
+        Utl_VerifyReturn(lRet);
 
         while (!mAttributes.empty())
         {
@@ -101,25 +116,19 @@ namespace HI
         }
 
         lRet = fprintf(GetFile(), ">");
-        if (0 >= lRet)
-        {
-            throw std::exception("fprintf( , ,  ) failed", lRet);
-        }
+        Utl_VerifyReturn(lRet);
+
+        mTags.push_back(lTI.mName);
     }
 
-    void HTML_Document::Tag_End(HTML_Tag aTag)
+    void HTML_Document::Tag_End()
     {
-        assert(TAG_QTY > aTag);
+        assert(!mTags.empty());
 
-        HTML_TagInfo lTI;
+        int lRet = fprintf(GetFile(), "</%s>", mTags.back().c_str());
+        Utl_VerifyReturn(lRet);
 
-        HTML_Tags::FindByIndex(&lTI, aTag);
-
-        int lRet = fprintf(GetFile(), "</%s>", lTI.mName);
-        if (0 > lRet)
-        {
-            throw std::exception("fprintf( , ,  ) failed", lRet);
-        }
+        mTags.pop_back();
     }
 
     // ===== Document ======================================================
@@ -134,31 +143,30 @@ namespace HI
 
     void HTML_Document::Close()
     {
-        if (mEndBody)
+        while (!mTags.empty())
         {
-            Tag_End(TAG_BODY);
+            Tag_End();
         }
-
-        Tag_End(TAG_HTML);
 
         Document::Close();
     }
 
+    // TODO HTML_Document.Comment
+
+    // aText [---;R--]
     void HTML_Document::Comment(const char * aText)
     {
-        // TODO
     }
 
     void HTML_Document::Comment_Begin()
     {
-        // TODO
     }
 
     void HTML_Document::Comment_End()
     {
-        // TODO
     }
 
+    // aName [---;R--]
     void HTML_Document::Create(FolderId aFolder, const char * aName)
     {
         assert(FOLDER_QTY >  aFolder);
@@ -170,6 +178,10 @@ namespace HI
         Tag_Begin(TAG_HEAD);
     }
 
+    // NOT TESTED HTML_Document.Create.Folder
+
+    // aFolder [---;R--]
+    // aName   [---;R--]
     void HTML_Document::Create(const char * aFolder, const char * aName)
     {
         assert(NULL != aName);

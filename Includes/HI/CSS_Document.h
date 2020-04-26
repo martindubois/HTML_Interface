@@ -2,7 +2,7 @@
 // Product  HTML_Interface
 
 /// \author KMS - Martin Dubois, P.Eng.
-/// \file   Includes/CSS_Document.h
+/// \file   Includes/HI/CSS_Document.h
 
 #pragma once
 
@@ -155,6 +155,7 @@ namespace HI
         typedef enum
         {
             UNIT_MS,
+            UNIT_PX,
             UNIT_S ,
         }
         UnitName;

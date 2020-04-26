@@ -2,7 +2,7 @@
 // Product  HTML_Interface
 
 /// \author KMS - Martin Dubois, P.Eng.
-/// \file   Includes/HTML_Tags.h
+/// \file   Includes/HI/HTML_Tags.h
 
 #pragma once
 
@@ -19,15 +19,21 @@ namespace HI
     {
         TAG_A      ,
         TAG_BODY   ,
+        TAG_CODE   ,
+        TAG_DETAILS,
         TAG_DOCTYPE,
         TAG_HEAD   ,
         TAG_H1     ,
         TAG_H2     ,
+        TAG_HR     ,
         TAG_HTML   ,
+        TAG_I      ,
         TAG_P      ,
         TAG_STYLE  ,
+        TAG_SUMMARY,
         TAG_TABLE  ,
         TAG_TD     ,
+        TAG_TH     ,
         TAG_TITLE  ,
         TAG_TR     ,
 
@@ -42,9 +48,9 @@ namespace HI
 
     public:
 
-        const char  * mIdName;
-        const char  * mName  ;
-        HTML_Tag      mTag   ;
+        const char * mIdName;
+        unsigned int mIndex ;
+        const char * mName  ;
 
     };
 
@@ -53,13 +59,6 @@ namespace HI
     {
 
     public:
-
-        typedef enum
-        {
-            ORDER_NAME    ,
-            ORDER_SEQUENCE,
-        }
-        Order;
 
         static bool FindByIdName(HTML_TagInfo * aOut, const char * aIdName);
 
@@ -73,9 +72,9 @@ namespace HI
 
         static void GetLast(HTML_TagInfo * aOut);
 
-        static void GetNext(HTML_TagInfo * aInOut, Order aOrder = ORDER_NAME);
+        static bool GetNext(HTML_TagInfo * aInOut);
 
-        static void GetPrevious(HTML_TagInfo * aInOut, Order aOrder = ORDER_NAME);
+        static bool GetPrevious(HTML_TagInfo * aInOut);
 
     };
 

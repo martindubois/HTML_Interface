@@ -1,0 +1,29 @@
+
+# Author     KMS - Martin Dubois, P.Eng.
+# Copyright  (C) 2020 KMS. All rights reserved.
+# Product    HTML_Interface
+# File       Export.txt
+
+.
+    DoxyFile_en.txt
+
+.	Includes
+
+_DocUser	.
+    HTML_Interface.ReadMe.txt
+
+Includes/HI
+    CSS_Colors.h
+    CSS_Document.h
+    CSS_Properties.h
+    Document.h
+    HTML_Attributes.h
+    HTML_Document.h
+	HTML_Tags.h
+	Types.h
+
+HILib/_DocUser	.
+    HTML_Interface.HILib.ReadMe.txt
+
+Scripts	.
+    Import.txt

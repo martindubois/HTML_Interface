@@ -2,7 +2,7 @@
 // Product  HTML_Interface
 
 /// \author KMS - Martin Dubois, P.Eng.
-/// \file   Includes/CSS_Properties.h
+/// \file   Includes/HI/CSS_Properties.h
 
 #pragma once
 
@@ -12,6 +12,7 @@ namespace HI
     typedef enum
     {
         PROP_BORDER_STYLE,
+        PROP_PADDING     ,
 
         PROP_QTY
     }
@@ -32,9 +33,9 @@ namespace HI
 
     public:
 
-        const char * mIdName  ;
-        const char * mName    ;
-        CSS_Property mProperty;
+        const char * mIdName;
+        unsigned int mIndex ;
+        const char * mName  ;
 
     };
 
@@ -54,9 +55,9 @@ namespace HI
 
         static void GetLast(CSS_PropertyInfo * aOut);
 
-        static void GetNext(CSS_PropertyInfo * aInOut);
+        static bool GetNext(CSS_PropertyInfo * aInOut);
 
-        static void GetPrevious(CSS_PropertyInfo * aInOut);
+        static bool GetPrevious(CSS_PropertyInfo * aInOut);
 
     };
 

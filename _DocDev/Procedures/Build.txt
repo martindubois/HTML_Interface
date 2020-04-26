@@ -1,0 +1,28 @@
+
+Author     KMS - Martin Dubois, P.Eng.
+Copyright  (C) 2020 KMS. All rights reserved.
+Product    HTML_Interface
+File       _DocDev/Procedures/Build.txt
+
+
+Name                _________________________________________________________
+
+Date and time       ______ - ______ - ______                  ______ : ______
+
+[ ] File "Common/Version.h" - Edit the version number
+
+Version             ______ . ______ . ______ . ______ - _____________________
+
+[ ] Tool "Windows PowerShell" - In the product folder
+		.\RunDoxygen.cmd
+		.\Build.cmd
+
+[ ] Tool "GIT"
+	- Index the modified file and commit them using
+	  "{Major}.{Minor}.{Build}[_{Type}]" as message.
+	- Add the tag "{Major}.{Minor}.{Build}[_{Type}]"
+	- Push the repository to the servers
+
+Time and duration   ______ : ______              ______ hours, ______ minutes
+
+Signature           _________________________________________________________

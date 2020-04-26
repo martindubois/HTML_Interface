@@ -4,6 +4,10 @@
 // Product    HTML_Interface
 // File       HILib/HTML_Attributes.cpp
 
+// CODE REVIEW 2020-04-26 KMS - Martin Dubois, P.Eng
+
+// TEST COVERAGE 2020-04-26 KMS - Martin Dubois, P.Eng
+
 // Includes
 /////////////////////////////////////////////////////////////////////////////
 
@@ -28,6 +32,12 @@ public:
 
 };
 
+// Static function declarations
+/////////////////////////////////////////////////////////////////////////////
+
+static void CopyInfo(HI::HTML_AttributeInfo * aOut, const Data * aIn);
+static void InitInfo(HI::HTML_AttributeInfo * aOut, const Data * aIn);
+
 // Constants
 /////////////////////////////////////////////////////////////////////////////
 
@@ -43,18 +53,65 @@ namespace HI
     // Public
     /////////////////////////////////////////////////////////////////////////
 
-    void HTML_Attributes::FindByIndex(HTML_AttributeInfo * aOut, HTML_Attribute aAttr)
+    // aOut [---;-W-]
+    void HTML_Attributes::FindByIndex(HTML_AttributeInfo * aOut, HTML_Attribute aIndex)
     {
-        assert(NULL     != aOut );
-        assert(ATTR_QTY >  aAttr);
+        assert(NULL     != aOut  );
+        assert(ATTR_QTY >  aIndex);
 
-        memset(aOut, 0, sizeof(*aOut));
+        InitInfo(aOut, ATTRIBUTES + aIndex);
 
-        const Data * lData = ATTRIBUTES + aAttr;
-
-        aOut->mAttribute = aAttr         ;
-        aOut->mIdName    = lData->mIdName;
-        aOut->mName      = lData->mName  ;
+        aOut->mIndex = aIndex;
     }
 
+    // aOut [---;-W-]
+    void HTML_Attributes::GetFirst(HTML_AttributeInfo * aOut)
+    {
+        assert(NULL != aOut);
+
+        InitInfo(aOut, ATTRIBUTES);
+    }
+
+    // aOut [---;RW-]
+    bool HTML_Attributes::GetNext(HTML_AttributeInfo * aInOut)
+    {
+        assert(NULL != aInOut);
+
+        aInOut->mIndex++;
+        if (ATTR_QTY <= aInOut->mIndex)
+        {
+            return false;
+        }
+
+        CopyInfo(aInOut, ATTRIBUTES + aInOut->mIndex);
+
+        return true;
+    }
+
+}
+
+// Static functions
+/////////////////////////////////////////////////////////////////////////////
+
+// aOut [---;-W-]
+// aIn  [---;R--]
+void CopyInfo(HI::HTML_AttributeInfo * aOut, const Data * aIn)
+{
+    assert(NULL != aOut);
+    assert(NULL != aIn );
+
+    aOut->mIdName = aIn->mIdName;
+    aOut->mName   = aIn->mName  ;
+}
+
+// aOut [---;-W-]
+// aIn  [---;R--]
+void InitInfo(HI::HTML_AttributeInfo * aOut, const Data * aIn)
+{
+    assert(NULL != aOut);
+    assert(NULL != aIn );
+
+    memset(aOut, 0, sizeof(*aOut));
+
+    CopyInfo(aOut, aIn);
 }

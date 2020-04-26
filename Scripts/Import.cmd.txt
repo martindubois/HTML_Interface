@@ -1,0 +1,22 @@
+
+# Author     KMS - Martin Dubois, P.Eng.
+# Copyright  (C) 2020 KMS. All rights reserved.
+# Product    HTML_Interface
+# File       Scripts/Import.cmd.txt
+
+.
+	GenDoc.ext
+
+.	Libraries
+
+Libraries/Debug_32
+	HILib.lib
+
+Libraries/Debug_64
+	HILib.lib
+
+Libraries/Release_32
+	HILib.lib
+
+Libraries/Release_64
+	HILib.lib

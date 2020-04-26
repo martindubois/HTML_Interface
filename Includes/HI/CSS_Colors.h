@@ -2,7 +2,7 @@
 // Product  HTML_Interface
 
 /// \author KMS - Martin Dubois, P.Eng.
-/// \file   Includes/CSS_Colors.h
+/// \file   Includes/HI/CSS_Colors.h
 
 #pragma once
 

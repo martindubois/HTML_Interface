@@ -1,0 +1,23 @@
+
+# Author     KMS - Martin Dubois, P.Eng.
+# Copyright  (C) 2020 KMS. All rights reserved.
+# Product    HTML_Interface
+# File       Scripts/Import.txt
+
+.
+    DoxyFile_en.txt
+    HTML_Interface.HILib.ReadMe.txt
+    HTML_Interface.ReadMe.txt
+    RunDoxygen.cmd
+
+.	Includes
+
+Includes/HI
+    CSS_Colors.h
+    CSS_Document.h
+    CSS_Properties.h
+    Document.h
+    HTML_Attributes.h
+    HTML_Document.h
+    HTML_Tags.h
+    Types.h
