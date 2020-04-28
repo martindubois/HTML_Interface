@@ -50,6 +50,8 @@ namespace HI
 
     private:
 
+        void Start(const char * aFileName);
+
     };
 
 }

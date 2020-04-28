@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/HTML_Document.cpp
 
-// CODE REVIEW 2020-04-26 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-04-28 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-04-26 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-04-28 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -30,6 +30,10 @@ namespace HI
     {
     }
 
+    // TODO HTML_Document.Notices
+    //      Add a notices indicating the file is generated using
+    //      HTML_Interface.
+
     // aName  [---;R--]
     // aTitle [---;R--]
     void HTML_Document::Create(FolderId aFolder, const char * aName, const char * aTitle)
@@ -45,8 +49,6 @@ namespace HI
 
         mEndBody = true;
     }
-
-    // NOT TESTED HTML_Document.Create.Folder
 
     // aFolder [---;R--]
     // aName   [---;R--]
@@ -177,8 +179,6 @@ namespace HI
         Tag_Begin(TAG_HTML);
         Tag_Begin(TAG_HEAD);
     }
-
-    // NOT TESTED HTML_Document.Create.Folder
 
     // aFolder [---;R--]
     // aName   [---;R--]

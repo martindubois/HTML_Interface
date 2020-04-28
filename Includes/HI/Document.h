@@ -55,7 +55,7 @@ namespace HI
 
         virtual void Create(const char * aFolder, const char * aName);
 
-        virtual bool Delete();
+        virtual void Delete();
 
         virtual void DeleteOnDestruction();
 
@@ -64,6 +64,8 @@ namespace HI
         Document(const char * aExtension);
 
     private:
+
+        void Create(const char * aFileName);
 
         struct
         {
@@ -76,7 +78,7 @@ namespace HI
 
         const char * mExtension;
         FILE       * mFile     ;
-        std::string  mFolder   ;
+        std::string  mFileName ;
         std::string  mName     ;
 
     };

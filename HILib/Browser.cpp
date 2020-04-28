@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/Browser.cpp
 
-// CODE REVIEW 2020-04-26 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-04-28 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-04-26 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-04-28 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -70,19 +70,37 @@ namespace HI
         assert(FOLDER_QTY >  aFolder);
         assert(NULL       != aName  );
 
-        char lCommand [1024 + 128];
         char lFileName[1024 +  64];
-
-        memset(&lCommand , 0, sizeof(lCommand ));
 
         Utl_MakeFileName(lFileName, sizeof(lFileName), aFolder, aName, "html");
 
-        if (!Start_Chrome(lFileName))
+        Start(lFileName);
+    }
+
+    void Browser::Start(const char * aFolder, const char * aName)
+    {
+        assert(NULL != aName);
+
+        char lFileName[1024 + 64];
+
+        Utl_MakeFileName(lFileName, sizeof(lFileName), aFolder, aName, "html");
+
+        Start(lFileName);
+    }
+
+    // Private
+    /////////////////////////////////////////////////////////////////////////
+
+    void Browser::Start(const char * aFileName)
+    {
+        assert(NULL != aFileName);
+
+        if (!Start_Chrome(aFileName))
         {
             // NOT TESTED Browser.Chrome.Error
             //            Start the Windows default browser when starting
             //            Chrome fail.
-            if (!Start_Windows(lFileName))
+            if (!Start_Windows(aFileName))
             {
                 throw std::exception("ERROR  Cannot start browser");
             }

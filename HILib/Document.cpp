@@ -4,15 +4,18 @@
 // Product    HTML_Interface
 // File       HILib/Document.cpp
 
-// CODE REVIEW 2020-04-26 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-04-28 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-04-26 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-04-28 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
 
 // ===== C ==================================================================
 #include <assert.h>
+
+// ===== Windows ============================================================
+#include <Windows.h>
 
 // ===== Includes ===========================================================
 #include <HI/Document.h>
@@ -28,6 +31,10 @@ namespace HI
 
     Document::~Document()
     {
+        if (mFlags.mDeleteOnDestruction)
+        {
+            Delete();
+        }
     }
 
     FILE * Document::GetFile()
@@ -82,42 +89,43 @@ namespace HI
     {
         assert(NULL != aName);
 
-        assert(NULL == mFile);
+        assert(NULL != mExtension);
 
         char lFileName[2048];
 
         Utl_MakeFileName(lFileName, sizeof(lFileName), aFolder, aName, mExtension);
 
-        errno_t lErr = fopen_s(&mFile, lFileName, "wb");
-        if (0 != lErr)
-        {
-            // NOT TESTED Document.Error
-            //            fopen_s fail
-            throw std::exception("ERROR  fopen( , ,  )  failed", lErr);
-        }
-
-        assert(NULL != mFile);
+        Create(lFileName);
 
         mName = aName;
     }
-
-    // TODO Document.Create
 
     // aFolder [---;R--]
     // aName   [---;R--]
     void Document::Create(const char * aFolder, const char * aName)
     {
         assert(NULL != aName);
+
+        assert(NULL != mExtension);
+
+        char lFileName[2048];
+
+        Utl_MakeFileName(lFileName, sizeof(lFileName), aFolder, aName, mExtension);
+
+        Create(lFileName);
+
+        mName = aName;
     }
 
-    // TODO Document.Delete
-
-    bool Document::Delete()
+    void Document::Delete()
     {
-        return false;
-    }
+        if (!DeleteFile(mFileName.c_str()))
+        {
+            throw std::exception("ERROR  DeleteFile(  )  failed");
+        }
 
-    // NOT TESTED Document.DeleteOnDestruction
+        mFileName.clear();
+    }
 
     void Document::DeleteOnDestruction()
     {
@@ -136,6 +144,27 @@ namespace HI
 
         mFlags.mDeleteOnDestruction = false;
         mFlags.mDoNotClose          = false;
+    }
+
+    // Private
+    /////////////////////////////////////////////////////////////////////////
+
+    // aFileName [---;R--]
+    void Document::Create(const char * aFileName)
+    {
+        assert(NULL != aFileName);
+
+        assert(NULL == mFile);
+
+        errno_t lErr = fopen_s(&mFile, aFileName, "wb");
+        if (0 != lErr)
+        {
+            throw std::exception("ERROR  fopen( , ,  )  failed", lErr);
+        }
+
+        assert(NULL != mFile);
+
+        mFileName = aFileName;
     }
 
 }
