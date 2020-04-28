@@ -5,7 +5,7 @@
 # File       Scripts/Import.cmd.txt
 
 .
-	GenDoc.ext
+	GenDoc.exe
 
 .	Libraries
 
