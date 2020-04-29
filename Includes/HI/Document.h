@@ -43,7 +43,7 @@ namespace HI
 
         virtual void Close();
 
-        virtual void Comment(const char * aText) = 0;
+        virtual void Comment(const char * aText);
 
         virtual void Comment_Begin() = 0;
 
@@ -59,9 +59,13 @@ namespace HI
 
         virtual void DeleteOnDestruction();
 
+        virtual void NewLine();
+
     protected:
 
         Document(const char * aExtension);
+
+        void Indent(unsigned int aLevel);
 
     private:
 

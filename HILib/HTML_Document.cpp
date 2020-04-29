@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/HTML_Document.cpp
 
-// CODE REVIEW 2020-04-28 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-04-29 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-04-28 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-04-29 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -26,13 +26,9 @@ namespace HI
     // Public
     /////////////////////////////////////////////////////////////////////////
 
-    HTML_Document::HTML_Document() : Document("html")
+    HTML_Document::HTML_Document() : Document("html"), mInComment(false)
     {
     }
-
-    // TODO HTML_Document.Notices
-    //      Add a notices indicating the file is generated using
-    //      HTML_Interface.
 
     // aName  [---;R--]
     // aTitle [---;R--]
@@ -43,11 +39,7 @@ namespace HI
 
         Create(aFolder, aName);
 
-        Tag(TAG_TITLE, aTitle);
-        Tag_End();
-        Tag_Begin(TAG_BODY);
-
-        mEndBody = true;
+        Create(aTitle);
     }
 
     // aFolder [---;R--]
@@ -59,11 +51,7 @@ namespace HI
 
         Create(aFolder, aName);
 
-        Tag(TAG_TITLE, aTitle);
-        Tag_End();
-        Tag_Begin(TAG_BODY);
-
-        mEndBody = true;
+        Create(aTitle);
     }
 
     // aValue [---;R--]
@@ -84,6 +72,13 @@ namespace HI
         mAttributes.push_back(lStr);
     }
 
+    void HTML_Document::Tag(HTML_Tag aTag)
+    {
+        assert(TAG_QTY > aTag);
+
+        Tag_Internal(aTag);
+    }
+
     // aText [---;R--]
     void HTML_Document::Tag(HTML_Tag aTag, const char * aText)
     {
@@ -94,7 +89,7 @@ namespace HI
             {
                 // NOT TESTED HTML_Document.Error
                 //            fprintf fail
-                throw std::exception("ERROR  fprintf( , ,  )  failed");
+                throw std::exception("ERROR  092  fprintf( , ,  )  failed");
             }
 
         Tag_End();
@@ -104,28 +99,21 @@ namespace HI
     {
         assert(TAG_QTY > aTag);
 
-        HTML_TagInfo lTI;
+        const char * lName = Tag_Internal(aTag);
 
-        HTML_Tags::FindByIndex(&lTI, aTag);
-
-        int lRet = fprintf(GetFile(), "<%s", lTI.mName);
-        Utl_VerifyReturn(lRet);
-
-        while (!mAttributes.empty())
-        {
-            fprintf(GetFile(), "%s", mAttributes.front().c_str());
-            mAttributes.pop_front();
-        }
-
-        lRet = fprintf(GetFile(), ">");
-        Utl_VerifyReturn(lRet);
-
-        mTags.push_back(lTI.mName);
+        mTags.push_back(lName);
     }
 
-    void HTML_Document::Tag_End()
+    void HTML_Document::Tag_End(bool aNewLine)
     {
         assert(!mTags.empty());
+
+        if (aNewLine)
+        {
+            Document::NewLine();
+
+            Indent(mTags.size() - 1);
+        }
 
         int lRet = fprintf(GetFile(), "</%s>", mTags.back().c_str());
         Utl_VerifyReturn(lRet);
@@ -147,25 +135,38 @@ namespace HI
     {
         while (!mTags.empty())
         {
-            Tag_End();
+            Tag_End(true);
         }
 
         Document::Close();
     }
 
-    // TODO HTML_Document.Comment
-
-    // aText [---;R--]
-    void HTML_Document::Comment(const char * aText)
-    {
-    }
-
     void HTML_Document::Comment_Begin()
     {
+        assert(!mInComment);
+
+        NewLine();
+
+        int lRet = fprintf(GetFile(), "<!--");
+        Utl_VerifyReturn(lRet);
+
+        mInComment = true;
+
+        NewLine();
     }
 
     void HTML_Document::Comment_End()
     {
+        assert(mInComment);
+
+        mInComment = false;
+
+        NewLine();
+
+        int lRet = fprintf(GetFile(), "-->");
+        Utl_VerifyReturn(lRet);
+
+        NewLine();
     }
 
     // aName [---;R--]
@@ -176,8 +177,7 @@ namespace HI
 
         Document::Create(aFolder, aName);
 
-        Tag_Begin(TAG_HTML);
-        Tag_Begin(TAG_HEAD);
+        Create();
     }
 
     // aFolder [---;R--]
@@ -188,8 +188,64 @@ namespace HI
 
         Document::Create(aFolder, aName);
 
+        Create();
+    }
+
+    void HTML_Document::NewLine()
+    {
+        Document::NewLine();
+
+        Indent(mTags.size() + (mInComment ? 1 : 0));
+    }
+
+    // Private
+    /////////////////////////////////////////////////////////////////////////
+
+    void HTML_Document::Create()
+    {
+        Tag(TAG_DOCTYPE);
+
+        Comment("Generated using the HTML_Interface library");
+
         Tag_Begin(TAG_HTML);
+        NewLine();
         Tag_Begin(TAG_HEAD);
+        NewLine();
+    }
+
+    // aTitle [---;R--]
+    void HTML_Document::Create(const char * aTitle)
+    {
+        assert(NULL != aTitle);
+
+        Tag(TAG_TITLE, aTitle);
+        Tag_End(true);
+        NewLine();
+        Tag_Begin(TAG_BODY);
+        NewLine();
+    }
+
+    const char * HTML_Document::Tag_Internal(HTML_Tag aTag)
+    {
+        assert(TAG_QTY > aTag);
+
+        HTML_TagInfo lTI;
+
+        HTML_Tags::FindByIndex(&lTI, aTag);
+
+        int lRet = fprintf(GetFile(), "<%s", lTI.mName);
+        Utl_VerifyReturn(lRet);
+
+        while (!mAttributes.empty())
+        {
+            fprintf(GetFile(), "%s", mAttributes.front().c_str());
+            mAttributes.pop_front();
+        }
+
+        lRet = fprintf(GetFile(), ">");
+        Utl_VerifyReturn(lRet);
+
+        return lTI.mName;
     }
 
 }

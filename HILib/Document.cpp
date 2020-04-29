@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/Document.cpp
 
-// CODE REVIEW 2020-04-28 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-04-29 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-04-28 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-04-29 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -64,9 +64,26 @@ namespace HI
             {
                 // NOT TESTED Document.Error
                 //            fclose fail
-                throw std::exception("ERROR  fclose(  )  failed", lRet);
+                throw std::exception("ERROR  067  fclose(  )  failed", lRet);
             }
         }
+    }
+
+    void Document::Comment(const char * aText)
+    {
+        assert(NULL != mFile);
+
+        Comment_Begin();
+
+            int lRet = fprintf(mFile, "%s", aText);
+            if (0 > lRet)
+            {
+                // NOT TESTED Document.Error
+                //            fprintf fail
+                throw std::exception("ERROR  081  fprintf( , ,  )  failed", lRet);
+            }
+
+        Comment_End();
     }
 
     // aDocument [-K-;RW-]
@@ -87,7 +104,8 @@ namespace HI
     // aName [---;R--]
     void Document::Create(FolderId aFolder, const char * aName)
     {
-        assert(NULL != aName);
+        assert(FOLDER_QTY >  aFolder);
+        assert(NULL       != aName  );
 
         assert(NULL != mExtension);
 
@@ -100,7 +118,7 @@ namespace HI
         mName = aName;
     }
 
-    // aFolder [---;R--]
+    // aFolder [--O;R--]
     // aName   [---;R--]
     void Document::Create(const char * aFolder, const char * aName)
     {
@@ -121,7 +139,7 @@ namespace HI
     {
         if (!DeleteFile(mFileName.c_str()))
         {
-            throw std::exception("ERROR  DeleteFile(  )  failed");
+            throw std::exception("ERROR  142  DeleteFile(  )  failed");
         }
 
         mFileName.clear();
@@ -130,6 +148,14 @@ namespace HI
     void Document::DeleteOnDestruction()
     {
         mFlags.mDeleteOnDestruction = true;
+    }
+
+    void Document::NewLine()
+    {
+        assert(NULL != mFile);
+
+        int lRet = fprintf(mFile, "\n");
+        Utl_VerifyReturn(lRet);
     }
 
     // Protected
@@ -146,6 +172,17 @@ namespace HI
         mFlags.mDoNotClose          = false;
     }
 
+    void Document::Indent(unsigned int aLevel)
+    {
+        assert(NULL != mFile);
+
+        for (unsigned int i = 0; i < aLevel; i++)
+        {
+            int lRet = fprintf(mFile, "    ");
+            Utl_VerifyReturn(lRet);
+        }
+    }
+
     // Private
     /////////////////////////////////////////////////////////////////////////
 
@@ -159,7 +196,7 @@ namespace HI
         errno_t lErr = fopen_s(&mFile, aFileName, "wb");
         if (0 != lErr)
         {
-            throw std::exception("ERROR  fopen( , ,  )  failed", lErr);
+            throw std::exception("ERROR  199  fopen( , ,  )  failed", lErr);
         }
 
         assert(NULL != mFile);

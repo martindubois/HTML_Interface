@@ -22,6 +22,8 @@ KMS_TEST_BEGIN(HTML_Document_Base)
 
     lHD0.Create(NULL, "Test");
 
+    lHD0.Tag(HI::TAG_HR);
+
     try
     {
         lHD0.Delete();

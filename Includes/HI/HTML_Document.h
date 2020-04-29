@@ -187,7 +187,7 @@ namespace HI
 
         void Tag_Begin(HTML_Tag aTag);
 
-        void Tag_End();
+        void Tag_End(bool aNewLine = false);
 
         // ===== Document ===================================================
 
@@ -195,19 +195,25 @@ namespace HI
 
         virtual void Close();
 
-        virtual void Comment      (const char * aComment);
         virtual void Comment_Begin();
         virtual void Comment_End  ();
 
         virtual void Create(FolderId     aFolder, const char * aName);
         virtual void Create(const char * aFolder, const char * aName);
 
+        virtual void NewLine();
+
     private:
+
+        void Create();
+        void Create(const char * aTitle);
+
+        const char * Tag_Internal(HTML_Tag aTag);
 
         typedef std::list<std::string> StringList;
 
         StringList mAttributes;
-        bool       mEndBody   ;
+        bool       mInComment ;
         StringList mTags      ;
 
     };
