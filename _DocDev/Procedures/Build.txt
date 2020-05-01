@@ -19,8 +19,8 @@ Version             ______ . ______ . ______ . ______ - _____________________
 
 [ ] Tool "GIT"
 	- Index the modified file and commit them using
-	  "{Major}.{Minor}.{Build}[_{Type}]" as message.
-	- Add the tag "{Major}.{Minor}.{Build}[_{Type}]"
+	  "{Major}.{Minor}.{Build}[_{Type}]_Windows" as message.
+	- Add the tag "{Major}.{Minor}.{Build}[_{Type}]_Windows"
 	- Push the repository to the servers
 
 Time and duration   ______ : ______              ______ hours, ______ minutes
