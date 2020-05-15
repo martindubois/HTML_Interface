@@ -24,5 +24,11 @@
     <ClCompile Include="HTML_Document.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CSS_Document.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

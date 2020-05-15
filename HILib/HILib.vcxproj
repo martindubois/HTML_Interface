@@ -22,17 +22,20 @@
     <ClCompile Include="Browser.cpp" />
     <ClCompile Include="CSS_Colors.cpp" />
     <ClCompile Include="CSS_Document.cpp" />
-    <ClCompile Include="CSS_Properties.cpp" />
     <ClCompile Include="Document.cpp" />
-    <ClCompile Include="HTML_Attributes.cpp" />
     <ClCompile Include="HTML_Document.cpp" />
-    <ClCompile Include="HTML_Tags.cpp" />
+    <ClCompile Include="OS_Windows.cpp" />
+    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="SVG_Document.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="XML_Document.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="_DocUser\HTML_Interface.HILib.ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HTTP.h" />
+    <ClInclude Include="OS.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

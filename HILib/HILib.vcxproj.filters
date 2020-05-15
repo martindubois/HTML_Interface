@@ -24,25 +24,28 @@
     <ClCompile Include="Document.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HTML_Tags.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CSS_Colors.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CSS_Document.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CSS_Properties.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HTML_Attributes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Browser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OS_Windows.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="XML_Document.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SVG_Document.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,6 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HTTP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

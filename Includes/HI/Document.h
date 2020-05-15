@@ -41,29 +41,39 @@ namespace HI
 
         bool IsClosed() const;
 
+        /// \exception std::exception
         virtual void Close();
 
+        /// \exception std::exception
         virtual void Comment(const char * aText);
 
-        virtual void Comment_Begin() = 0;
+        /// \exception std::exception
+        virtual void Comment_Begin();
 
-        virtual void Comment_End() = 0;
+        /// \exception std::exception
+        virtual void Comment_End();
 
         virtual void Create(Document * aDocument);
 
+        /// \exception std::exception
         virtual void Create(FolderId aFolder, const char * aName);
 
+        /// \exception std::exception
         virtual void Create(const char * aFolder, const char * aName);
 
+        /// \exception std::exception
         virtual void Delete();
 
         virtual void DeleteOnDestruction();
 
+        /// \exception std::exception
         virtual void NewLine();
 
     protected:
 
         Document(const char * aExtension);
+
+        bool InComment() const;
 
         void Indent(unsigned int aLevel);
 
@@ -75,8 +85,9 @@ namespace HI
         {
             unsigned mDeleteOnDestruction : 1;
             unsigned mDoNotClose          : 1;
+            unsigned mInComment           : 1;
 
-            unsigned mReserved0 : 30;
+            unsigned mReserved0 : 29;
         }
         mFlags;
 

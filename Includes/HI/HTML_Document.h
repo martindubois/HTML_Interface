@@ -14,207 +14,90 @@
 #include <string>
 
 // ===== Includes ===========================================================
-#include <HI/Document.h>
-#include <HI/HTML_Attributes.h>
-#include <HI/HTML_Tags.h>
+#include <HI/XML_Document.h>
 
 namespace HI
 {
 
     /// \brief HTML_Document
-    class HTML_Document : public Document
+    class HTML_Document : public XML_Document
     {
 
     public:
 
         typedef enum
         {
-            AUTO_COMPLETE_OFF,
-            AUTO_COMPLETE_ON ,
+            ATTR_HREF ,
+            ATTR_STYLE,
+
+            ATTR_QTY
         }
-        AutoCompleteName;
+        AttributeIndex;
 
         typedef enum
         {
-            BOOLEAN_FALSE,
-            BOOLEAN_TRUE ,
-        }
-        BooleanName;
+            TAG_A      ,
+            TAG_BODY   ,
+            TAG_CODE   ,
+            TAG_DETAILS,
+            TAG_DOCTYPE,
+            TAG_HEAD   ,
+            TAG_H1     ,
+            TAG_H2     ,
+            TAG_HR     ,
+            TAG_HTML   ,
+            TAG_I      ,
+            TAG_P      ,
+            TAG_STYLE  ,
+            TAG_SUMMARY,
+            TAG_TABLE  ,
+            TAG_TD     ,
+            TAG_TH     ,
+            TAG_TITLE  ,
+            TAG_TR     ,
 
-        typedef enum
-        {
-            FORM_METHOD_GET ,
-            FORM_METHOD_POST,
+            TAG_QTY,
+            TAG_NONE
         }
-        FormMethodName;
+        TagIndex;
 
-        typedef enum
-        {
-            KIND_CAPTIONS    ,
-            KIND_CHAPTERS    ,
-            KIND_DESCRIPTIONS,
-            KIND_METADATA    ,
-            KIND_SUBTITLES   ,
-        }
-        KindName;
+        static void Attribute_GetFirst(Info * aOut);
 
-        typedef enum
-        {
-            PRELOAD_AUTO    ,
-            PRELOAD_METADATA,
-            PRELOAD_NONE    ,
-        }
-        PreloadName;
+        static bool Attribute_GetNext(Info * aInOut);
 
-        typedef enum
-        {
-            REL_ALTERNATE   ,
-            REL_AUTHOR      ,
-            REL_BOOKMARK    ,
-            REL_DNS_PREFETCH,
-            REL_EXTERNAL    ,
-            REL_HELP        ,
-            REL_ICON        ,
-            REL_LICENSE     ,
-            REL_NEXT        ,
-            REL_NO_FOLLOW   ,
-            REL_NO_REFERRER ,
-            REL_NO_OPENER   ,
-            REL_PINGBACK    ,
-            REL_PRECONNECT  ,
-            REL_PREFETCH    ,
-            REL_PRELOAD     ,
-            REL_PREV        ,
-            REL_SEARCH      ,
-            REL_STYLESHEET  ,
-            REL_TAG         ,
-        }
-        RelName;
+        static bool Tag_FindByIdName(Info * aOut, const char * aIdName);
 
-        typedef enum
-        {
-            SCOPE_COL     ,
-            SCOPE_COLGROUP,
-            SCOPE_ROW     ,
-            SCOPE_ROWGROUP,
-        }
-        ScopeName;
+        static void Tag_FindByIndex(Info * aOut, TagIndex aIndex);
 
-        typedef enum
-        {
-            SHAPE_CIRCLE ,
-            SHAPE_DEFAULT,
-            SHAPE_POLY   ,
-            SHAPE_RECT   ,
-        }
-        ShapeName;
+        static bool Tag_FindByName(Info * aOut, const char * aName);
 
-        typedef enum
-        {
-            TARGET_BLANK ,
-            TARGET_PARENT,
-            TARGET_SELF  ,
-            TARGET_TOP   ,
-        }
-        TargetName;
+        static void Tag_GetFirst(Info * aOut);
 
-        typedef enum
-        {
-            TYPE_BUTTON        ,
-            TYPE_CHECKBOX      ,
-            TYPE_COLOR         ,
-            TYPE_DATE          ,
-            TYPE_DATETIME_LOCAL,
-            TYPE_EMAIL         ,
-            TYPE_FILE          ,
-            TYPE_HIDDEN        ,
-            TYPE_IMAGE         ,
-            TYPE_MONTH         ,
-            TYPE_NUMBER        ,
-            TYPE_PASSWORD      ,
-            TYPE_RADIO         ,
-            TYPE_RESET         ,
-            TYPE_SEARCH        ,
-            TYPE_SUBMIT        ,
-            TYPE_TEL           ,
-            TYPE_TEXT          ,
-            TYPE_TIME          ,
-            TYPE_URL           ,
-            TYPE_WEEK          ,
-        }
-        TypeName;
+        static void Tag_GetLast(Info * aOut);
 
-        typedef enum
-        {
-            WRAP_HARD,
-            WRAP_SOFT,
-        }
-        WrapName;
+        static bool Tag_GetNext(Info * aInOut);
+
+        static bool Tag_GetPrevious(Info * aInOut);
 
         HTML_Document();
 
+        /// \exception std::exception
         void Create(FolderId aFolder, const char * aName, const char * aTitle);
 
+        /// \exception std::exception
         void Create(const char * aFolder, const char * aName, const char * aTitle);
-
-        void Attribute_Set(HTML_Attribute aAttribute, AutoCompleteName aValue);
-
-        void Attribute_Set(HTML_Attribute aAttribute, BooleanName aValue);
-
-        void Attribute_Set(HTML_Attribute aAttribute, FormMethodName aValue);
-
-        void Attribute_Set(HTML_Attribute aAttribute, KindName aValue);
-
-        void Attribute_Set(HTML_Attribute aAttribute, PreloadName aValue);
-
-        void Attribute_Set(HTML_Attribute aAttribute, RelName aValue);
-
-        void Attribute_Set(HTML_Attribute aAttribute, ScopeName aValue);
-
-        void Attribute_Set(HTML_Attribute aAttribute, ShapeName aValue);
-
-        void Attribute_Set(HTML_Attribute aAttribute, TargetName aValue);
-
-        void Attribute_Set(HTML_Attribute aAttribute, TypeName aValue);
-
-        void Attribute_Set(HTML_Attribute aAttribute, WrapName aValue);
-
-        void Attribute_Set(HTML_Attribute aAttribute, const char * aValue);
-
-        void Tag(HTML_Tag aTag);
-
-        void Tag(HTML_Tag aTag, const char * aText);
-
-        void Tag_Begin(HTML_Tag aTag);
-
-        void Tag_End(bool aNewLine = false);
 
         // ===== Document ===================================================
 
         virtual ~HTML_Document();
 
-        virtual void Close();
-
-        virtual void Comment_Begin();
-        virtual void Comment_End  ();
-
         virtual void Create(FolderId     aFolder, const char * aName);
         virtual void Create(const char * aFolder, const char * aName);
-
-        virtual void NewLine();
 
     private:
 
         void Create();
         void Create(const char * aTitle);
-
-        const char * Tag_Internal(HTML_Tag aTag);
-
-        typedef std::list<std::string> StringList;
-
-        StringList mAttributes;
-        bool       mInComment ;
-        StringList mTags      ;
 
     };
 

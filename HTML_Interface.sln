@@ -10,14 +10,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HI", "HI", "{97B3B0A6-608C-
 		Includes\HI\Browser.h = Includes\HI\Browser.h
 		Includes\HI\CSS_Colors.h = Includes\HI\CSS_Colors.h
 		Includes\HI\CSS_Document.h = Includes\HI\CSS_Document.h
-		Includes\HI\CSS_Properties.h = Includes\HI\CSS_Properties.h
 		Includes\HI\Document.h = Includes\HI\Document.h
-		Includes\HI\HTML_Attributes.h = Includes\HI\HTML_Attributes.h
 		Includes\HI\HTML_Document.h = Includes\HI\HTML_Document.h
-		Includes\HI\HTML_Tags.h = Includes\HI\HTML_Tags.h
 		Includes\HI\JS_Document.h = Includes\HI\JS_Document.h
 		Includes\HI\Server.h = Includes\HI\Server.h
+		Includes\HI\SVG_Document.h = Includes\HI\SVG_Document.h
 		Includes\HI\Types.h = Includes\HI\Types.h
+		Includes\HI\XML_Document.h = Includes\HI\XML_Document.h
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HILib", "HILib\HILib.vcxproj", "{51712226-EC62-4CBC-8916-BF0B427DBE3D}"
@@ -70,6 +69,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HILib_Test", "HILib_Test\HI
 		{51712226-EC62-4CBC-8916-BF0B427DBE3D} = {51712226-EC62-4CBC-8916-BF0B427DBE3D}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Static", "Static", "{CEC88802-827A-4697-BB84-15448668D287}"
+	ProjectSection(SolutionItems) = preProject
+		Static\ErrorNotFound.html = Static\ErrorNotFound.html
+		Static\favicon.ico = Static\favicon.ico
+		Static\Tests\Server_SetupB.html = Static\Tests\Server_SetupB.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{40DB1B05-8814-414F-8A8D-CF3D34B39722}"
+	ProjectSection(SolutionItems) = preProject
+		Static\Tests\AutoClose.html = Static\Tests\AutoClose.html
+		Static\Tests\Server_SetupB.html = Static\Tests\Server_SetupB.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -109,6 +121,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{97B3B0A6-608C-4516-94D3-CEC74B8AAA7B} = {5B921471-4E1C-4E70-8A13-30A75AA411C1}
 		{0CE10567-E157-4059-83BB-FD25C1DF42E5} = {3AA81B60-77F8-4F00-BEA2-BC382B714F68}
+		{40DB1B05-8814-414F-8A8D-CF3D34B39722} = {CEC88802-827A-4697-BB84-15448668D287}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F422AB75-8A78-47B0-924D-90265ECF390C}

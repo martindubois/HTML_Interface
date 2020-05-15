@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/Document.cpp
 
-// CODE REVIEW 2020-04-29 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-15 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-04-29 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-15 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -62,8 +62,8 @@ namespace HI
             int lRet = fclose(lFile);
             if (0 != lRet)
             {
-                // NOT TESTED Document.Error
-                //            fclose fail
+                // NOT TESTED Document.Close.Error
+                //            fclose(  ) fails.
                 throw std::exception("ERROR  067  fclose(  )  failed", lRet);
             }
         }
@@ -78,13 +78,30 @@ namespace HI
             int lRet = fprintf(mFile, "%s", aText);
             if (0 > lRet)
             {
-                // NOT TESTED Document.Error
-                //            fprintf fail
+                // NOT TESTED Document.Comment.Error
+                //            fprintf( , ,  ) fails.
                 throw std::exception("ERROR  081  fprintf( , ,  )  failed", lRet);
             }
 
         Comment_End();
     }
+
+    void Document::Comment_Begin()
+    {
+        assert(!mFlags.mInComment);
+
+        mFlags.mInComment = true;
+    }
+
+    void Document::Comment_End()
+    {
+        assert(mFlags.mInComment);
+
+        mFlags.mInComment = false;
+    }
+
+    // TESTED  Document.Create
+    //         Create a document inside another document (GenDoc.exe)
 
     // aDocument [-K-;RW-]
     void Document::Create(Document * aDocument)
@@ -101,7 +118,6 @@ namespace HI
         mFlags.mDoNotClose = true;
     }
 
-    // aName [---;R--]
     void Document::Create(FolderId aFolder, const char * aName)
     {
         assert(FOLDER_QTY >  aFolder);
@@ -119,7 +135,6 @@ namespace HI
     }
 
     // aFolder [--O;R--]
-    // aName   [---;R--]
     void Document::Create(const char * aFolder, const char * aName)
     {
         assert(NULL != aName);
@@ -170,6 +185,12 @@ namespace HI
 
         mFlags.mDeleteOnDestruction = false;
         mFlags.mDoNotClose          = false;
+        mFlags.mInComment           = false;
+    }
+
+    bool Document::InComment() const
+    {
+        return mFlags.mInComment;
     }
 
     void Document::Indent(unsigned int aLevel)
@@ -186,7 +207,6 @@ namespace HI
     // Private
     /////////////////////////////////////////////////////////////////////////
 
-    // aFileName [---;R--]
     void Document::Create(const char * aFileName)
     {
         assert(NULL != aFileName);

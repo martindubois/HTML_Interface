@@ -1,6 +1,6 @@
 
 // Author     KMS - Martin Dubois, P.Eng.
-// Copyright  (C) 2000 KMS. All rights reserved.
+// Copyright  (C) 2020 KMS. All rights reserved.
 // Product    HTML_Interface
 // File       HILib/Utils.h
 

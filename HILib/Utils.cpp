@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/Utils.cpp
 
-// CODE REVIEW 2020-04-26 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-15 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-04-26 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-15 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -23,24 +23,9 @@
 #include <Windows.h>
 
 // ===== HILib ==============================================================
+#include "OS.h"
+
 #include "Utils.h"
-
-// Constants
-/////////////////////////////////////////////////////////////////////////////
-
-static const char * BINARIES[] =
-{
-
-#ifdef _DEBUG
-    "\\x64\\Debug"  ,
-    "\\Debug"       ,
-#else
-    "\\x64\\Release",
-    "\\Release"     ,
-#endif
-
-    NULL
-};
 
 // Static variable
 /////////////////////////////////////////////////////////////////////////////
@@ -66,15 +51,13 @@ static void Initialize();
 /////////////////////////////////////////////////////////////////////////////
 
 // aOut       [---;-W-]
-// aName      [---;R--]
-// aExtension [---;R--]
+// aExtension [--O;R--]
 void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, HI::FolderId aFolder, const char * aName, const char * aExtension)
 {
     assert(NULL           != aOut         );
     assert(             0 <  aOutSize_byte);
     assert(HI::FOLDER_QTY >  aFolder      );
     assert(NULL           != aName        );
-    assert(NULL           != aExtension   );
 
     if (!sInitDone)
     {
@@ -85,15 +68,13 @@ void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, HI::FolderId aFol
 }
 
 // aOut       [---;-W-]
-// aFolder    [---;R--]
 // aName      [---;R--]
-// aExtension [---;R--]
+// aExtension [--O;R--]
 void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, const char * aFolder, const char * aName, const char * aExtension)
 {
     assert(NULL != aOut         );
     assert(   0 <  aOutSize_byte);
     assert(NULL != aName        );
-    assert(NULL != aExtension   );
 
     memset(aOut, 0, aOutSize_byte);
 
@@ -101,29 +82,48 @@ void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, const char * aFol
 
     if (NULL == aFolder)
     {
-        // NOT TESTED Folder.Current
-        lRet = sprintf_s(aOut, aOutSize_byte, "%s.%s", aName, aExtension);
+        if (NULL == aExtension)
+        {
+            // NOT TESTED Utils.Folder
+            //            Retrieve filename relative to the current folder
+            //            without extension.
+            lRet = sprintf_s(aOut, aOutSize_byte, "%s", aName);
+        }
+        else
+        {
+            lRet = sprintf_s(aOut, aOutSize_byte, "%s.%s", aName, aExtension);
+        }
     }
     else
     {
-        lRet = sprintf_s(aOut, aOutSize_byte, "%s\\%s.%s", aFolder, aName, aExtension);
+        if (NULL == aExtension)
+        {
+            // NOT TESTED Utils.Folder
+            //            Retrieve filename without extension.
+            lRet = sprintf_s(aOut, aOutSize_byte, "%s\\%s", aFolder, aName);
+        }
+        else
+        {
+            lRet = sprintf_s(aOut, aOutSize_byte, "%s\\%s.%s", aFolder, aName, aExtension);
+        }
     }
 
     if (0 >= lRet)
     {
-        // NOT TESTED Folder.Error
-        //            sprintf_s fail
-        throw std::exception("ERROR  sprintf_s( , , , ,  )  failed", lRet);
+        // NOT TESTED Utils.Folder.Error
+        //            sprintf_s( , , ,  ) of sprintf_s( , , , ,  ) fails.
+        throw std::exception("ERROR  115  sprintf_s( , , , ,  )  failed", lRet);
     }
 }
+
+// NOT TESTED Utils.Verify
+//            Utl_VerifyReturn detects an error.
 
 void Utl_VerifyReturn(int aRet)
 {
     if (0 >= aRet)
     {
-        // NOT TESTED Document.Error
-        //            VerifyReturn detect an error
-        throw std::exception("ERROR  Write failed", aRet);
+        throw std::exception("ERROR  126  Write failed", aRet);
     }
 }
 
@@ -131,16 +131,12 @@ void Utl_VerifyReturn(int aRet, unsigned int aMax)
 {
     if (0 >= aRet)
     {
-        // NOT TESTED Document.Error
-        //            VerifyReturn detect an error
-        throw std::exception("ERROR  Formating failed", aRet);
+        throw std::exception("ERROR  134  Formating failed", aRet);
     }
 
     if (aMax <= static_cast<unsigned int>(aRet))
     {
-        // NOT TESTED Document.Error
-        //            VerifyReturn detect an error
-        throw std::exception("ERROR  Formating failed", aRet);
+        throw std::exception("ERROR  139  Formating failed", aRet);
     }
 }
 
@@ -151,20 +147,14 @@ void Init_Exec()
 {
     char lFolder[1024];
 
-    DWORD lSize_byte = GetModuleFileName(NULL, lFolder, sizeof(lFolder));
-    if ((0 >= lSize_byte) || (sizeof(lFolder) <= lSize_byte))
-    {
-        // NOT TESTED Folder.Error
-        //            GetModuleFileName fail
-        throw std::exception("ERROR  GetModuleFileName( , ,  )  failed");
-    }
+    OS_GetModuleFileName(lFolder, sizeof(lFolder));
 
     char * lPtr = strrchr(lFolder, '\\');
     if (NULL == lPtr)
     {
-        // NOT TESTED Folder.Error
-        //            strrchr fail
-        throw std::exception("ERROR  strrchr( ,  )  failed");
+        // NOT TESTED Utils.Folder.Error
+        //            strrchr( ,  ) fails.
+        throw std::exception("ERROR  157  strrchr( ,  )  failed");
     }
 
     *lPtr = '\0';
@@ -179,9 +169,9 @@ void Init_Static()
     strcpy_s(lFolder, sFolder_Exec);
 
     unsigned int i = 0;
-    while (NULL != BINARIES[i])
+    while (NULL != OS_BINARIES[i])
     {
-        char * lPtr = strstr(lFolder, BINARIES[i]);
+        char * lPtr = strstr(lFolder, OS_BINARIES[i]);
         if (NULL != lPtr)
         {
             *lPtr = '\0';
@@ -199,31 +189,14 @@ void Init_Temp()
 {
     char lTemp[1000];
 
-    DWORD lSize_byte = GetEnvironmentVariable("TEMP", lTemp, sizeof(lTemp));
-    if ((0 >= lSize_byte) || (sizeof(lTemp) <= lSize_byte))
-    {
-        // NOT TESTED Folder.Error
-        //            GetEnvironmentVariable fail
-        throw std::exception("ERROR  GetEnvironmentVariable( , ,  )  failed");
-    }
+    OS_GetEnvironmentVariable("TEMP", lTemp, sizeof(lTemp));
 
-    DWORD lProcessId = GetCurrentProcessId();
+    unsigned int lProcessId = OS_GetCurrentProcessId();
 
     int lRet = sprintf_s(sFolder_Temp, "%s\\HTML_Interface_%08x", lTemp, lProcessId);
     Utl_VerifyReturn(lRet, sizeof(sFolder_Temp));
 
-    if (!CreateDirectory(sFolder_Temp, NULL))
-    {
-        // NOT TESTED Folder.Error
-        //            CreateDirectory fail
-        switch (GetLastError())
-        {
-        case ERROR_ALREADY_EXISTS: break;
-
-        default:
-            throw std::exception("ERROR  CreateDirectory( ,  )  failed");
-        }
-    }
+    OS_CreateDirectory(sFolder_Temp);
 }
 
 void Initialize()

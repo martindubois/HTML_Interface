@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/Browser.cpp
 
-// CODE REVIEW 2020-04-28 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-15 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-04-28 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-15 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -24,22 +24,18 @@
 #include <Windows.h>
 
 // ===== Includes ===========================================================
+#include <HI/Server.h>
+
 #include <HI/Browser.h>
 
 // ===== HILib ==============================================================
+#include "OS.h"
 #include "Utils.h"
-
-// Constants
-/////////////////////////////////////////////////////////////////////////////
-
-#define CHROME_EXE "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
 
 // Static function declarations
 /////////////////////////////////////////////////////////////////////////////
 
-static bool Start_Chrome (const char * aFileName);
-static bool Start_Process(const char * aExec, const char * aCommand);
-static bool Start_Windows(const char * aFileName);
+static bool Start_Chrome(const char * aFileName);
 
 namespace HI
 {
@@ -47,22 +43,84 @@ namespace HI
     // Public
     /////////////////////////////////////////////////////////////////////////
 
-    Browser::Browser()
+    Browser::Browser() : mPrefered(PREFERED_CHROME), mState(STATE_INIT)
     {
     }
 
     Browser::~Browser()
     {
+        switch (mState)
+        {
+        // NOT TESTED  Browser.Detach
+        //             Detach on delete
+        case STATE_OPEN: OS_Process_Close(mProcess); break;
+        }
     }
 
-    // TODO Browser.Arguments
-    //      Add arguments to
-    //      - Select the default browser
-    //      - Disable the broweser
+    void Browser::SetPrefered(Prefered aIn)
+    {
+        assert(PREFERED_QTY > aIn);
+
+        assert(PREFERED_QTY > mPrefered);
+
+        mPrefered = aIn;
+    }
+
+    void Browser::Close()
+    {
+        assert(STATE_OPEN == mState);
+
+        mState = STATE_INIT;
+
+        OS_Process_Terminate(mProcess);
+    }
+
+    // NOT TESTED  Browser.Detach
+
+    void Browser::Detach()
+    {
+        assert(STATE_OPEN == mState);
+
+        mState = STATE_INIT;
+
+        OS_Process_Close(mProcess);
+    }
+
+    void Browser::Open(FolderId aFolder, const char * aName)
+    {
+        assert(FOLDER_QTY >  aFolder);
+        assert(NULL       != aName  );
+
+        char lFileName[1024];
+
+        Utl_MakeFileName(lFileName, sizeof(lFileName), aFolder, aName, "html");
+
+        Open(lFileName);
+    }
+
+    void Browser::Open(const Server * aServer, const char * aName)
+    {
+        assert(NULL != aServer);
+        assert(NULL != aName  );
+
+        char lURL[1024];
+
+        sprintf_s(lURL, "http://localhost:%u/%s.html", aServer->GetPort(), aName);
+
+        Open(lURL);
+    }
+
     void Browser::ParseArguments(int aCount, const char ** aVector)
     {
         assert(   1 <= aCount );
         assert(NULL != aVector);
+
+        for (int i = 1; i < aCount; i++)
+        {
+            if (0 == strcmp("Browser.Prefered=Chrome" , aVector[i])) { mPrefered = PREFERED_CHROME ; continue; }
+            if (0 == strcmp("Browser.Prefered=Default", aVector[i])) { mPrefered = PREFERED_DEFAULT; continue; }
+            if (0 == strcmp("Browser.Prefered=None"   , aVector[i])) { mPrefered = PREFERED_NONE   ; continue; }
+        }
     }
 
     void Browser::Start(FolderId aFolder, const char * aName)
@@ -91,18 +149,123 @@ namespace HI
     // Private
     /////////////////////////////////////////////////////////////////////////
 
+    // NOT TESTED  Browser.Open
+    //             Open the default OS browser.
+    //             Open no browser.
+    //             Open the second choice when opening the first choice
+    //             fails.
+
+    void Browser::Open(const char * aFileName)
+    {
+        assert(STATE_INIT == mState);
+
+        assert(NULL != aFileName);
+
+        bool lRet;
+
+        switch (mPrefered)
+        {
+        case PREFERED_CHROME : lRet = Open_Chrome (aFileName); break;
+        case PREFERED_DEFAULT: lRet = Open_Default(aFileName); break;
+
+        case PREFERED_NONE: return;
+
+        default: assert(false);
+        }
+
+        if (!lRet)
+        {
+            switch (mPrefered)
+            {
+            case PREFERED_CHROME : lRet = Open_Default(aFileName); break;
+            case PREFERED_DEFAULT: lRet = Open_Chrome (aFileName); break;
+
+            default: assert(false);
+            }
+
+            if (!lRet)
+            {
+                throw std::exception("ERROR  188  Cannot open browser");
+            }
+        }
+
+        mState = STATE_OPEN;
+    }
+
+    bool Browser::Open_Chrome(const char * aFileName)
+    {
+        assert(NULL != aFileName);
+
+        char lCommand[1024 + 128];
+
+        int lRet = sprintf_s(lCommand, "\"%s\" --disable-background-mode --disable-plugins --start-maximized \"%s\"", OS_CHROME_EXE, aFileName);
+        assert(0                < lRet);
+        assert(sizeof(lCommand) > lRet);
+
+        return Open_Process(OS_CHROME_EXE, lCommand);
+    }
+
+    bool Browser::Open_Process(const char * aExec, const char * aCommand)
+    {
+        assert(NULL != aExec   );
+        assert(NULL != aCommand);
+
+        mProcess = OS_Process_Create(aExec, aCommand);
+
+        return (NULL != mProcess);
+    }
+
+    // NOT TESTED  Browser.Open
+    //             Open the default OS browser.
+
+    bool Browser::Open_Default(const char * aFileName)
+    {
+        assert(NULL != aFileName);
+
+        mProcess = OS_Open_Default(aFileName);
+
+        return (NULL != mProcess);
+    }
+
+    // TESTED  Browser.Start
+    //         Start Chrome. (GenDoc.exe)
+
+    // NOT TESTED  Browser.Start
+    //             Start the default OS browser
+
     void Browser::Start(const char * aFileName)
     {
         assert(NULL != aFileName);
 
-        if (!Start_Chrome(aFileName))
+        bool lRet;
+
+        switch (mPrefered)
+        {
+        case PREFERED_CHROME : lRet =    Start_Chrome (aFileName); break;
+        case PREFERED_DEFAULT: lRet = OS_Start_Default(aFileName); break;
+
+        case PREFERED_NONE: return;
+
+        default: assert(false);
+        }
+
+        if (!lRet)
         {
             // NOT TESTED Browser.Chrome.Error
-            //            Start the Windows default browser when starting
-            //            Chrome fail.
-            if (!Start_Windows(aFileName))
+            //            Start the second choice when starting the first
+            //            choice fails.
+
+            switch (mPrefered)
             {
-                throw std::exception("ERROR  Cannot start browser");
+            case PREFERED_CHROME : lRet = OS_Start_Default(aFileName); break;
+            case PREFERED_DEFAULT: lRet =    Start_Chrome (aFileName); break;
+
+            default: assert(false);
+            }
+
+            if (!lRet)
+            {
+                throw std::exception("ERROR  268  Cannot start browser");
             }
         }
     }
@@ -112,56 +275,15 @@ namespace HI
 // Static functions
 /////////////////////////////////////////////////////////////////////////////
 
-// aFileName [---;R--]
 bool Start_Chrome(const char * aFileName)
 {
     assert(NULL != aFileName);
 
     char lCommand[1024 + 128];
 
-    int lRet = sprintf_s(lCommand, "\"" CHROME_EXE "\" --disable-background-mode --disable-plugins --start-maximized \"%s\"", aFileName);
-    assert(0 < lRet);
+    int lRet = sprintf_s(lCommand, "\"%s\" --disable-background-mode --disable-plugins --start-maximized \"%s\"", OS_CHROME_EXE, aFileName);
+    assert(0                < lRet);
     assert(sizeof(lCommand) > lRet);
 
-    return Start_Process(CHROME_EXE, lCommand);
-}
-
-// aExec    [---;R--]
-// aCommand [---;R--]
-bool Start_Process(const char * aExec, const char * aCommand)
-{
-    assert(NULL != aExec   );
-    assert(NULL != aCommand);
-
-    PROCESS_INFORMATION lPI;
-    STARTUPINFO         lSI;
-
-    memset(&lPI, 0, sizeof(lPI));
-    memset(&lSI, 0, sizeof(lSI));
-
-    lSI.cb = sizeof(lSI);
-
-    BOOL lRetB = CreateProcess(CHROME_EXE, const_cast<char *>(aCommand), NULL, NULL, FALSE, 0, NULL, NULL, &lSI, &lPI);
-    if (lRetB)
-    {
-        lRetB = CloseHandle(lPI.hProcess);
-        assert(lRetB);
-
-        lRetB = CloseHandle(lPI.hThread);
-        assert(lRetB);
-    }
-
-    return lRetB;
-}
-
-// NOT TESTED Browser.Windows
-//            Start the windows default browser
-
-// aFileName [---;R--]
-bool Start_Windows(const char * aFileName)
-{
-    assert(NULL != aFileName);
-
-    HINSTANCE lRet = ShellExecute(NULL, "open", aFileName, NULL, NULL, SW_SHOWDEFAULT);
-    return (32 < reinterpret_cast<int64_t>(lRet));
+    return OS_Start_Process(OS_CHROME_EXE, lCommand);
 }

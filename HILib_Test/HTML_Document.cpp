@@ -22,7 +22,10 @@ KMS_TEST_BEGIN(HTML_Document_Base)
 
     lHD0.Create(NULL, "Test");
 
-    lHD0.Tag(HI::TAG_HR);
+    lHD0.Tag(HI::HTML_Document::TAG_HR);
+
+    lHD0.Attribute_Set(HI::HTML_Document::ATTR_STYLE, "color: #000000");
+    lHD0.Tag(HI::HTML_Document::TAG_P, "Paragraph");
 
     try
     {
@@ -55,5 +58,11 @@ KMS_TEST_BEGIN(HTML_Document_Base)
     catch (std::exception)
     {
     }
+
+    HI::HTML_Document lHD3;
+
+    lHD3.DeleteOnDestruction();
+
+    lHD3.Create(HI::FOLDER_TEMP, "Test3", "Test3");
 
 KMS_TEST_END

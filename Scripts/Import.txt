@@ -13,11 +13,12 @@
 .	Includes
 
 Includes/HI
+	Browser.h
     CSS_Colors.h
     CSS_Document.h
-    CSS_Properties.h
     Document.h
-    HTML_Attributes.h
     HTML_Document.h
-    HTML_Tags.h
+	Server.h
+	SVG_Document.h
     Types.h
+	XML_Document.h

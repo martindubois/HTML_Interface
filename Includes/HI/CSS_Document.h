@@ -10,7 +10,6 @@
 /////////////////////////////////////////////////////////////////////////////
 
 // ===== Includes ===========================================================
-#include <HI/CSS_Properties.h>
 #include <HI/Document.h>
 
 namespace HI
@@ -126,6 +125,17 @@ namespace HI
         }
         FillModeName;
 
+        class Info
+        {
+
+        public:
+
+            const char * mIdName;
+            unsigned int mIndex ;
+            const char * mName  ;
+
+        };
+
         typedef enum
         {
             PLAY_STATE_INHERITED,
@@ -135,6 +145,15 @@ namespace HI
             PLAY_STATE_RUNNING,
         }
         PlayStateName;
+
+        typedef enum
+        {
+            PROP_BORDER_STYLE,
+            PROP_PADDING     ,
+
+            PROP_QTY
+        }
+        PropertyIndex;
 
         typedef enum
         {
@@ -170,57 +189,93 @@ namespace HI
         }
         VisibilityName;
 
+        static void Property_GetFirst(Info * aOut);
+
+        static bool Property_GetNext(Info * aInOut);
+
         CSS_Document();
 
-        void Property_Set(CSS_Property aProp, AlignName aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, AlignName aValue);
 
-        void Property_Set(CSS_Property aProp, BackgrounAttachmentName aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, BackgrounAttachmentName aValue);
 
-        void Property_Set(CSS_Property aProp, BackgroundBlendModeName aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, BackgroundBlendModeName aValue);
 
-        void Property_Set(CSS_Property aProp, BackgroundClipName aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, BackgroundClipName aValue);
 
-        void Property_Set(CSS_Property aProp, BaseName aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, BaseName aValue);
 
-        void Property_Set(CSS_Property aProp, BorderStyleName aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, BorderStyleName aValue);
 
-        void Property_Set(CSS_Property aProp, DirectionName aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, DirectionName aValue);
 
-        void Property_Set(CSS_Property aProp, FillModeName aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, FillModeName aValue);
 
-        void Property_Set(CSS_Property aProp, PlayStateName aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, PlayStateName aValue);
 
-        void Property_Set(CSS_Property aProp, TimmingFunctionName aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, TimmingFunctionName aValue);
 
-        void Property_Set(CSS_Property aProp, VisibilityName aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, VisibilityName aValue);
 
-        void Property_Set(CSS_Property aProp, unsigned int aValue, UnitName aUnit);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, unsigned int aValue, UnitName aUnit);
 
-        void Property_Set(CSS_Property aProp, const char * aValue);
+        /// \exception std::exception
+        void Property_Set(PropertyIndex aProp, const char * aValue);
 
+        /// \exception std::exception
         void Rule_Begin_Class(const char * aClass);
 
+        /// \exception std::exception
         void Rule_Begin_Element(const char * aElement);
 
+        /// \exception std::exception
         void Rule_Begin_Elements(const char * aFirst, ...);
 
+        /// \exception std::exception
         void Rule_Begin_Elements(unsigned int aCount, const char * * aVector);
 
+        /// \exception std::exception
         void Rule_Begin_Element_Class(const char * aElement, const char * aClass);
 
+        /// \exception std::exception
         void Rule_Begin_Id(const char * aId);
 
+        /// \exception std::exception
         void Rule_Begin_Universal();
 
+        /// \exception std::exception
         void Rule_End();
 
         // ===== Document ===================================================
 
         virtual ~CSS_Document();
 
-        virtual void Comment      (const char * aComment);
         virtual void Comment_Begin();
         virtual void Comment_End  ();
+
+        virtual void Create(Document   * aDocument);
+        virtual void Create(FolderId     aFolder, const char * aName);
+        virtual void Create(const char * aFolder, const char * aName);
+
+        virtual void NewLine();
+
+    private:
+
+        void Create();
+
+        bool mInRule;
 
     };
 

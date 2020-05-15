@@ -10,62 +10,74 @@ echo Executing  Test.cmd  ...
 
 rem ===== Initialisation ====================================================
 
+set GEN_DOC_EXE=GenDoc.exe
+
+set HI_LIB_TEST_EXE=HILib_Test.exe
+
 rem ===== Verification ======================================================
 
 rem ===== Execution =========================================================
 
-Debug\HILib_Test.exe
+set CONFIG=Debug
+
+%CONFIG%\%HI_LIB_TEST_EXE%
 if ERRORLEVEL 1 (
-	echo ERROR  Debug\HILib_Test.exe  failed - %ERRORLEVEL%
+	echo ERROR  %CONFIG%\%HI_LIB_TEST_EXE%  failed - %ERRORLEVEL%
 	pause
 	exit /B 5
 )
 
-Debug\GenDoc.exe
+%CONFIG%\%GEN_DOC_EXE%
 if ERRORLEVEL 1 (
-	echo ERROR  Debug\GenDoc.exe  failed - %ERRORLEVEL%
+	echo ERROR  %CONFIG%\%GEN_DOC_EXE%  failed - %ERRORLEVEL%
 	pause
 	exit /B 10
 )
 
-x64\Debug\HILib_Test.exe
+set CONFIG=x64\Debug
+
+%CONFIG%\%HI_LIB_TEST_EXE%
 if ERRORLEVEL 1 (
-	echo ERROR  x64\Debug\HILib_Test.exe  failed - %ERRORLEVEL%
+	echo ERROR  %CONFIG%\%HI_LIB_TEST_EXE%  failed - %ERRORLEVEL%
 	pause
 	exit /B 15
 )
 
-x64\Debug\GenDoc.exe
+%CONFIG%\%GEN_DOC_EXE%
 if ERRORLEVEL 1 (
-	echo ERROR  x64\Debug\GenDoc.exe  failed - %ERRORLEVEL%
+	echo ERROR  %CONFIG%\%GEN_DOC_EXE%  failed - %ERRORLEVEL%
 	pause
 	exit /B 20
 )
 
-Release\HILib_Test.exe
+set CONFIG=Release
+
+%CONFIG%\%HI_LIB_TEST_EXE%
 if ERRORLEVEL 1 (
-	echo ERROR  Release\HILib_Test.exe  failed - %ERRORLEVEL%
+	echo ERROR  %CONFIG%\%HI_LIB_TEST_EXE%  failed - %ERRORLEVEL%
 	pause
 	exit /B 25
 )
 
-Release\GenDoc.exe
+%CONFIG%\%GEN_DOC_EXE%
 if ERRORLEVEL 1 (
-	echo ERROR  Release\GenDoc.exe  failed - %ERRORLEVEL%
+	echo ERROR  %CONFIG%\%GEN_DOC_EXE%  failed - %ERRORLEVEL%
 	pause
 	exit /B 30
 )
 
-x64\Release\HILib_Test.exe
+set CONFIG=x64\Release
+
+%CONFIG%\%HI_LIB_TEST_EXE%
 if ERRORLEVEL 1 (
-	echo ERROR  x64\Release\HILib_Test.exe  failed - %ERRORLEVEL%
+	echo ERROR  %CONFIG%\%HI_LIB_TEST_EXE%  failed - %ERRORLEVEL%
 	pause
 	exit /B 35
 )
 
-x64\Release\GenDoc.exe
+%CONFIG%\%GEN_DOC_EXE%
 if ERRORLEVEL 1 (
-	echo ERROR  x64\Release\GenDoc.exe  failed - %ERRORLEVEL%
+	echo ERROR  %CONFIG%\%GEN_DOC_EXE%  failed - %ERRORLEVEL%
 	pause
 	exit /B 40
 )
