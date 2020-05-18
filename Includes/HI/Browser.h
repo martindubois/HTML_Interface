@@ -59,6 +59,8 @@ namespace HI
 
         void ParseArguments(int aCount, const char ** aVector);
 
+        bool ParseAssignation(const char * aAssignation);
+
         /// \exception std::exception
         void Start(FolderId aFolder, const char * aName);
 

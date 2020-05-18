@@ -14,6 +14,11 @@
 #include <HI/Browser.h>
 #include <HI/Server.h>
 
+// Constants
+/////////////////////////////////////////////////////////////////////////////
+
+static const char * ARG_0[] = { "HILib_Test.exe", "Server.Debug=true", "Useless" };
+
 // Needed class
 /////////////////////////////////////////////////////////////////////////////
 
@@ -54,6 +59,8 @@ KMS_TEST_BEGIN(Server_Base)
     HI::Server  lS0;
 
     lS0.SetDebug(true);
+
+    lS0.ParseArguments(3, ARG_0);
 
     lS0.AddProcessor(0, "Tests/Stop", &lP0);
 

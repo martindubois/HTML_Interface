@@ -90,6 +90,30 @@ namespace HI
         Trace("Server::SetDebug( true )");
     }
 
+    // aVector [---;R--] [---;R--]
+    void Server::ParseArguments(int aCount, const char ** aVector)
+    {
+        assert(   1 <= aCount );
+        assert(NULL != aVector);
+
+        for (int i = 1; i < aCount; i++)
+        {
+            assert(NULL != aVector[i]);
+
+            ParseAssignation(aVector[i]);
+        }
+    }
+
+    bool Server::ParseAssignation(const char * aAssignation)
+    {
+        assert(NULL != aAssignation);
+
+        if (0 == strcmp("Server.Debug=false", aAssignation)) { mFlags.mDebug = false; return false; }
+        if (0 == strcmp("Server.Debug=true" , aAssignation)) { mFlags.mDebug = true ; return true ; }
+
+        return false;
+    }
+
     void Server::Run()
     {
         assert(INVALID_SOCKET != mSocket);
@@ -294,11 +318,11 @@ namespace HI
 
         char lRequest[MAX_REQUEST_SIZE_byte];
 
-        if (1 == sscanf_s(aRequest, "GET /%s", lRequest, sizeof(lRequest)))
+        if (1 == sscanf_s(aRequest, "GET /%s", lRequest, static_cast<unsigned int>(sizeof(lRequest))))
         {
             ProcessGet(lRequest);
         }
-        else if (1 == sscanf_s(aRequest, "POST /%s", lRequest, sizeof(lRequest)))
+        else if (1 == sscanf_s(aRequest, "POST /%s", lRequest, static_cast<unsigned int>(sizeof(lRequest))))
         {
             ProcessPost(lRequest);
         }

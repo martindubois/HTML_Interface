@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/Browser.cpp
 
-// CODE REVIEW 2020-05-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-18 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-15 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-18 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -117,10 +117,21 @@ namespace HI
 
         for (int i = 1; i < aCount; i++)
         {
-            if (0 == strcmp("Browser.Prefered=Chrome" , aVector[i])) { mPrefered = PREFERED_CHROME ; continue; }
-            if (0 == strcmp("Browser.Prefered=Default", aVector[i])) { mPrefered = PREFERED_DEFAULT; continue; }
-            if (0 == strcmp("Browser.Prefered=None"   , aVector[i])) { mPrefered = PREFERED_NONE   ; continue; }
+            assert(NULL != aVector[i]);
+
+            ParseAssignation(aVector[i]);
         }
+    }
+
+    bool Browser::ParseAssignation(const char * aAssignation)
+    {
+        assert(NULL != aAssignation);
+
+        if (0 == strcmp("Browser.Prefered=Chrome" , aAssignation)) { mPrefered = PREFERED_CHROME ; return true; }
+        if (0 == strcmp("Browser.Prefered=Default", aAssignation)) { mPrefered = PREFERED_DEFAULT; return true; }
+        if (0 == strcmp("Browser.Prefered=None"   , aAssignation)) { mPrefered = PREFERED_NONE   ; return true; }
+
+        return false;
     }
 
     void Browser::Start(FolderId aFolder, const char * aName)
