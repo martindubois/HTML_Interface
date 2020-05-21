@@ -482,7 +482,7 @@ namespace HI
             lTimeStr,
             aDataSize_byte);
         
-        SendData(lHeader, strlen(lHeader));
+        SendData(lHeader, static_cast<unsigned int>(strlen(lHeader)));
     }
 
     void Server::Trace(const char * aMessage)

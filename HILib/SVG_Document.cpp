@@ -153,8 +153,8 @@ namespace HI
 
     SVG_Document::SVG_Document() : XML_Document("svg", ATTR_QTY, ATTRIBUTES, TAG_QTY, TAGS)
     {
-        AddTagAttribute(TAG_SVG, "xmlns = \"http://www.w3.org/2000/svg\"");
-        AddTagAttribute(TAG_XML, "version=\"1.0\" ?"                     );
+        AddTagAttribute(TAG_SVG, "xmlns=\"http://www.w3.org/2000/svg\"");
+        AddTagAttribute(TAG_XML, "version=\"1.0\" ?"                   );
     }
 
     // ===== Document =======================================================

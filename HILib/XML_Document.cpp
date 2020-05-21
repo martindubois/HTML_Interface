@@ -161,6 +161,12 @@ namespace HI
     {
         assert(mTagQty > aTag);
 
+        AttributeMap::const_iterator lAttr = mTagAttribute.find(aTag);
+        if (mTagAttribute.end() != lAttr)
+        {
+            mAttributes.push_front(lAttr->second);
+        }
+
         XML_Document::Tag_Begin(mTagList[aTag].mName);
     }
 
@@ -181,7 +187,7 @@ namespace HI
         {
             Document::NewLine();
 
-            Indent(mTags.size() - 1);
+            Indent(static_cast<unsigned int>(mTags.size()) - 1);
         }
 
         int lRet = fprintf(GetFile(), "</%s>", mTags.back().c_str());
@@ -270,7 +276,7 @@ namespace HI
     {
         Document::NewLine();
 
-        Indent(mTags.size() + (InComment() ? 1 : 0));
+        Indent(static_cast<unsigned int>(mTags.size()) + (InComment() ? 1 : 0));
     }
 
     // Protected

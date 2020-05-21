@@ -4,10 +4,10 @@
 	Product    HTML_Interface
 	File       README.md
 
-===== Development computer preparation ======================================
+    ===== Development computer preparation ==================================
 
 See _DocDev!_DocDev/Procedures/Windows/DevComputerPrep.txt
 
-===== Compilation ===========================================================
+    ===== Compilation =======================================================
 
 See _DocDev/Procedures/Build.txt
