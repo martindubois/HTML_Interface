@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/CSS_Document.cpp
 
-// CODE REVIEW 2020-05-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-15 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-21 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -137,7 +137,7 @@ namespace HI
 
         char lStr[64];
 
-        int lRet = sprintf_s(lStr, "%u %s", aValue, lUnit);
+        int lRet = sprintf_s(lStr, "%u%s", aValue, lUnit);
         Utl_VerifyReturn(lRet, sizeof(lStr));
 
         Property_Set(aProp, lStr);
