@@ -4,7 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/SVG_Document.cpp
 
-// CODE REVIEW 2020-05-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-21 KMS - Martin Dubois, P.Eng.
+
+// TEST COVERAGE 2020-05-21 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -82,11 +84,11 @@ static const HI::XML_Document::Data TAGS[HI::SVG_Document::TAG_QTY] =
     { "TAG_POLYLINE", "polyline" },
     { "TAG_RECT"    , "rect"     },
     { "TAG_STYLE"   , "style"    },
-    { "TAG_SVG"     , "svg xmlns=\"http://www.w3.org/2000/svg\"" },
+    { "TAG_SVG"     , "svg"      },
     { "TAG_TEXT"    , "text"     },
     { "TAG_TITLE"   , "title"    },
     { "TAG_TSPAN"   , "tspan"    },
-    { "TAG_XML"     , "?xml version=\"1.0\" ?" },
+    { "TAG_XML"     , "?xml"     },
 };
 
 namespace HI
@@ -151,6 +153,8 @@ namespace HI
 
     SVG_Document::SVG_Document() : XML_Document("svg", ATTR_QTY, ATTRIBUTES, TAG_QTY, TAGS)
     {
+        AddTagAttribute(TAG_SVG, "xmlns = \"http://www.w3.org/2000/svg\"");
+        AddTagAttribute(TAG_XML, "version=\"1.0\" ?"                     );
     }
 
     // ===== Document =======================================================
@@ -158,6 +162,9 @@ namespace HI
     SVG_Document::~SVG_Document()
     {
     }
+
+    // NOT TESTED SVG_Document.Create
+    //            Create a SVG document into a HTML document
 
     void SVG_Document::Create(HI::Document * aDocument)
     {
@@ -177,6 +184,9 @@ namespace HI
 
         Create();
     }
+
+    // NOT TESTED SVG_Document.Create
+    //            Create a SVG document into a named folder
 
     void SVG_Document::Create(const char * aFolder, const char * aName)
     {

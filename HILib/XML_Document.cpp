@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/XML_Document.cpp
 
-// CODE REVIEW 2020-05-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-15 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-21 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -58,6 +58,13 @@ namespace HI
         XML_Document::Attribute_Set(mAttrList[aAttr].mName, aValue);
     }
 
+    void XML_Document::Attribute_Set(unsigned int aAttr, unsigned int aValue)
+    {
+        assert(mAttrQty > aAttr);
+
+        XML_Document::Attribute_Set(mAttrList[aAttr].mName, aValue);
+    }
+
     void XML_Document::Attribute_Set(const char * aAttr, const char * aValue)
     {
         assert(NULL != aAttr );
@@ -71,9 +78,27 @@ namespace HI
         mAttributes.push_back(lStr);
     }
 
+    void XML_Document::Attribute_Set(const char * aAttr, unsigned int aValue)
+    {
+        assert(NULL != aAttr);
+
+        char lValue[16];
+
+        int lRet = sprintf_s(lValue, "%u", aValue);
+        Utl_VerifyReturn(lRet, sizeof(lValue));
+
+        XML_Document::Attribute_Set(aAttr, lValue);
+    }
+
     void XML_Document::Tag(unsigned int aTag)
     {
         assert(mTagQty > aTag);
+
+        AttributeMap::const_iterator lAttr = mTagAttribute.find(aTag);
+        if (mTagAttribute.end() != lAttr)
+        {
+            mAttributes.push_front(lAttr->second);
+        }
 
         XML_Document::Tag(mTagList[aTag].mName);
     }
@@ -97,10 +122,19 @@ namespace HI
         Utl_VerifyReturn(lRet);
     }
 
+    // NOT TESTED XML_Document.Tag
+    //            Tag with mandatory attribute and text in it.
+
     void XML_Document::Tag(unsigned int aTag, const char * aText)
     {
         assert(mTagQty >  aTag );
         assert(NULL    != aText);
+
+        AttributeMap::const_iterator lAttr = mTagAttribute.find(aTag);
+        if (mTagAttribute.end() != lAttr)
+        {
+            mAttributes.push_front(lAttr->second);
+        }
 
         XML_Document::Tag(mTagList[aTag].mName, aText);
     }
@@ -163,7 +197,18 @@ namespace HI
     {
         assert(mTagQty > aTag);
 
-        Tag_NoAttribute(mTagList[aTag].mName);
+        const char * lName = mTagList[aTag].mName;
+        char         lNameAndAttr[1024];
+
+        AttributeMap::const_iterator lAttr = mTagAttribute.find(aTag);
+        if (mTagAttribute.end() != lAttr)
+        {
+            sprintf_s(lNameAndAttr, "%s %s", lName, lAttr->second);
+
+            lName = lNameAndAttr;
+        }
+
+        Tag_NoAttribute(lName);
     }
 
     void XML_Document::Tag_NoAttribute(const char * aTag)
@@ -244,6 +289,14 @@ namespace HI
         assert(NULL != aAttrList );
         assert(   0 <  aTagQty   );
         assert(NULL != aTagList  );
+    }
+
+    // aAttr [-K-;R--]
+    void XML_Document::AddTagAttribute(unsigned int aTag, const char * aAttr)
+    {
+        assert(NULL != aAttr);
+
+        mTagAttribute.insert(AttributeMap::value_type(aTag, aAttr));
     }
 
 }

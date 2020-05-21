@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/HTML_Document.cpp
 
-// CODE REVIEW 2020-05-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-15 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-21 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -35,7 +35,7 @@ static const HI::XML_Document::Data TAGS[HI::HTML_Document::TAG_QTY] =
     { "TAG_BODY"   , "body"          },
     { "TAG_CODE"   , "code"          },
     { "TAG_DETAILS", "details"       },
-    { "TAG_DOCTYPE", "!DOCTYPE html" },
+    { "TAG_DOCTYPE", "!DOCTYPE"      },
     { "TAG_HEAD"   , "head"          },
     { "TAG_H1"     , "h1"            },
     { "TAG_H2"     , "h2"            },
@@ -114,6 +114,7 @@ namespace HI
 
     HTML_Document::HTML_Document() : XML_Document("html", ATTR_QTY, ATTRIBUTES, TAG_QTY, TAGS)
     {
+        AddTagAttribute(TAG_DOCTYPE, "html");
     }
 
     void HTML_Document::Create(FolderId aFolder, const char * aName, const char * aTitle)
