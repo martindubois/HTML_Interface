@@ -125,6 +125,7 @@ namespace HI
         }
         FillModeName;
 
+        /// \brief Info
         class Info
         {
 
