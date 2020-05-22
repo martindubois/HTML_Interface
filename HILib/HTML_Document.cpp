@@ -114,7 +114,7 @@ namespace HI
 
     HTML_Document::HTML_Document() : XML_Document("html", ATTR_QTY, ATTRIBUTES, TAG_QTY, TAGS)
     {
-        AddTagAttribute(TAG_DOCTYPE, "html");
+        AddTagAttribute(TAG_DOCTYPE, " html");
     }
 
     void HTML_Document::Create(FolderId aFolder, const char * aName, const char * aTitle)

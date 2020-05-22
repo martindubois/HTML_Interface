@@ -136,7 +136,7 @@ namespace HI
         XML_Document(const char * aExtension, unsigned int aAttrQty, const Data * aAttrList, unsigned int aTagQty, const Data * aTagList);
 
         /// \param aTag  The tag index
-        /// \param aAttr The attribute string that must always be used with the tag
+        /// \param aAttr The attribute string that must always be used with the tag. This one must start with a space.
         void AddTagAttribute(unsigned int aTag, const char * aAttr);
 
     private:
