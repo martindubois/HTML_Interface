@@ -10,6 +10,8 @@ echo Executing  Test.cmd  ...
 
 rem ===== Initialisation ====================================================
 
+set GEN_DOC_ARG="Browser.Prefered=None"
+
 set GEN_DOC_EXE=GenDoc.exe
 
 set HI_LIB_TEST_EXE=HILib_Test.exe
@@ -27,7 +29,7 @@ if ERRORLEVEL 1 (
 	exit /B 5
 )
 
-%CONFIG%\%GEN_DOC_EXE%
+%CONFIG%\%GEN_DOC_EXE% %GEN_DOC_ARG%
 if ERRORLEVEL 1 (
 	echo ERROR  %CONFIG%\%GEN_DOC_EXE%  failed - %ERRORLEVEL%
 	pause
@@ -43,7 +45,7 @@ if ERRORLEVEL 1 (
 	exit /B 15
 )
 
-%CONFIG%\%GEN_DOC_EXE%
+%CONFIG%\%GEN_DOC_EXE% %GEN_DOC_ARG%
 if ERRORLEVEL 1 (
 	echo ERROR  %CONFIG%\%GEN_DOC_EXE%  failed - %ERRORLEVEL%
 	pause
@@ -59,7 +61,7 @@ if ERRORLEVEL 1 (
 	exit /B 25
 )
 
-%CONFIG%\%GEN_DOC_EXE%
+%CONFIG%\%GEN_DOC_EXE% %GEN_DOC_ARG%
 if ERRORLEVEL 1 (
 	echo ERROR  %CONFIG%\%GEN_DOC_EXE%  failed - %ERRORLEVEL%
 	pause
@@ -75,7 +77,7 @@ if ERRORLEVEL 1 (
 	exit /B 35
 )
 
-%CONFIG%\%GEN_DOC_EXE%
+%CONFIG%\%GEN_DOC_EXE% %GEN_DOC_ARG%
 if ERRORLEVEL 1 (
 	echo ERROR  %CONFIG%\%GEN_DOC_EXE%  failed - %ERRORLEVEL%
 	pause
