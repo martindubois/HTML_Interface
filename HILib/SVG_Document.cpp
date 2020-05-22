@@ -172,7 +172,7 @@ namespace HI
 
         Document::Create(aDocument);
 
-        Tag_Begin(TAG_SVG);
+        Create();
     }
 
     void SVG_Document::Create(HI::FolderId aFolder, const char * aName)
@@ -195,6 +195,8 @@ namespace HI
 
         Document::Create(aFolder, aName);
 
+        Tag(TAG_XML);
+
         Create();
     }
 
@@ -203,7 +205,7 @@ namespace HI
 
     void SVG_Document::Create()
     {
-        Tag(TAG_XML);
+        NewLine();
 
         Tag_Begin(TAG_SVG);
     }

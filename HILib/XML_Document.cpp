@@ -113,7 +113,7 @@ namespace HI
 
         PopAttributes(aFlags);
 
-        Write((0 == (FLAG_TAG_NO_CLOSE & aFlags)) ? ">" : " />");
+        Write((0 == (FLAG_TAG_NO_CLOSE & aFlags)) ? " />" : ">");
     }
 
     // NOT TESTED XML_Document.Tag
