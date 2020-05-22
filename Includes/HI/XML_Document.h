@@ -35,6 +35,15 @@ namespace HI
             const char * mIdName;
             const char * mName  ;
 
+            unsigned int mFlags;
+
+        };
+
+        enum
+        {
+            FLAG_TAG_MANDATORY_ATTR = 0x00000001,
+            FLAG_TAG_NO_CLOSE       = 0x00000002,
+            FLAG_TAG_NO_OPT_ATTR    = 0x00000004,
         };
 
         /// \brief Info
@@ -81,9 +90,10 @@ namespace HI
         /// \exception std::exception
         void Tag(unsigned int aTag);
 
-        /// \param aTag The tag name
+        /// \param aTag   The tag name
+        /// \param aFlags See FLAG_TAG_...
         /// \exception std::exception
-        void Tag(const char * aTag);
+        void Tag(const char * aTag, unsigned int aFlags = 0);
 
         /// \param aTag  The tag index
         /// \param aText The text to put into the tag
@@ -99,9 +109,10 @@ namespace HI
         /// \exception std::exception
         void Tag_Begin(unsigned int aTag);
 
-        /// \param aTag  The tag name
+        /// \param aTag   The tag name
+        /// \param aFlags See FLAG_TAG_...
         /// \exception std::exception
-        void Tag_Begin(const char * aTag);
+        void Tag_Begin(const char * aTag, unsigned int aFlags = 0);
 
         /// \param aNewLine Set to true to move to a new line before closing the tag.
         /// \exception std::exception
@@ -140,6 +151,14 @@ namespace HI
         void AddTagAttribute(unsigned int aTag, const char * aAttr);
 
     private:
+
+        void PopAttribute ();
+        void PopAttributes();
+        void PopAttributes(unsigned int aFlags);
+
+        void PushMandatoryAttributes(unsigned int aTag);
+
+        void Write(const char * aText);
 
         typedef std::map<unsigned int, const char *> AttributeMap;
         typedef std::list<std::string> StringList;

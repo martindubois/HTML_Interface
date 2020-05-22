@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/HTML_Document.cpp
 
-// CODE REVIEW 2020-05-21 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-22 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-21 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-22 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -35,11 +35,11 @@ static const HI::XML_Document::Data TAGS[HI::HTML_Document::TAG_QTY] =
     { "TAG_BODY"   , "body"          },
     { "TAG_CODE"   , "code"          },
     { "TAG_DETAILS", "details"       },
-    { "TAG_DOCTYPE", "!DOCTYPE"      },
+    { "TAG_DOCTYPE", "!DOCTYPE", HI::XML_Document::FLAG_TAG_MANDATORY_ATTR | HI::XML_Document::FLAG_TAG_NO_CLOSE },
     { "TAG_HEAD"   , "head"          },
     { "TAG_H1"     , "h1"            },
     { "TAG_H2"     , "h2"            },
-    { "TAG_HR"     , "hr"            },
+    { "TAG_HR"     , "hr"      , HI::XML_Document::FLAG_TAG_NO_CLOSE },
     { "TAG_HTML"   , "html"          },
     { "TAG_I"      , "i"             },
     { "TAG_P"      , "p"             },

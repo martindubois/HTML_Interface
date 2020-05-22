@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/XML_Document.cpp
 
-// CODE REVIEW 2020-05-21 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-22 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-21 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-22 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -94,32 +94,26 @@ namespace HI
     {
         assert(mTagQty > aTag);
 
-        AttributeMap::const_iterator lAttr = mTagAttribute.find(aTag);
-        if (mTagAttribute.end() != lAttr)
+        const Data & lTI = mTagList[aTag];
+
+        if (0 != (FLAG_TAG_MANDATORY_ATTR & lTI.mFlags))
         {
-            mAttributes.push_front(lAttr->second);
+            PushMandatoryAttributes(aTag);
         }
 
-        XML_Document::Tag(mTagList[aTag].mName);
+        XML_Document::Tag(lTI.mName, lTI.mFlags);
     }
 
-    void XML_Document::Tag(const char * aTag)
+    void XML_Document::Tag(const char * aTag, unsigned int aFlags)
     {
         assert(NULL != aTag);
 
         int lRet = fprintf(GetFile(), "<%s", aTag);
         Utl_VerifyReturn(lRet);
 
-        while (!mAttributes.empty())
-        {
-            lRet = fprintf(GetFile(), "%s", mAttributes.front().c_str());
-            mAttributes.pop_front();
+        PopAttributes(aFlags);
 
-            Utl_VerifyReturn(lRet);
-        }
-
-        lRet = fprintf(GetFile(), ">");
-        Utl_VerifyReturn(lRet);
+        Write((0 == (FLAG_TAG_NO_CLOSE & aFlags)) ? ">" : " />");
     }
 
     // NOT TESTED XML_Document.Tag
@@ -130,13 +124,14 @@ namespace HI
         assert(mTagQty >  aTag );
         assert(NULL    != aText);
 
-        AttributeMap::const_iterator lAttr = mTagAttribute.find(aTag);
-        if (mTagAttribute.end() != lAttr)
+        const Data & lTI = mTagList[aTag];
+
+        if (0 != (FLAG_TAG_MANDATORY_ATTR & lTI.mFlags))
         {
-            mAttributes.push_front(lAttr->second);
+            PushMandatoryAttributes(aTag);
         }
 
-        XML_Document::Tag(mTagList[aTag].mName, aText);
+        XML_Document::Tag(lTI.mName, aText);
     }
 
     void XML_Document::Tag(const char * aTag, const char * aText)
@@ -161,20 +156,26 @@ namespace HI
     {
         assert(mTagQty > aTag);
 
-        AttributeMap::const_iterator lAttr = mTagAttribute.find(aTag);
-        if (mTagAttribute.end() != lAttr)
+        const Data & lTI = mTagList[aTag];
+
+        if (0 != (FLAG_TAG_MANDATORY_ATTR & lTI.mFlags))
         {
-            mAttributes.push_front(lAttr->second);
+            PushMandatoryAttributes(aTag);
         }
 
-        XML_Document::Tag_Begin(mTagList[aTag].mName);
+        XML_Document::Tag_Begin(lTI.mName);
     }
 
-    void XML_Document::Tag_Begin(const char * aTag)
+    void XML_Document::Tag_Begin(const char * aTag, unsigned int aFlags)
     {
         assert(NULL != aTag);
 
-        Tag(aTag);
+        int lRet = fprintf(GetFile(), "<%s", aTag);
+        Utl_VerifyReturn(lRet);
+
+        PopAttributes(aFlags);
+
+        Write(">");
 
         mTags.push_back(aTag);
     }
@@ -194,38 +195,6 @@ namespace HI
         Utl_VerifyReturn(lRet);
 
         mTags.pop_back();
-    }
-
-    // NOT TESTED  XML_Document.Attribute
-    //             Output tag without consuming queued attributes.
-
-    void XML_Document::Tag_NoAttribute(unsigned int aTag)
-    {
-        assert(mTagQty > aTag);
-
-        const char * lName = mTagList[aTag].mName;
-        char         lNameAndAttr[1024];
-
-        AttributeMap::const_iterator lAttr = mTagAttribute.find(aTag);
-        if (mTagAttribute.end() != lAttr)
-        {
-            sprintf_s(lNameAndAttr, "%s %s", lName, lAttr->second);
-
-            lName = lNameAndAttr;
-        }
-
-        Tag_NoAttribute(lName);
-    }
-
-    void XML_Document::Tag_NoAttribute(const char * aTag)
-    {
-        assert(NULL != aTag);
-
-        int lRet = fprintf(GetFile(), "<%s", aTag);
-        Utl_VerifyReturn(lRet);
-
-        lRet = fprintf(GetFile(), ">");
-        Utl_VerifyReturn(lRet);
     }
 
     // ===== Document =======================================================
@@ -252,8 +221,7 @@ namespace HI
     {
         NewLine();
 
-        int lRet = fprintf(GetFile(), "<!--");
-        Utl_VerifyReturn(lRet);
+        Write("<!--");
 
         Document::Comment_Begin();
 
@@ -266,8 +234,7 @@ namespace HI
 
         NewLine();
 
-        int lRet = fprintf(GetFile(), "-->");
-        Utl_VerifyReturn(lRet);
+        Write("-->");
 
         NewLine();
     }
@@ -303,6 +270,56 @@ namespace HI
         assert(NULL != aAttr);
 
         mTagAttribute.insert(AttributeMap::value_type(aTag, aAttr));
+    }
+
+    // Private
+    /////////////////////////////////////////////////////////////////////////
+
+    void XML_Document::PopAttribute()
+    {
+        int lRet = fprintf(GetFile(), "%s", mAttributes.front().c_str());
+        mAttributes.pop_front();
+
+        Utl_VerifyReturn(lRet);
+    }
+
+    void XML_Document::PopAttributes()
+    {
+        while (!mAttributes.empty())
+        {
+            PopAttribute();
+        }
+    }
+
+    void XML_Document::PopAttributes(unsigned int aFlags)
+    {
+        if (0 == (FLAG_TAG_NO_OPT_ATTR & aFlags))
+        {
+            PopAttributes();
+        }
+        else
+        {
+            if (0 != (FLAG_TAG_MANDATORY_ATTR & aFlags))
+            {
+                PopAttribute();
+            }
+        }
+    }
+
+    void XML_Document::PushMandatoryAttributes(unsigned int aTag)
+    {
+        AttributeMap::const_iterator lAttr = mTagAttribute.find(aTag);
+        assert(mTagAttribute.end() != lAttr);
+
+        mAttributes.push_front(lAttr->second);
+    }
+
+    void XML_Document::Write(const char * aText)
+    {
+        assert(NULL != aText);
+
+        int lRet = fprintf(GetFile(), aText);
+        Utl_VerifyReturn(lRet);
     }
 
 }

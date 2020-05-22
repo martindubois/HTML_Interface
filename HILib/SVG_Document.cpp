@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/SVG_Document.cpp
 
-// CODE REVIEW 2020-05-21 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-22 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-21 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-22 KMS - Martin Dubois, P.Eng.
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -84,11 +84,11 @@ static const HI::XML_Document::Data TAGS[HI::SVG_Document::TAG_QTY] =
     { "TAG_POLYLINE", "polyline" },
     { "TAG_RECT"    , "rect"     },
     { "TAG_STYLE"   , "style"    },
-    { "TAG_SVG"     , "svg"      },
+    { "TAG_SVG"     , "svg"     , HI::XML_Document::FLAG_TAG_MANDATORY_ATTR },
     { "TAG_TEXT"    , "text"     },
     { "TAG_TITLE"   , "title"    },
     { "TAG_TSPAN"   , "tspan"    },
-    { "TAG_XML"     , "?xml"     },
+    { "TAG_XML"     , "?xml"    , HI::XML_Document::FLAG_TAG_MANDATORY_ATTR | HI::XML_Document::FLAG_TAG_NO_OPT_ATTR },
 };
 
 namespace HI
@@ -203,7 +203,7 @@ namespace HI
 
     void SVG_Document::Create()
     {
-        Tag_NoAttribute(TAG_XML);
+        Tag(TAG_XML);
 
         Tag_Begin(TAG_SVG);
     }
