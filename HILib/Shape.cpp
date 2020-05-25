@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Shape.cpp
 
-// CODE REVIEW 2020-05-24 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-25 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-24 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-25 KMS - Martin Dubois, P.Eng.
 
 // TODO Shape
 //      Add a shape type (RECT or ELIPSE)
@@ -16,7 +16,6 @@
 //      Add a type text color
 //      Add a name text color
 //      Add a tooltip
-//      Change width based on the text (type or name)
 //      Make type smaller than name
 //      Add a font size for the name and type
 //      Add GetRight and GetTop
@@ -33,6 +32,8 @@
 
 // Constants
 /////////////////////////////////////////////////////////////////////////////
+
+#define CHAR_SIZE_X_pixel (8)
 
 #define SIZE_X_DEFAULT_pixel (70)
 #define SIZE_Y_DEFAULT_pixel (50)
@@ -51,12 +52,14 @@ namespace HI
         Init();
     }
 
-    Shape::Shape(const char * aType, const char * aName) : mName(aName), mType(aType)
+    Shape::Shape(const char * aType, const char * aName) : mType(aType)
     {
         assert(NULL != aType);
         assert(NULL != aName);
 
         Init();
+
+        SetName(aName);
     }
 
     Shape::~Shape()
@@ -130,6 +133,23 @@ namespace HI
         mCenterY_pixel = aY_pixel;
     }
 
+    // REQUIREMENT Shape.SetName
+    //             If needed, SetName increase the shape width to fit the name length.
+
+    void Shape::SetName(const char * aName)
+    {
+        assert(NULL != aName);
+
+        mName = aName;
+
+        unsigned int lSizeX_pixel = mName.size() * CHAR_SIZE_X_pixel;
+
+        if (mSizeX_pixel < lSizeX_pixel)
+        {
+            mSizeX_pixel = lSizeX_pixel;
+        }
+    }
+
     void Shape::Generate_SVG(SVG_Document * aDoc) const
     {
         assert(NULL != aDoc);
@@ -172,6 +192,8 @@ namespace HI
     {
         mCenterX_pixel = 0;
         mCenterY_pixel = 0;
+
+        mFlags.mAutoDelete = false;
 
         mSizeX_pixel = SIZE_X_DEFAULT_pixel;
         mSizeY_pixel = SIZE_Y_DEFAULT_pixel;

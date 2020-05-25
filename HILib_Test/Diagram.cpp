@@ -18,12 +18,12 @@ KMS_TEST_BEGIN(Diagram_Base)
 
     HI::Diagram lD0;
 
-    lD0.mShapes.AddShape("Box", "A");
-    lD0.mShapes.AddShape("Box", "B");
-    lD0.mShapes.AddShape("Box", "C");
-    lD0.mShapes.AddShape("Box", "D");
-    lD0.mShapes.AddShape("Box", "E");
-    lD0.mShapes.AddShape("Box", "F");
+    lD0.mShapes.AddShape("Box", "Alpha");
+    lD0.mShapes.AddShape("Box", "Bravo - Bravo");
+    lD0.mShapes.AddShape("Box", "Charlie - Charlie - Charlie");
+    lD0.mShapes.AddShape("Box", "Delta - Delta - Delta");
+    lD0.mShapes.AddShape("Box", "Echo - Echo");
+    lD0.mShapes.AddShape("Box", "Foxtrot");
 
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(0), lD0.mShapes.GetShape(1));
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(1), lD0.mShapes.GetShape(2));
@@ -35,7 +35,7 @@ KMS_TEST_BEGIN(Diagram_Base)
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(4), lD0.mShapes.GetShape(5));
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(5), lD0.mShapes.GetShape(3));
 
-    KMS_TEST_COMPARE(0, strcmp("A", lD0.mShapes.GetShape(0)->GetName()));
+    KMS_TEST_COMPARE(0, strcmp("Alpha", lD0.mShapes.GetShape(0)->GetName()));
 
     KMS_TEST_ASSERT(NULL == lD0.mShapes.GetShape(6));
 

@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/ShapeList.cpp
 
-// CODE REVIEW 2020-05-24 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-25 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-24 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-25 KMS - Martin Dubois, P.Eng.
 
 // TODO ShapeList
 //      Add the Trim method to remove empty space on top and on left
@@ -46,6 +46,13 @@ namespace HI
         }
     }
 
+    void ShapeList::AddShape(HI::Shape * aShape)
+    {
+        assert(NULL != aShape);
+
+        mShapes.push_back(aShape);
+    }
+
     void ShapeList::AddShape(const char * aType, const char * aName)
     {
         assert(NULL != aType);
@@ -56,7 +63,7 @@ namespace HI
 
         lShape->SetAutoDelete();
 
-        mShapes.push_back(lShape);
+        AddShape(lShape);
     }
 
     const Shape * ShapeList::FindByCenter(unsigned int aX_pixel, unsigned int aY_pixel) const
