@@ -48,11 +48,11 @@ namespace HI
         /// \exception std::exception
         void Generate_HTML(const char * aFolder, const char * aName, const char * aTitle);
 
-        /// \aDoc The document to create the SVG document into
+        /// \param aDoc The document to create the SVG document into
         /// \exception std::exception
         void Generate_SVG(HTML_Document * aDoc);
 
-        /// \aDoc The SVG document to generate code into
+        /// \param aDoc The SVG document to generate code into
         /// \exception std::exception
         void Generate_SVG(SVG_Document * aDoc);
 

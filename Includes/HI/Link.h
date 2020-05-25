@@ -35,7 +35,7 @@ namespace HI
         /// \return The length of the link in pixel
         double GetLength() const;
 
-        /// \aShape The shape of interreset
+        /// \param aShape The shape of interreset
         /// \retval false Not connected
         /// \retval true  Connected
         bool IsConnectedTo(const Shape * aShape);
