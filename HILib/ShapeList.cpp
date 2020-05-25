@@ -225,7 +225,7 @@ namespace HI
         }
 
         aGrid->mCountX = 1280 / aGrid->mDelta_pixel;
-        aGrid->mCountY = mShapes.size() * 2 / aGrid->mCountX;
+        aGrid->mCountY = static_cast<unsigned int>(mShapes.size() * 2 / aGrid->mCountX);
 
         if (aGrid->mCountX > aGrid->mCountY)
         {

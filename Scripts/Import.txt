@@ -1,8 +1,8 @@
 
-# Author     KMS - Martin Dubois, P.Eng.
-# Copyright  (C) 2020 KMS. All rights reserved.
-# Product    HTML_Interface
-# File       Scripts/Import.txt
+# Author    KMS - Martin Dubois, P.Eng.
+# Copyright (C) 2020 KMS. All rights reserved.
+# Product   HTML_Interface
+# File      Scripts/Import.txt
 
 .
     DoxyFile_en.txt
@@ -16,9 +16,14 @@ Includes/HI
 	Browser.h
     CSS_Colors.h
     CSS_Document.h
+	Diagram.h
     Document.h
     HTML_Document.h
+	Link.h
+	LinkList.h
 	Server.h
+	Shape.h
+	ShapeList.h
 	SVG_Document.h
     Types.h
 	XML_Document.h
