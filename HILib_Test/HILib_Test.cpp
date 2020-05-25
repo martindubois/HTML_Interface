@@ -26,6 +26,7 @@ KMS_TEST_GROUP_LIST_BEGIN
 extern int Browser_Base      ();
 extern int Browser_SetupA    ();
 extern int CSS_Document_Base ();
+extern int Diagram_Base      ();
 extern int HTML_Document_Base();
 extern int SVG_Document_Base ();
 extern int Server_Base       ();
@@ -35,6 +36,7 @@ KMS_TEST_LIST_BEGIN
     KMS_TEST_LIST_ENTRY(Browser_Base      , "Browser - Base"      , 0, 0)
     KMS_TEST_LIST_ENTRY(Browser_SetupA    , "Browser - Setup A"   , 1, KMS_TEST_FLAG_INTERACTION_NEEDED)
     KMS_TEST_LIST_ENTRY(CSS_Document_Base , "CSS_Document - Base" , 0, 0)
+    KMS_TEST_LIST_ENTRY(Diagram_Base      , "Diagram - Base"      , 0, 0)
     KMS_TEST_LIST_ENTRY(HTML_Document_Base, "HTML_Document - Base", 0, 0)
     KMS_TEST_LIST_ENTRY(SVG_Document_Base , "SVG_Document - Base" , 0, 0)
     KMS_TEST_LIST_ENTRY(Server_Base       , "Server - Base"       , 0, 0)

@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="Browser.cpp" />
     <ClCompile Include="CSS_Document.cpp" />
+    <ClCompile Include="Diagram.cpp" />
     <ClCompile Include="HILib_Test.cpp" />
     <ClCompile Include="HTML_Document.cpp" />
     <ClCompile Include="Server.cpp" />
