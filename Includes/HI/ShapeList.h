@@ -33,8 +33,9 @@ namespace HI
         /// \param aShape The Shape instance to add
         void AddShape(Shape * aShape);
 
-        /// \param aType The type
-        /// \param aName The name
+        /// \param aTypeName The type
+        /// \param aName     The name
+        /// \param aType     See Shape::TYPE_...
         void AddShape(const char * aTypeName, const char * aName, Shape::Type aType = Shape::TYPE_RECT);
 
         /// \param aX_pixel

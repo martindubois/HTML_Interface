@@ -33,8 +33,9 @@ namespace HI
 
         Shape();
 
-        /// \param aType The type
-        /// \param aName The name
+        /// \param aTypeName The type
+        /// \param aName     The name
+        /// \param aType     See TYPE_...
         Shape(const char * aTypeName, const char * aName, Type aType = TYPE_RECT);
 
         virtual ~Shape();
@@ -86,9 +87,10 @@ namespace HI
         /// \param aY_pixel The height
         void SetSize(unsigned int aX_pixel, unsigned int aY_pixel);
 
+        /// \param aType See TYPE_...
         void SetType(Type aType);
 
-        /// \param aType The type
+        /// \param aTypeName The type
         void SetTypeName(const char * aTypeName);
 
         /// \param aDoc The document to generate into
