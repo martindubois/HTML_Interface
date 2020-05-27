@@ -32,13 +32,37 @@ namespace HI
         /// \retval true  Delete when no longer needed
         bool GetAutoDelete() const;
 
+        /// \return This method returns a pointer to the shape at the start of the link.
+        const Shape * GetFrom() const;
+
         /// \return The length of the link in pixel
         double GetLength() const;
+
+        /// \return This method returns a pointer to the shape at the end of the link.
+        const Shape * GetTo() const;
 
         /// \param aShape The shape of interreset
         /// \retval false Not connected
         /// \retval true  Connected
-        bool IsConnectedTo(const Shape * aShape);
+        bool IsConnectedTo(const Shape * aShape) const;
+
+        /// \param aLink The Link to verify
+        /// \retval false No crossing
+        /// \retval true  Crossing
+        bool IsCrossing(const Link * aLink) const;
+
+        /// \retval false Not horizontal
+        /// \retval true  Horizontal
+        bool IsHorizontal() const;
+
+        /// \param aLink The Link to verify
+        /// \retval false No overlap
+        /// \retval true  Overlap
+        bool IsOverlapping(const Link * aLink) const;
+
+        /// \retval false Not vertical
+        /// \retval true  Vertical
+        bool IsVertical() const;
 
         void SetAutoDelete();
 
@@ -55,6 +79,13 @@ namespace HI
     private:
 
         void Init();
+
+        void GetDelta(double * aDX_pixel, double * aDY_pixel) const;
+
+        double GetSlope() const;
+
+        bool GetX(unsigned int aY_pixel) const;
+        bool GetY(unsigned int aX_pixel) const;
 
         struct
         {

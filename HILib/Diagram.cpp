@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Diagram.cpp
 
-// CODE REVIEW 2020-05-24 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-05-27 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-24 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-05-27 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -130,7 +130,7 @@ namespace HI
 
         aShape->GetCenter(&lX_pixel, &lY_pixel);
 
-        double lLength_pixel = mLinks.GetLength(aShape);
+        double lWeight = mLinks.GetWeight(aShape);
 
         aGrid->Iterator_Reset();
 
@@ -142,13 +142,13 @@ namespace HI
             {
                 aShape->SetCenter(aGrid->Iterator_GetX(), aGrid->Iterator_GetY());
 
-                double lNewLength_pixel = mLinks.GetLength(aShape);
-                if (lLength_pixel > lNewLength_pixel)
+                double lNewWeight = mLinks.GetWeight(aShape);
+                if (lWeight > lNewWeight)
                 {
                     lResult++;
-                    lLength_pixel = lNewLength_pixel;
-                    lX_pixel      = aGrid->Iterator_GetX();
-                    lY_pixel      = aGrid->Iterator_GetY();
+                    lWeight  = lNewWeight;
+                    lX_pixel = aGrid->Iterator_GetX();
+                    lY_pixel = aGrid->Iterator_GetY();
                 }
             }
         }

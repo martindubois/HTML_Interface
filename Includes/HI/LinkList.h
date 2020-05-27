@@ -37,18 +37,22 @@ namespace HI
 
         /// \param aShape The Shape of interrest
         /// \return The number of link connected to the shape
-        unsigned int GetCount(const Shape * aShape);
+        unsigned int GetCount(const Shape * aShape) const;
 
         /// \return The total length in pixel
-        double GetLength();
+        double GetLength() const;
 
         /// \param aShape The Shape of interrest
         /// \return The total length of all link connected to the shape, in pixel.
-        double GetLength(const Shape * aShape);
+        double GetLength(const Shape * aShape) const;
 
         /// \param aDoc The document to generate into
         /// \exception std::exception
         void Generate_SVG(HI::SVG_Document * aDoc) const;
+
+    // Internal
+
+        double GetWeight(const Shape * aShape) const;
 
     private:
 
