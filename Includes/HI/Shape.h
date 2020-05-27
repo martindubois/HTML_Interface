@@ -22,11 +22,20 @@ namespace HI
 
     public:
 
+        typedef enum
+        {
+            TYPE_ELLIPES,
+            TYPE_RECT   ,
+
+            TYPE_QTY
+        }
+        Type;
+
         Shape();
 
         /// \param aType The type
         /// \param aName The name
-        Shape(const char * aType, const char * aName);
+        Shape(const char * aTypeName, const char * aName, Type aType = TYPE_RECT);
 
         virtual ~Shape();
 
@@ -69,6 +78,7 @@ namespace HI
 
         void SetDoNotMove();
 
+        /// If needed, SetName increase the shape width to fit the name length.
         /// \param aName The name
         void SetName(const char * aName);
 
@@ -76,8 +86,10 @@ namespace HI
         /// \param aY_pixel The height
         void SetSize(unsigned int aX_pixel, unsigned int aY_pixel);
 
+        void SetType(Type aType);
+
         /// \param aType The type
-        void SetType(const char * aType);
+        void SetTypeName(const char * aTypeName);
 
         /// \param aDoc The document to generate into
         /// \exception std::exception
@@ -85,7 +97,7 @@ namespace HI
 
     private:
 
-        void Init();
+        void Init(Type aType);
 
         struct
         {
@@ -96,8 +108,9 @@ namespace HI
         }
         mFlags;
 
-        std::string mName;
-        std::string mType;
+        std::string mName    ;
+        Type        mType    ;
+        std::string mTypeName;
 
         unsigned int mCenterX_pixel;
         unsigned int mCenterY_pixel;

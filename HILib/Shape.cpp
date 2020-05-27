@@ -49,15 +49,16 @@ namespace HI
 
     Shape::Shape()
     {
-        Init();
+        Init(TYPE_RECT);
     }
 
-    Shape::Shape(const char * aType, const char * aName) : mType(aType)
+    Shape::Shape(const char * aTypeName, const char * aName, Type aType) : mTypeName(aTypeName)
     {
-        assert(NULL != aType);
-        assert(NULL != aName);
+        assert(NULL            != aTypeName);
+        assert(NULL            != aName    );
+        assert(Shape::TYPE_QTY >  aType    );
 
-        Init();
+        Init(aType);
 
         SetName(aName);
     }
@@ -133,17 +134,13 @@ namespace HI
         mCenterY_pixel = aY_pixel;
     }
 
-    // REQUIREMENT Shape.SetName
-    //             If needed, SetName increase the shape width to fit the name length.
-
     void Shape::SetName(const char * aName)
     {
         assert(NULL != aName);
 
         mName = aName;
 
-        unsigned int lSizeX_pixel = mName.size() * CHAR_SIZE_X_pixel;
-
+        unsigned int lSizeX_pixel = static_cast<unsigned int>(mName.size() * CHAR_SIZE_X_pixel);
         if (mSizeX_pixel < lSizeX_pixel)
         {
             mSizeX_pixel = lSizeX_pixel;
@@ -160,13 +157,30 @@ namespace HI
         unsigned int lX_pixel = mCenterX_pixel - mSizeX_pixel / 2;
         unsigned int lY_pixel = mCenterY_pixel - mSizeY_pixel / 2;
 
-        aDoc->Attribute_Set(SVG_Document::ATTR_HEIGHT, mSizeY_pixel);
-        aDoc->Attribute_Set(SVG_Document::ATTR_WIDTH , mSizeX_pixel);
-        aDoc->Attribute_Set(SVG_Document::ATTR_X     , lX_pixel);
-        aDoc->Attribute_Set(SVG_Document::ATTR_Y     , lY_pixel);
-        aDoc->Attribute_Set(SVG_Document::ATTR_STYLE , "fill:white; stroke:black;");
+        aDoc->Attribute_Set(SVG_Document::ATTR_STYLE, "fill:white; stroke:black;");
 
-        aDoc->Tag(SVG_Document::TAG_RECT);
+        switch (mType)
+        {
+        case TYPE_ELLIPES:
+            aDoc->Attribute_Set(SVG_Document::ATTR_CX, mCenterX_pixel);
+            aDoc->Attribute_Set(SVG_Document::ATTR_CY, mCenterY_pixel);
+            aDoc->Attribute_Set(SVG_Document::ATTR_RX, mSizeX_pixel / 2);
+            aDoc->Attribute_Set(SVG_Document::ATTR_RY, mSizeY_pixel / 2);
+
+            aDoc->Tag(SVG_Document::TAG_ELLIPSE);
+            break;
+
+        case TYPE_RECT:
+            aDoc->Attribute_Set(SVG_Document::ATTR_HEIGHT, mSizeY_pixel);
+            aDoc->Attribute_Set(SVG_Document::ATTR_WIDTH , mSizeX_pixel);
+            aDoc->Attribute_Set(SVG_Document::ATTR_X     , lX_pixel);
+            aDoc->Attribute_Set(SVG_Document::ATTR_Y     , lY_pixel);
+
+            aDoc->Tag(SVG_Document::TAG_RECT);
+            break;
+
+        default: assert(false);
+        }
 
         lX_pixel +=  5;
         lY_pixel += 20;
@@ -175,7 +189,7 @@ namespace HI
         aDoc->Attribute_Set(SVG_Document::ATTR_Y    , lY_pixel);
         aDoc->Attribute_Set(SVG_Document::ATTR_STYLE, "fill:grey;");
 
-        aDoc->Tag(SVG_Document::TAG_TEXT, mType.c_str());
+        aDoc->Tag(SVG_Document::TAG_TEXT, mTypeName.c_str());
 
         lY_pixel += 20;
 
@@ -188,8 +202,10 @@ namespace HI
     // Private
     /////////////////////////////////////////////////////////////////////////
 
-    void Shape::Init()
+    void Shape::Init(Type aType)
     {
+        assert(TYPE_QTY > aType);
+
         mCenterX_pixel = 0;
         mCenterY_pixel = 0;
 
@@ -197,6 +213,8 @@ namespace HI
 
         mSizeX_pixel = SIZE_X_DEFAULT_pixel;
         mSizeY_pixel = SIZE_Y_DEFAULT_pixel;
+
+        mType = aType;
     }
 
 }

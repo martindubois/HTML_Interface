@@ -11,6 +11,9 @@
 // ===== C++ ================================================================
 #include <list>
 
+// ===== Includes ===========================================================
+#include <HI/Shape.h>
+
 // ===== HILib ==============================================================
 class Grid;
 
@@ -32,7 +35,7 @@ namespace HI
 
         /// \param aType The type
         /// \param aName The name
-        void AddShape(const char * aType, const char * aName);
+        void AddShape(const char * aTypeName, const char * aName, Shape::Type aType = Shape::TYPE_RECT);
 
         /// \param aX_pixel
         /// \param aY_pixel

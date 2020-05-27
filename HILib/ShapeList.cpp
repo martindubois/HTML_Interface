@@ -53,12 +53,13 @@ namespace HI
         mShapes.push_back(aShape);
     }
 
-    void ShapeList::AddShape(const char * aType, const char * aName)
+    void ShapeList::AddShape(const char * aTypeName, const char * aName, Shape::Type aType)
     {
-        assert(NULL != aType);
-        assert(NULL != aName);
+        assert(NULL            != aTypeName);
+        assert(NULL            != aName    );
+        assert(Shape::TYPE_QTY >  aType    );
 
-        Shape * lShape = new Shape(aType, aName);
+        Shape * lShape = new Shape(aTypeName, aName, aType);
         assert(NULL != lShape);
 
         lShape->SetAutoDelete();

@@ -18,12 +18,13 @@ KMS_TEST_BEGIN(Diagram_Base)
 
     HI::Diagram lD0;
 
-    lD0.mShapes.AddShape("Box", "Alpha");
-    lD0.mShapes.AddShape("Box", "Bravo - Bravo");
-    lD0.mShapes.AddShape("Box", "Charlie - Charlie - Charlie");
-    lD0.mShapes.AddShape("Box", "Delta - Delta - Delta");
-    lD0.mShapes.AddShape("Box", "Echo - Echo");
-    lD0.mShapes.AddShape("Box", "Foxtrot");
+    lD0.mShapes.AddShape("Box", "Alpha - B - C - D");
+    lD0.mShapes.AddShape("Box", "Bravo - A - C");
+    lD0.mShapes.AddShape("Box", "Charlie - A - B");
+    lD0.mShapes.AddShape("Box", "Delta - A - E - F");
+    lD0.mShapes.AddShape("Box", "Echo - D - F");
+    lD0.mShapes.AddShape("Box", "Foxtrot - D - E - G");
+    lD0.mShapes.AddShape("Box", "Golf - F", HI::Shape::TYPE_ELLIPES);
 
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(0), lD0.mShapes.GetShape(1));
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(1), lD0.mShapes.GetShape(2));
@@ -35,10 +36,29 @@ KMS_TEST_BEGIN(Diagram_Base)
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(4), lD0.mShapes.GetShape(5));
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(5), lD0.mShapes.GetShape(3));
 
-    KMS_TEST_COMPARE(0, strcmp("Alpha", lD0.mShapes.GetShape(0)->GetName()));
+    lD0.mLinks.AddLink(lD0.mShapes.GetShape(5), lD0.mShapes.GetShape(6));
 
-    KMS_TEST_ASSERT(NULL == lD0.mShapes.GetShape(6));
+    KMS_TEST_COMPARE(0, strcmp("Alpha - B - C - D", lD0.mShapes.GetShape(0)->GetName()));
+
+    KMS_TEST_ASSERT(NULL == lD0.mShapes.GetShape(7));
 
     lD0.Generate_HTML(HI::FOLDER_CURRENT, "Diagram_Base_0", "Diagram - Base - 0");
+
+    HI::Diagram lD1;
+
+    lD1.mShapes.AddShape("Box", "Alpha - B - C");
+    lD1.mShapes.AddShape("Box", "Bravo - A - E - F");
+    lD1.mShapes.AddShape("Box", "Charlie - A - D");
+    lD1.mShapes.AddShape("Box", "Delta - C");
+    lD1.mShapes.AddShape("Box", "Echo - B");
+    lD1.mShapes.AddShape("Box", "Foxtrot - B", HI::Shape::TYPE_ELLIPES);
+
+    lD1.mLinks.AddLink(lD1.mShapes.GetShape(0), lD1.mShapes.GetShape(1));
+    lD1.mLinks.AddLink(lD1.mShapes.GetShape(0), lD1.mShapes.GetShape(2));
+    lD1.mLinks.AddLink(lD1.mShapes.GetShape(1), lD1.mShapes.GetShape(4));
+    lD1.mLinks.AddLink(lD1.mShapes.GetShape(1), lD1.mShapes.GetShape(5));
+    lD1.mLinks.AddLink(lD1.mShapes.GetShape(2), lD1.mShapes.GetShape(3));
+
+    lD1.Generate_HTML(HI::FOLDER_CURRENT, "Diagram_Base_1", "Diagram - Base - 1");
 
 KMS_TEST_END
