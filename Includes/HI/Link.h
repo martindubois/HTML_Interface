@@ -38,6 +38,10 @@ namespace HI
         /// \return The length of the link in pixel
         double GetLength() const;
 
+        /// \param aShape One of the two connected shapes
+        /// \return This method returns the pointer to the other connected shape.
+        const Shape * GetOtherShape(const Shape * aShape) const;
+
         /// \return This method returns a pointer to the shape at the end of the link.
         const Shape * GetTo() const;
 
@@ -84,8 +88,10 @@ namespace HI
 
         double GetSlope() const;
 
-        bool GetX(unsigned int aY_pixel) const;
-        bool GetY(unsigned int aX_pixel) const;
+        bool IsInsideX_Excl(unsigned int aX_pixel) const;
+        bool IsInsideX_Incl(unsigned int aX_pixel) const;
+        bool IsInsideY_Excl(unsigned int aY_pixel) const;
+        bool IsInsideY_Incl(unsigned int aX_pixel) const;
 
         struct
         {

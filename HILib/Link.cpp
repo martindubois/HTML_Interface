@@ -27,21 +27,20 @@
 // Macros
 /////////////////////////////////////////////////////////////////////////////
 
-#define INSIDE_X(x) ((lFX_pixel >= (x)) || (lTX_pixel >= (x))) && ((lFX_pixel <= (x)) || (lTX_pixel <= (x)))
-#define INSIDE_Y(y) ((lFY_pixel >= (y)) || (lTY_pixel >= (y))) && ((lFY_pixel <= (y)) || (lTY_pixel <= (y)))
-
-#define OUTSIDE_X(x) ((lFX_pixel < (x)) && (lTX_pixel < (x))) || ((lFX_pixel > (x)) && (lTX_pixel > (x)))
-#define OUTSIDE_Y(y) ((lFY_pixel < (y)) && (lTY_pixel < (y))) || ((lFY_pixel > (y)) && (lTY_pixel > (y)))
+#define INSIDE_X_EXCL(x) ((lFX_pixel >  (x)) || (lTX_pixel >  (x))) && ((lFX_pixel <  (x)) || (lTX_pixel <  (x)))
+#define INSIDE_X_INCL(x) ((lFX_pixel >= (x)) || (lTX_pixel >= (x))) && ((lFX_pixel <= (x)) || (lTX_pixel <= (x)))
+#define INSIDE_Y_EXCL(y) ((lFY_pixel >  (y)) || (lTY_pixel >  (y))) && ((lFY_pixel <  (y)) || (lTY_pixel <  (y)))
+#define INSIDE_Y_INCL(y) ((lFY_pixel >= (y)) || (lTY_pixel >= (y))) && ((lFY_pixel <= (y)) || (lTY_pixel <= (y)))
 
 #define RETRIEVE_DELTA                \
     double lDX_pixel;                 \
     double lDY_pixel;                 \
     GetDelta(&lDX_pixel, &lDY_pixel);
 
-
 #define RETRIEVE_XY                           \
-    assert(NULL != mFrom);                    \
-    assert(NULL != mTo  );                    \
+    assert(NULL  != mFrom);                   \
+    assert(NULL  != mTo  );                   \
+    assert(mFrom != mTo  );                   \
     unsigned int lFX_pixel;                   \
     unsigned int lFY_pixel;                   \
     unsigned int lTX_pixel;                   \
@@ -67,8 +66,9 @@ namespace HI
     // aTo   [-K-;R--]
     Link::Link(const Shape * aFrom, const Shape * aTo) : mFrom(aFrom), mTo(aTo)
     {
-        assert(NULL != aFrom);
-        assert(NULL != aTo  );
+        assert(NULL  != aFrom);
+        assert(NULL  != aTo  );
+        assert(aFrom != aTo  );
 
         Init();
     }
@@ -99,12 +99,32 @@ namespace HI
     }
 
     // aShape [---;---]
+    const Shape * Link::GetOtherShape(const Shape * aShape) const
+    {
+        assert(NULL != aShape);
+
+        assert(NULL  != mFrom);
+        assert(NULL  != mTo  );
+        assert(mFrom != mTo  );
+
+        if (mFrom == aShape)
+        {
+            return mTo;
+        }
+
+        assert(mTo == aShape);
+
+        return mFrom;
+    }
+
+    // aShape [---;---]
     bool Link::IsConnectedTo(const Shape * aShape) const
     {
         assert(NULL != aShape);
 
-        assert(NULL != mFrom);
-        assert(NULL != mTo  );
+        assert(NULL  != mFrom);
+        assert(NULL  != mTo  );
+        assert(mFrom != mTo  );
 
         return (mFrom == aShape) || (mTo == aShape);
     }
@@ -115,37 +135,49 @@ namespace HI
 
         RETRIEVE_XY
 
-        unsigned int lBFX_pixel;
-        unsigned int lBFY_pixel;
+        double lX_pixel;
 
-        aLink->GetFrom()->GetCenter(&lBFX_pixel, &lBFY_pixel);
-
-        if (IsVertical  ()) { return (!aLink->IsVertical  ()) && aLink->GetY(lFX_pixel); }
-        if (IsHorizontal()) { return (!aLink->IsHorizontal()) && aLink->GetX(lFY_pixel); }
-
-        if (aLink->IsVertical  ()) { return INSIDE_X(lBFX_pixel); }
-        if (aLink->IsHorizontal()) { return INSIDE_Y(lBFY_pixel); }
-
-        double lAS =        GetSlope();
-        double lBS = aLink->GetSlope();
-
-        assert(0 != lAS);
-        assert(0 != lBS);
-
-        if (lAS == lBS)
+        if (IsVertical())
         {
-            return false;
+            if (aLink->IsVertical())
+            {
+                return false;
+            }
+
+            lX_pixel = lFX_pixel;
+        }
+        else
+        {
+            unsigned int lBFX_pixel;
+            unsigned int lBFY_pixel;
+
+            aLink->GetFrom()->GetCenter(&lBFX_pixel, &lBFY_pixel);
+
+            if (aLink->IsVertical())
+            {
+                lX_pixel = lBFX_pixel;
+            }
+            else
+            {
+                double lAS =        GetSlope();
+                double lBS = aLink->GetSlope();
+
+                if (lAS == lBS)
+                {
+                    return false;
+                }
+
+                double lAY0_pixel = lFY_pixel;
+                double lBY0_pixel = lBFY_pixel;
+
+                lAY0_pixel -= lAS * lFX_pixel;
+                lBY0_pixel -= lBS * lBFX_pixel;
+
+                lX_pixel = (lBY0_pixel - lAY0_pixel) / (lAS - lBS);
+            }
         }
 
-        double lAY0_pixel = lFY_pixel ;
-        double lBY0_pixel = lBFY_pixel;
-
-        lAY0_pixel -= lAS * lFX_pixel ;
-        lBY0_pixel -= lBS * lBFX_pixel;
-
-        double lX_pixel = (lBY0_pixel - lAY0_pixel) / (lAS - lBS);
-
-        return INSIDE_X(lX_pixel);
+        return INSIDE_X_INCL(lX_pixel);
     }
 
     bool Link::IsHorizontal() const
@@ -166,8 +198,8 @@ namespace HI
 
         aLink->GetFrom()->GetCenter(&lBFX_pixel, &lBFY_pixel);
 
-        if (IsHorizontal()) { return aLink->IsHorizontal() && (lFY_pixel == lBFY_pixel) && (aLink->GetY(lFX_pixel) || aLink->GetY(lTX_pixel)); }
-        if (IsVertical  ()) { return aLink->IsVertical  () && (lFX_pixel == lBFX_pixel) && (aLink->GetX(lFY_pixel) || aLink->GetX(lTY_pixel)); }
+        if (IsHorizontal()) { return aLink->IsHorizontal() && (lFY_pixel == lBFY_pixel) && (aLink->IsInsideX_Excl(lFX_pixel) || aLink->IsInsideX_Excl(lTX_pixel)); }
+        if (IsVertical  ()) { return aLink->IsVertical  () && (lFX_pixel == lBFX_pixel) && (aLink->IsInsideY_Excl(lFY_pixel) || aLink->IsInsideY_Excl(lTY_pixel)); }
 
         if (aLink->IsHorizontal() || aLink->IsVertical())
         {
@@ -250,18 +282,32 @@ namespace HI
         return lDY_pixel / lDX_pixel;
     }
 
-    bool Link::GetX(unsigned int aY_pixel) const
+    bool Link::IsInsideX_Excl(unsigned int aX_pixel) const
     {
         RETRIEVE_XY
 
-        return INSIDE_Y(aY_pixel);
+        return INSIDE_X_EXCL(aX_pixel);
     }
 
-    bool Link::GetY(unsigned int aX_pixel) const
+    bool Link::IsInsideX_Incl(unsigned int aX_pixel) const
     {
         RETRIEVE_XY
 
-        return INSIDE_X(aX_pixel);
+        return INSIDE_X_INCL(aX_pixel);
+    }
+
+    bool Link::IsInsideY_Excl(unsigned int aY_pixel) const
+    {
+        RETRIEVE_XY
+
+        return INSIDE_Y_EXCL(aY_pixel);
+    }
+
+    bool Link::IsInsideY_Incl(unsigned int aY_pixel) const
+    {
+        RETRIEVE_XY
+
+        return INSIDE_Y_INCL(aY_pixel);
     }
 
 }
