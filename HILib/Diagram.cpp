@@ -100,15 +100,16 @@ namespace HI
 
     void Diagram::PositionShapes(Grid * aGrid)
     {
-        unsigned int lMoveCount;
+        assert(NULL != aGrid);
+
+        unsigned int lIteration = 100;
 
         do
         {
-            lMoveCount = 0;
-
             mShapes.Iterator_Reset();
 
-            Shape * lShape;
+            unsigned int lMoveCount = 0;
+            Shape      * lShape;
 
             while (NULL != (lShape = mShapes.Iterator_Get()))
             {
@@ -116,8 +117,17 @@ namespace HI
 
                 mShapes.Iterator_Next();
             }
+
+            lIteration--;
+
+            if ((0 >= lMoveCount) && (1 < lIteration))
+            {
+                // Nothing moved but shape at the begining of the list could find better place now that the one at the end of the liste
+                // moved. This is why we do one more iteration.
+                lIteration = 1;
+            }
         }
-        while (0 < lMoveCount);
+        while (0 < lIteration);
     }
 
     unsigned int Diagram::PositionShape(Grid * aGrid, Shape * aShape)
