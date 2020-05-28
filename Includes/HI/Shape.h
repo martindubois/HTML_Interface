@@ -24,7 +24,7 @@ namespace HI
 
         typedef enum
         {
-            TYPE_ELLIPES,
+            TYPE_ELLIPSE,
             TYPE_RECT   ,
 
             TYPE_QTY

@@ -161,7 +161,7 @@ namespace HI
 
         switch (mType)
         {
-        case TYPE_ELLIPES:
+        case TYPE_ELLIPSE:
             aDoc->Attribute_Set(SVG_Document::ATTR_CX, mCenterX_pixel);
             aDoc->Attribute_Set(SVG_Document::ATTR_CY, mCenterY_pixel);
             aDoc->Attribute_Set(SVG_Document::ATTR_RX, mSizeX_pixel / 2);

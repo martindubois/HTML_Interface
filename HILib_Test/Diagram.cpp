@@ -24,7 +24,7 @@ KMS_TEST_BEGIN(Diagram_Base)
     lD0.mShapes.AddShape("Box", "Delta - A - E - F");
     lD0.mShapes.AddShape("Box", "Echo - D - F");
     lD0.mShapes.AddShape("Box", "Foxtrot - D - E - G");
-    lD0.mShapes.AddShape("Box", "Golf - F", HI::Shape::TYPE_ELLIPES);
+    lD0.mShapes.AddShape("Box", "Golf - F", HI::Shape::TYPE_ELLIPSE);
 
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(0), lD0.mShapes.GetShape(1));
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(1), lD0.mShapes.GetShape(2));
@@ -51,7 +51,7 @@ KMS_TEST_BEGIN(Diagram_Base)
     lD1.mShapes.AddShape("Box", "Charlie - A - D");
     lD1.mShapes.AddShape("Box", "Delta - C");
     lD1.mShapes.AddShape("Box", "Echo - B");
-    lD1.mShapes.AddShape("Box", "Foxtrot - B", HI::Shape::TYPE_ELLIPES);
+    lD1.mShapes.AddShape("Box", "Foxtrot - B", HI::Shape::TYPE_ELLIPSE);
 
     lD1.mLinks.AddLink(lD1.mShapes.GetShape(0), lD1.mShapes.GetShape(1));
     lD1.mLinks.AddLink(lD1.mShapes.GetShape(0), lD1.mShapes.GetShape(2));
