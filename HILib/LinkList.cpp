@@ -16,11 +16,6 @@
 
 #include <HI/LinkList.h>
 
-// Static function declarations
-/////////////////////////////////////////////////////////////////////////////
-
-static double DetectConflict(const HI::Link * aA, const HI::Link * aB);
-
 namespace HI
 {
 
@@ -99,7 +94,7 @@ namespace HI
     {
         assert(NULL != aShape);
 
-        double lResult_pixel = 0;
+        double lResult = 0;
 
         for (InternalList::const_iterator lIt = mLinks.begin(); lIt != mLinks.end(); lIt++)
         {
@@ -108,40 +103,30 @@ namespace HI
 
             if (lLink->IsConnectedTo(aShape))
             {
-                lResult_pixel += lLink->GetLength();
+                const Shape * lOtherShape = lLink->GetOtherShape(aShape);
+
+                lResult += lLink->GetLength();
 
                 for (InternalList::const_iterator lIt2 = mLinks.begin(); lIt2 != mLinks.end(); lIt2++)
                 {
-                    if (lIt != lIt2)
+                    Link * lLink2 = *lIt2;
+                    if (lLink != lLink2)
                     {
-                        lResult_pixel += DetectConflict(lLink, *lIt2);
+                        if (lLink->IsOverlapping(lLink2))
+                        {
+                            lResult += 1000;
+                        }
+
+                        if (!lLink2->IsConnectedTo(aShape) && !lLink2->IsConnectedTo(lOtherShape) && lLink->IsCrossing(lLink2))
+                        {
+                            lResult += 100;
+                        }
                     }
                 }
             }
         }
 
-        return lResult_pixel;
+        return lResult;
     }
 
-}
-
-// Static functions
-/////////////////////////////////////////////////////////////////////////////
-
-double DetectConflict(const HI::Link * aA, const HI::Link * aB)
-{
-    assert(NULL != aA);
-    assert(NULL != aB);
-
-    if (aA->IsOverlapping(aB))
-    {
-        return 1000;
-    }
-
-    if (aA->IsCrossing(aB))
-    {
-        return 100;
-    }
-
-    return 0;
 }
