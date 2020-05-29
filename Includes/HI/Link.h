@@ -88,11 +88,6 @@ namespace HI
 
         double GetSlope() const;
 
-        bool IsInsideX_Excl(unsigned int aX_pixel) const;
-        bool IsInsideX_Incl(unsigned int aX_pixel) const;
-        bool IsInsideY_Excl(unsigned int aY_pixel) const;
-        bool IsInsideY_Incl(unsigned int aX_pixel) const;
-
         struct
         {
             unsigned mAutoDelete : 1;

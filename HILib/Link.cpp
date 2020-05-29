@@ -27,11 +27,6 @@
 // Macros
 /////////////////////////////////////////////////////////////////////////////
 
-#define INSIDE_X_EXCL(x) ((lFX_pixel >  (x)) || (lTX_pixel >  (x))) && ((lFX_pixel <  (x)) || (lTX_pixel <  (x)))
-#define INSIDE_X_INCL(x) ((lFX_pixel >= (x)) || (lTX_pixel >= (x))) && ((lFX_pixel <= (x)) || (lTX_pixel <= (x)))
-#define INSIDE_Y_EXCL(y) ((lFY_pixel >  (y)) || (lTY_pixel >  (y))) && ((lFY_pixel <  (y)) || (lTY_pixel <  (y)))
-#define INSIDE_Y_INCL(y) ((lFY_pixel >= (y)) || (lTY_pixel >= (y))) && ((lFY_pixel <= (y)) || (lTY_pixel <= (y)))
-
 #define RETRIEVE_DELTA                \
     double lDX_pixel;                 \
     double lDY_pixel;                 \
@@ -117,6 +112,13 @@ namespace HI
         return mFrom;
     }
 
+    const Shape * Link::GetTo() const
+    {
+        assert(NULL != mTo);
+
+        return mTo;
+    }
+
     // aShape [---;---]
     bool Link::IsConnectedTo(const Shape * aShape) const
     {
@@ -177,7 +179,7 @@ namespace HI
             }
         }
 
-        return INSIDE_X_INCL(lX_pixel);
+        return ((lFX_pixel >= lX_pixel) || (lTX_pixel >= lX_pixel)) && ((lFX_pixel <= lX_pixel) || (lTX_pixel <= lX_pixel));
     }
 
     bool Link::IsHorizontal() const
@@ -195,16 +197,35 @@ namespace HI
 
         unsigned int lBFX_pixel;
         unsigned int lBFY_pixel;
+        unsigned int lBTX_pixel;
+        unsigned int lBTY_pixel;
 
         aLink->GetFrom()->GetCenter(&lBFX_pixel, &lBFY_pixel);
+        aLink->GetTo  ()->GetCenter(&lBTX_pixel, &lBTY_pixel);
 
-        if (IsHorizontal()) { return aLink->IsHorizontal() && (lFY_pixel == lBFY_pixel) && (aLink->IsInsideX_Excl(lFX_pixel) || aLink->IsInsideX_Excl(lTX_pixel)); }
-        if (IsVertical  ()) { return aLink->IsVertical  () && (lFX_pixel == lBFX_pixel) && (aLink->IsInsideY_Excl(lFY_pixel) || aLink->IsInsideY_Excl(lTY_pixel)); }
+        if (IsVertical())
+        {
+            if ((lBFY_pixel <= lFY_pixel) && (lBFY_pixel <= lTY_pixel) && (lBTY_pixel <= lFY_pixel) && (lBTY_pixel <= lTY_pixel)) { return false; }
+            if ((lBFY_pixel >= lFY_pixel) && (lBFY_pixel >= lTY_pixel) && (lBTY_pixel >= lFY_pixel) && (lBTY_pixel >= lTY_pixel)) { return false; }
 
-        if (aLink->IsHorizontal() || aLink->IsVertical())
+            return aLink->IsVertical() && (lFX_pixel == lBFX_pixel);
+        }
+
+        if (aLink->IsVertical())
         {
             return false;
         }
+
+        if ((lBFX_pixel <= lFX_pixel) && (lBFX_pixel <= lTX_pixel) && (lBTX_pixel <= lFX_pixel) && (lBTX_pixel <= lTX_pixel)) { return false; }
+        if ((lBFX_pixel >= lFX_pixel) && (lBFX_pixel >= lTX_pixel) && (lBTX_pixel >= lFX_pixel) && (lBTX_pixel >= lTX_pixel)) { return false; }
+
+        if (IsHorizontal())
+        {
+            return aLink->IsHorizontal() && (lFY_pixel == lBFY_pixel);
+        }
+
+        if ((lBFY_pixel <= lFY_pixel) && (lBFY_pixel <= lTY_pixel) && (lBTY_pixel <= lFY_pixel) && (lBTY_pixel <= lTY_pixel)) { return false; }
+        if ((lBFY_pixel >= lFY_pixel) && (lBFY_pixel >= lTY_pixel) && (lBTY_pixel >= lFY_pixel) && (lBTY_pixel >= lTY_pixel)) { return false; }
 
         double lAS =        GetSlope();
         double lBS = aLink->GetSlope();
@@ -280,34 +301,6 @@ namespace HI
         assert(0 != lDX_pixel);
 
         return lDY_pixel / lDX_pixel;
-    }
-
-    bool Link::IsInsideX_Excl(unsigned int aX_pixel) const
-    {
-        RETRIEVE_XY
-
-        return INSIDE_X_EXCL(aX_pixel);
-    }
-
-    bool Link::IsInsideX_Incl(unsigned int aX_pixel) const
-    {
-        RETRIEVE_XY
-
-        return INSIDE_X_INCL(aX_pixel);
-    }
-
-    bool Link::IsInsideY_Excl(unsigned int aY_pixel) const
-    {
-        RETRIEVE_XY
-
-        return INSIDE_Y_EXCL(aY_pixel);
-    }
-
-    bool Link::IsInsideY_Incl(unsigned int aY_pixel) const
-    {
-        RETRIEVE_XY
-
-        return INSIDE_Y_INCL(aY_pixel);
     }
 
 }
