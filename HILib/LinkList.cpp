@@ -110,6 +110,8 @@ namespace HI
                 for (InternalList::const_iterator lIt2 = mLinks.begin(); lIt2 != mLinks.end(); lIt2++)
                 {
                     Link * lLink2 = *lIt2;
+                    assert(NULL != lLink2);
+
                     if (lLink != lLink2)
                     {
                         if (lLink->IsOverlapping(lLink2))
