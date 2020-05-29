@@ -11,6 +11,9 @@
 // ===== C++ ================================================================
 #include <string>
 
+// ===== Includes ===========================================================
+#include <HI/CSS_Colors.h>
+
 namespace HI
 {
 
@@ -79,6 +82,12 @@ namespace HI
 
         void SetDoNotMove();
 
+        /// \param aColor The color
+        void SetFillColor(CSS_Color aColor);
+
+        /// \param aColor The color
+        void SetFillColor(const char * aColor);
+
         /// If needed, SetName increase the shape width to fit the name length.
         /// \param aName The name
         void SetName(const char * aName);
@@ -116,6 +125,8 @@ namespace HI
 
         unsigned int mCenterX_pixel;
         unsigned int mCenterY_pixel;
+
+        std::string mFillColor;
 
         unsigned int mSizeX_pixel;
         unsigned int mSizeY_pixel;

@@ -9,10 +9,8 @@
 // TEST COVERAGE 2020-05-25 KMS - Martin Dubois, P.Eng.
 
 // TODO Shape
-//      Add a shape type (RECT or ELIPSE)
 //      Add a line width
 //      Add a line color
-//      Add a fill color
 //      Add a type text color
 //      Add a name text color
 //      Add a tooltip
@@ -134,6 +132,24 @@ namespace HI
         mCenterY_pixel = aY_pixel;
     }
 
+    void Shape::SetFillColor(CSS_Color aColor)
+    {
+        assert(COLOR_INVALID != aColor);
+
+        char lColor[64];;
+
+        CSS_Colors::RetrieveName(lColor, sizeof(lColor), aColor);
+
+        mFillColor = lColor;
+    }
+
+    void Shape::SetFillColor(const char * aColor)
+    {
+        assert(NULL != aColor);
+
+        mFillColor = aColor;
+    }
+
     void Shape::SetName(const char * aName)
     {
         assert(NULL != aName);
@@ -157,7 +173,11 @@ namespace HI
         unsigned int lX_pixel = mCenterX_pixel - mSizeX_pixel / 2;
         unsigned int lY_pixel = mCenterY_pixel - mSizeY_pixel / 2;
 
-        aDoc->Attribute_Set(SVG_Document::ATTR_STYLE, "fill:white; stroke:black;");
+        char lStyle[64];
+
+        sprintf_s(lStyle, "fill:%s; stroke:black;", mFillColor.c_str());
+
+        aDoc->Attribute_Set(SVG_Document::ATTR_STYLE, lStyle);
 
         switch (mType)
         {
@@ -208,6 +228,8 @@ namespace HI
 
         mCenterX_pixel = 0;
         mCenterY_pixel = 0;
+
+        mFillColor = "white";
 
         mFlags.mAutoDelete = false;
 

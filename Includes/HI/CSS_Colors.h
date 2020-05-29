@@ -162,7 +162,9 @@ namespace HI
         COLOR_YELLOW                  = 0xffff00,
         COLOR_YELLOW_GREEN            = 0x9acd32,
 
-        COLOR_QTY = 142
+        COLOR_QTY = 142,
+
+        COLOR_INVALID = 0x01000000
     }
     CSS_Color;
 
@@ -200,6 +202,8 @@ namespace HI
         static bool GetNext(CSS_ColorInfo * aInOut);
 
         static bool GetPrevious(CSS_ColorInfo * aInOut);
+
+        static void RetrieveName(char * aOut, unsigned int aOutSize_byte, CSS_Color aValue);
 
     };
 

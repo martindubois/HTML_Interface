@@ -43,6 +43,9 @@ static int CompareGreen(uint32_t aA, uint32_t aB);
 static int CompareRed  (uint32_t aA, uint32_t aB);
 static int CompareWhite(uint32_t aA, uint32_t aB);
 
+static void Info_Copy(HI::CSS_ColorInfo * aOut, const Data & aIn);
+static void Info_Init(HI::CSS_ColorInfo * aOut, const Data & aIn);
+
 static void InitializeOrders();
 
 // Constants
@@ -227,6 +230,28 @@ namespace HI
     uint8_t CSS_ColorInfo::GetGreen() const { return GREEN(mValue); }
     uint8_t CSS_ColorInfo::GetRed  () const { return RED  (mValue); }
 
+    bool CSS_Colors::FindByValue(CSS_ColorInfo * aOut, CSS_Color aValue)
+    {
+        assert(NULL          != aOut  );
+        assert(COLOR_INVALID != aValue);
+
+        for (unsigned int i = 0; i < COLOR_QTY; i++)
+        {
+            if (COLORS[i].mValue == aValue)
+            {
+                Info_Init(aOut, COLORS[i]);
+
+                aOut->mIndex   = i;
+                aOut->mIndexBy = i;
+                aOut->mOrder   = ORDER_NAME;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     // aOut [---;-W-]
     void CSS_Colors::GetFirst(CSS_ColorInfo * aOut, Order aOrder)
     {
@@ -254,12 +279,9 @@ namespace HI
         default:assert(false);
         }
 
-        const Data * lData = COLORS + aOut->mIndex;
+        Info_Copy(aOut, COLORS[aOut->mIndex]);
 
-        aOut->mIdName  = lData->mIdName;
-        aOut->mName    = lData->mName  ;
-        aOut->mOrder   = aOrder        ;
-        aOut->mValue   = lData->mValue ;
+        aOut->mOrder = aOrder;
     }
 
     // aInOut [---;RW-]
@@ -289,13 +311,29 @@ namespace HI
         default: assert(false);
         }
         
-        const Data * lData = COLORS + aInOut->mIndex;
-
-        aInOut->mIdName = lData->mIdName;
-        aInOut->mName   = lData->mName  ;
-        aInOut->mValue  = lData->mValue ;
+        Info_Copy(aInOut, COLORS[aInOut->mIndex]);
 
         return true;
+    }
+
+    void CSS_Colors::RetrieveName(char * aOut, unsigned int aOutSize_byte, CSS_Color aValue)
+    {
+        assert(NULL          != aOut         );
+        assert(            0 <  aOutSize_byte);
+        assert(COLOR_INVALID != aValue       );
+
+        memset(aOut, 0, aOutSize_byte);
+
+        CSS_ColorInfo lCI;
+
+        if (FindByValue(&lCI, aValue))
+        {
+            strncpy_s(aOut, aOutSize_byte, lCI.mName, aOutSize_byte - 1);
+        }
+        else
+        {
+            sprintf_s(aOut, aOutSize_byte, "#%02x%02x%02x", aValue & 0xff, (aValue >> 8) & 0xff, (aValue >> 16) & 0xff);
+        }
     }
 
 }
@@ -378,6 +416,26 @@ int CompareWhite(uint32_t aA, uint32_t aB)
     if (lGA > lGB) { return  1; }
 
     return 0;
+}
+
+void Info_Copy(HI::CSS_ColorInfo * aOut, const Data & aIn)
+{
+    assert(NULL !=  aOut);
+    assert(NULL != &aIn );
+
+    aOut->mIdName = aIn.mIdName;
+    aOut->mName   = aIn.mName  ;
+    aOut->mValue  = aIn.mValue ;
+}
+
+void Info_Init(HI::CSS_ColorInfo * aOut, const Data & aIn)
+{
+    assert(NULL !=  aOut);
+    assert(NULL != &aIn );
+
+    memset(aOut, 0, sizeof(HI::CSS_ColorInfo));
+
+    Info_Copy(aOut, aIn);
 }
 
 void InitializeOrders()

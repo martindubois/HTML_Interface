@@ -26,6 +26,8 @@ KMS_TEST_BEGIN(Diagram_Base)
     lD0.mShapes.AddShape("Box", "Foxtrot - D - E - G");
     lD0.mShapes.AddShape("Box", "Golf - F", HI::Shape::TYPE_ELLIPSE);
 
+    lD0.mShapes.GetShape(0)->SetFillColor(HI::COLOR_ALICE_BLUE);
+
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(0), lD0.mShapes.GetShape(1));
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(1), lD0.mShapes.GetShape(2));
     lD0.mLinks.AddLink(lD0.mShapes.GetShape(2), lD0.mShapes.GetShape(0));
