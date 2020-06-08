@@ -44,6 +44,8 @@ KMS_TEST_BEGIN(Diagram_Base)
 
     KMS_TEST_ASSERT(NULL == lD0.mShapes.GetShape(7));
 
+    lD0.PositionShapes();
+
     lD0.Generate_HTML(HI::FOLDER_CURRENT, "Diagram_Base_0", "Diagram - Base - 0");
 
     HI::Diagram lD1;
@@ -60,6 +62,10 @@ KMS_TEST_BEGIN(Diagram_Base)
     lD1.mLinks.AddLink(lD1.mShapes.GetShape(1), lD1.mShapes.GetShape(4));
     lD1.mLinks.AddLink(lD1.mShapes.GetShape(1), lD1.mShapes.GetShape(5));
     lD1.mLinks.AddLink(lD1.mShapes.GetShape(2), lD1.mShapes.GetShape(3));
+
+    lD1.SetDebug();
+
+    lD1.PositionShapes();
 
     lD1.Generate_HTML(HI::FOLDER_CURRENT, "Diagram_Base_1", "Diagram - Base - 1");
 

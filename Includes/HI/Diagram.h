@@ -36,6 +36,8 @@ namespace HI
         /// \param aSizeY_pixel The method puts the diagram height there.
         void GetSize(unsigned int * aSizeX_pixel, unsigned int * aSizeY_pixel) const;
 
+        void SetDebug();
+
         /// \param aFolder See FOLDER_...
         /// \param aName   The file name, without extension
         /// \param aTitle  The title
@@ -73,8 +75,20 @@ namespace HI
 
     private:
 
+        void DebugIteration(unsigned int aIteration);
+
         void         PositionShapes(Grid * aGrid);
         unsigned int PositionShape (Grid * aGrid, Shape * aShape);
+
+        void RetrieveDiagramSize(SVG_Document * aDoc);
+
+        struct
+        {
+            unsigned mDebug : 1;
+
+            unsigned mReserved0 : 31;
+        }
+        mFlags;
 
     };
 

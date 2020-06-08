@@ -9,6 +9,8 @@
 /KmsDoc/
 /doxygen_en/
 
+/*.html
+
 Debug/
 Release/
 

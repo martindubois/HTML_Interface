@@ -84,6 +84,8 @@ namespace HI
 
         void Init();
 
+        bool IsCrossing_Vertical(const Link * aLink) const;
+
         void GetDelta(double * aDX_pixel, double * aDY_pixel) const;
 
         double GetSlope() const;

@@ -30,7 +30,7 @@
 #define RETRIEVE_DELTA                \
     double lDX_pixel;                 \
     double lDY_pixel;                 \
-    GetDelta(&lDX_pixel, &lDY_pixel);
+    GetDelta(&lDX_pixel, &lDY_pixel)
 
 #define RETRIEVE_XY                           \
     assert(NULL  != mFrom);                   \
@@ -41,7 +41,15 @@
     unsigned int lTX_pixel;                   \
     unsigned int lTY_pixel;                   \
     mFrom->GetCenter(&lFX_pixel, &lFY_pixel); \
-    mTo  ->GetCenter(&lTX_pixel, &lTY_pixel);
+    mTo  ->GetCenter(&lTX_pixel, &lTY_pixel)
+
+// Static function declaration
+/////////////////////////////////////////////////////////////////////////////
+
+static bool DoOverlap_Excl(unsigned int aAF, unsigned int aAT, unsigned int aBF, unsigned int aBT);
+
+static bool IsIn_Excl(unsigned int aFrom, unsigned int aTo, unsigned int aValue);
+static bool IsIn_Incl(unsigned int aFrom, unsigned int aTo, unsigned int aValue);
 
 namespace HI
 {
@@ -86,7 +94,7 @@ namespace HI
 
     double Link::GetLength() const
     {
-        RETRIEVE_DELTA
+        RETRIEVE_DELTA;
 
         assert((0 != lDX_pixel) || (0 != lDY_pixel));
 
@@ -135,56 +143,49 @@ namespace HI
     {
         assert(NULL != aLink);
 
-        RETRIEVE_XY
+        if (IsVertical())
+        {
+            return IsCrossing_Vertical(aLink);
+        }
+
+        RETRIEVE_XY;
 
         double lX_pixel;
 
-        if (IsVertical())
+        unsigned int lBFX_pixel;
+        unsigned int lBFY_pixel;
+
+        aLink->GetFrom()->GetCenter(&lBFX_pixel, &lBFY_pixel);
+
+        if (aLink->IsVertical())
         {
-            if (aLink->IsVertical())
+            lX_pixel = lBFX_pixel;
+        }
+        else
+        {
+            double lAS =        GetSlope();
+            double lBS = aLink->GetSlope();
+
+            if (lAS == lBS)
             {
                 return false;
             }
 
-            lX_pixel = lFX_pixel;
-        }
-        else
-        {
-            unsigned int lBFX_pixel;
-            unsigned int lBFY_pixel;
+            double lAY0_pixel = lFY_pixel ;
+            double lBY0_pixel = lBFY_pixel;
 
-            aLink->GetFrom()->GetCenter(&lBFX_pixel, &lBFY_pixel);
+            lAY0_pixel -= lAS * lFX_pixel ;
+            lBY0_pixel -= lBS * lBFX_pixel;
 
-            if (aLink->IsVertical())
-            {
-                lX_pixel = lBFX_pixel;
-            }
-            else
-            {
-                double lAS =        GetSlope();
-                double lBS = aLink->GetSlope();
-
-                if (lAS == lBS)
-                {
-                    return false;
-                }
-
-                double lAY0_pixel = lFY_pixel;
-                double lBY0_pixel = lBFY_pixel;
-
-                lAY0_pixel -= lAS * lFX_pixel;
-                lBY0_pixel -= lBS * lBFX_pixel;
-
-                lX_pixel = (lBY0_pixel - lAY0_pixel) / (lAS - lBS);
-            }
+            lX_pixel = (lBY0_pixel - lAY0_pixel) / (lAS - lBS);
         }
 
-        return ((lFX_pixel >= lX_pixel) || (lTX_pixel >= lX_pixel)) && ((lFX_pixel <= lX_pixel) || (lTX_pixel <= lX_pixel));
+        return IsIn_Incl(lFX_pixel, lTX_pixel, lX_pixel);
     }
 
     bool Link::IsHorizontal() const
     {
-        RETRIEVE_XY
+        RETRIEVE_XY;
 
         return (lFY_pixel == lTY_pixel);
     }
@@ -193,7 +194,7 @@ namespace HI
     {
         assert(NULL != aLink);
 
-        RETRIEVE_XY
+        RETRIEVE_XY;
 
         unsigned int lBFX_pixel;
         unsigned int lBFY_pixel;
@@ -205,8 +206,10 @@ namespace HI
 
         if (IsVertical())
         {
-            if ((lBFY_pixel <= lFY_pixel) && (lBFY_pixel <= lTY_pixel) && (lBTY_pixel <= lFY_pixel) && (lBTY_pixel <= lTY_pixel)) { return false; }
-            if ((lBFY_pixel >= lFY_pixel) && (lBFY_pixel >= lTY_pixel) && (lBTY_pixel >= lFY_pixel) && (lBTY_pixel >= lTY_pixel)) { return false; }
+            if (!DoOverlap_Excl(lFY_pixel, lTY_pixel, lBFY_pixel, lBTY_pixel))
+            {
+                return false;
+            }
 
             return aLink->IsVertical() && (lFX_pixel == lBFX_pixel);
         }
@@ -216,16 +219,20 @@ namespace HI
             return false;
         }
 
-        if ((lBFX_pixel <= lFX_pixel) && (lBFX_pixel <= lTX_pixel) && (lBTX_pixel <= lFX_pixel) && (lBTX_pixel <= lTX_pixel)) { return false; }
-        if ((lBFX_pixel >= lFX_pixel) && (lBFX_pixel >= lTX_pixel) && (lBTX_pixel >= lFX_pixel) && (lBTX_pixel >= lTX_pixel)) { return false; }
+        if (!DoOverlap_Excl(lFX_pixel, lTX_pixel, lBFX_pixel, lBTX_pixel))
+        {
+            return false;
+        }
 
         if (IsHorizontal())
         {
             return aLink->IsHorizontal() && (lFY_pixel == lBFY_pixel);
         }
 
-        if ((lBFY_pixel <= lFY_pixel) && (lBFY_pixel <= lTY_pixel) && (lBTY_pixel <= lFY_pixel) && (lBTY_pixel <= lTY_pixel)) { return false; }
-        if ((lBFY_pixel >= lFY_pixel) && (lBFY_pixel >= lTY_pixel) && (lBTY_pixel >= lFY_pixel) && (lBTY_pixel >= lTY_pixel)) { return false; }
+        if (!DoOverlap_Excl(lFY_pixel, lTY_pixel, lBFY_pixel, lBTY_pixel))
+        {
+            return false;
+        }
 
         double lAS =        GetSlope();
         double lBS = aLink->GetSlope();
@@ -246,7 +253,7 @@ namespace HI
 
     bool Link::IsVertical() const
     {
-        RETRIEVE_XY
+        RETRIEVE_XY;
 
         return (lFX_pixel == lTX_pixel);
     }
@@ -260,7 +267,7 @@ namespace HI
     {
         assert(NULL != aDoc);
 
-        RETRIEVE_XY
+        RETRIEVE_XY;
 
         aDoc->Attribute_Set(SVG_Document::ATTR_X1, lFX_pixel);
         aDoc->Attribute_Set(SVG_Document::ATTR_Y1, lFY_pixel);
@@ -280,12 +287,52 @@ namespace HI
         mFlags.mAutoDelete = false;
     }
 
+    bool Link::IsCrossing_Vertical(const Link * aLink) const
+    {
+        assert(NULL != aLink);
+
+        if (aLink->IsVertical())
+        {
+            return false;
+        }
+
+        RETRIEVE_XY;
+
+        unsigned int lBFX_pixel;
+        unsigned int lBFY_pixel;
+        unsigned int lBTX_pixel;
+        unsigned int lBTY_pixel;
+
+        aLink->GetFrom()->GetCenter(&lBFX_pixel, &lBFY_pixel);
+        aLink->GetTo  ()->GetCenter(&lBTX_pixel, &lBTY_pixel);
+
+        if (!IsIn_Incl(lBFX_pixel, lBTX_pixel, lFX_pixel))
+        {
+            return false;
+        }
+
+        double lDeltaX_pixel = lBTX_pixel;
+        double lDeltaY_pixel = lBTY_pixel;
+
+        lDeltaX_pixel -= lBFX_pixel;
+        lDeltaY_pixel -= lBFY_pixel;
+
+        double lFactor = lFX_pixel;
+
+        lFactor -= lBFX_pixel;
+        lFactor /= lDeltaX_pixel;
+
+        double lY_pixel = lBFY_pixel + lDeltaY_pixel * lFactor;
+
+        return IsIn_Incl(lFY_pixel, lTY_pixel, lY_pixel);
+    }
+
     void Link::GetDelta(double * aDX_pixel, double * aDY_pixel) const
     {
         assert(NULL != aDX_pixel);
         assert(NULL != aDY_pixel);
 
-        RETRIEVE_XY
+        RETRIEVE_XY;
 
         *aDX_pixel = lTX_pixel;
         *aDY_pixel = lTY_pixel;
@@ -296,11 +343,65 @@ namespace HI
 
     double Link::GetSlope() const
     {
-        RETRIEVE_DELTA
+        RETRIEVE_DELTA;
 
         assert(0 != lDX_pixel);
 
         return lDY_pixel / lDX_pixel;
     }
 
+}
+
+// Static functions
+/////////////////////////////////////////////////////////////////////////////
+
+bool DoOverlap_Excl(unsigned int aAF, unsigned int aAT, unsigned int aBF, unsigned int aBT)
+{
+    assert(aAF != aAT);
+
+    if ((aBF <= aAF) && (aBT <= aAF) && (aBF <= aAT) && (aBT <= aAT))
+    {
+        return false;
+    }
+
+    if ((aBF >= aAF) && (aBT >= aAF) && (aBF >= aAT) && (aBT >= aAT))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool IsIn_Excl(unsigned int aFrom, unsigned int aTo, unsigned int aValue)
+{
+    assert(aFrom != aTo);
+
+    if ((aFrom <= aValue) && (aTo <= aValue))
+    {
+        return false;
+    };
+
+    if ((aFrom >= aValue) && (aTo >= aValue))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool IsIn_Incl(unsigned int aFrom, unsigned int aTo, unsigned int aValue)
+{
+    assert(aFrom != aTo);
+
+    if ((aFrom < aValue) && (aTo < aValue))
+    {
+        return false;
+    };
+
+    if ((aFrom > aValue) && (aTo > aValue))
+    {
+        return false;
+    }
+
+    return true;
 }

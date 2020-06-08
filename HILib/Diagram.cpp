@@ -29,10 +29,16 @@ namespace HI
 
     Diagram::Diagram()
     {
+        mFlags.mDebug = false;
     }
 
     Diagram::~Diagram()
     {
+    }
+
+    void Diagram::SetDebug()
+    {
+        mFlags.mDebug = true;
     }
 
     void Diagram::Generate_HTML(FolderId aFolder, const char * aName, const char * aTitle)
@@ -56,17 +62,9 @@ namespace HI
     {
         assert(NULL != aDoc);
 
-        PositionShapes();
-
-        unsigned int lSizeX_pixel;
-        unsigned int lSizeY_pixel;
-
-        mShapes.GetDiagramSize(&lSizeX_pixel, &lSizeY_pixel);
-
         SVG_Document lDoc;
 
-        lDoc.Attribute_Set(SVG_Document::ATTR_HEIGHT, lSizeY_pixel);
-        lDoc.Attribute_Set(SVG_Document::ATTR_WIDTH , lSizeX_pixel);
+        RetrieveDiagramSize(&lDoc);
 
         lDoc.Create(aDoc);
 
@@ -83,6 +81,22 @@ namespace HI
         mShapes.Generate_SVG(aDoc);
     }
 
+    void Diagram::Generate_SVG(HI::FolderId aFolder, const char * aName)
+    {
+        assert(FOLDER_QTY >  aFolder);
+        assert(NULL       != aName  );
+
+        SVG_Document lDoc;
+
+        RetrieveDiagramSize(&lDoc);
+
+        lDoc.Create(aFolder, aName);
+
+            Generate_SVG(&lDoc);
+
+        lDoc.Close();
+    }
+
     // TODO Diagram.Generate
     //      Add a phase 3 to remove empty space on top and on left
 
@@ -97,6 +111,15 @@ namespace HI
 
     // Private
     /////////////////////////////////////////////////////////////////////////
+
+    void Diagram::DebugIteration(unsigned int aIteration)
+    {
+        char lName[64];
+
+        sprintf_s(lName, "Diagram_Debug_Iteration_%03u", aIteration);
+
+        Generate_SVG(FOLDER_TEMP, lName);
+    }
 
     void Diagram::PositionShapes(Grid * aGrid)
     {
@@ -125,6 +148,15 @@ namespace HI
                 // Nothing moved but shape at the begining of the list could find better place now that the one at the end of the liste
                 // moved. This is why we do one more iteration.
                 lIteration = 1;
+            }
+
+            if (mFlags.mDebug)
+            {
+                char lName[64];
+
+                sprintf_s(lName, "Diagram_Debug_Iteration_%03u", lIteration);
+
+                Generate_SVG(FOLDER_TEMP, lName);
             }
         }
         while (0 < lIteration);
@@ -167,6 +199,19 @@ namespace HI
         aShape->SetCenter(lX_pixel, lY_pixel);
 
         return lResult;
+    }
+
+    void Diagram::RetrieveDiagramSize(SVG_Document * aDoc)
+    {
+        assert(NULL != aDoc);
+
+        unsigned int lSizeX_pixel;
+        unsigned int lSizeY_pixel;
+
+        mShapes.GetDiagramSize(&lSizeX_pixel, &lSizeY_pixel);
+
+        aDoc->Attribute_Set(SVG_Document::ATTR_HEIGHT, lSizeY_pixel);
+        aDoc->Attribute_Set(SVG_Document::ATTR_WIDTH , lSizeX_pixel);
     }
 
 }
