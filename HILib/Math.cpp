@@ -36,8 +36,6 @@ bool Math_Range_Include_Excl(unsigned int aFrom, unsigned int aTo, double aValue
 
 bool Math_Range_Include_Incl(unsigned int aFrom, unsigned int aTo, double aValue)
 {
-    assert(aFrom != aTo);
-
     if ((aFrom < aValue) && (aTo < aValue))
     {
         return false;

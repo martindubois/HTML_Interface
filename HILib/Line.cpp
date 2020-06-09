@@ -17,6 +17,7 @@
 
 // ===== HILib ==============================================================
 #include "Math.h"
+#include "Straight.h"
 
 namespace HI
 {
@@ -55,29 +56,40 @@ namespace HI
             return IsCrossing_Vertical(aLine);
         }
 
+        Straight lA;
+
+        GetStraight(&lA);
+
         double lX_pixel;
 
         if (aLine.IsVertical())
         {
             lX_pixel = aLine.mFrom.GetX();
+
+            double lY_pixel = lA.Evaluate(lX_pixel);
+
+            if (!Math_Range_Include_Incl(mFrom.GetY(), mTo.GetY(), lY_pixel))
+            {
+                return false;
+            }
         }
         else
         {
-            double lAS =       GetSlope();
-            double lBS = aLine.GetSlope();
+            Straight lB;
 
-            if (lAS == lBS)
+            aLine.GetStraight(&lB);
+
+            if (lA.GetM() == lB.GetM())
             {
                 return false;
             }
 
-            double lAY0_pixel =       mFrom.GetY();
-            double lBY0_pixel = aLine.mFrom.GetY();
+            lX_pixel = (lB.GetB() - lA.GetB()) / (lA.GetM() - lB.GetM());
 
-            lAY0_pixel -= lAS *       mFrom.GetX();
-            lBY0_pixel -= lBS * aLine.mFrom.GetX();
-
-            lX_pixel = (lBY0_pixel - lAY0_pixel) / (lAS - lBS);
+            if (!Math_Range_Include_Incl(aLine.mFrom.GetX(), aLine.mTo.GetX(), lX_pixel))
+            {
+                return false;
+            }
         }
 
         return Math_Range_Include_Incl(mFrom.GetX(), mTo.GetX(), lX_pixel);
@@ -117,21 +129,18 @@ namespace HI
             return false;
         }
 
-        double lAS =       GetSlope();
-        double lBS = aLine.GetSlope();
+        Straight lA;
+        Straight lB;
 
-        if (lAS != lBS)
+        GetStraight(&lA);
+        aLine.GetStraight(&lB);
+
+        if (lA.GetM() != lB.GetM())
         {
             return false;
         }
 
-        double lAY0_pixel =       mFrom.GetY();
-        double lBY0_pixel = aLine.mFrom.GetY();
-
-        lAY0_pixel -= lAS *       mFrom.GetX();
-        lBY0_pixel -= lBS * aLine.mFrom.GetX();
-
-        return lAY0_pixel == lBY0_pixel;
+        return lA.GetB() == lB.GetB();
     }
 
     bool Line::IsVertical() const
@@ -141,6 +150,26 @@ namespace HI
 
     // Private
     /////////////////////////////////////////////////////////////////////////
+
+    void Line::GetStraight(Straight * aOut) const
+    {
+        assert(NULL != aOut);
+
+        double lDX_pixel;
+        double lDY_pixel;
+
+        GetDelta(&lDX_pixel, &lDY_pixel);
+
+        assert(0 != lDX_pixel);
+
+        double lM = lDY_pixel / lDX_pixel;
+
+        double lB = mFrom.GetY();
+
+        lB -= lM * mFrom.GetX();
+
+        aOut->Set(lB, lM);
+    }
 
     void Line::GetDelta(double * aDX_pixel, double * aDY_pixel) const
     {
@@ -152,18 +181,6 @@ namespace HI
 
         *aDX_pixel -= mFrom.GetX();
         *aDY_pixel -= mFrom.GetY();
-    }
-
-    double Line::GetSlope() const
-    {
-        double lDX_pixel;
-        double lDY_pixel;
-
-        GetDelta(&lDX_pixel, &lDY_pixel);
-
-        assert(0 != lDX_pixel);
-
-        return lDY_pixel / lDX_pixel;
     }
 
     bool Line::IsCrossing_Vertical(const Line & aLine) const

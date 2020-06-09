@@ -54,14 +54,20 @@ KMS_TEST_BEGIN(Diagram_Base)
     lD1.mShapes.AddShape("Box", "Bravo - A - E - F");
     lD1.mShapes.AddShape("Box", "Charlie - A - D");
     lD1.mShapes.AddShape("Box", "Delta - C");
-    lD1.mShapes.AddShape("Box", "Echo - B");
-    lD1.mShapes.AddShape("Box", "Foxtrot - B", HI::Shape::TYPE_ELLIPSE);
+    lD1.mShapes.AddShape("Box", "Echo - B - G");
+    lD1.mShapes.AddShape("Box", "Foxtrot - B - H", HI::Shape::TYPE_ELLIPSE);
+    lD1.mShapes.AddShape("Box", "Golf - E - I");
+    lD1.mShapes.AddShape("Box", "Hotel - F");
+    lD1.mShapes.AddShape("Box", "India - G");
 
     lD1.mLinks.AddLink(lD1.mShapes.GetShape(0), lD1.mShapes.GetShape(1));
     lD1.mLinks.AddLink(lD1.mShapes.GetShape(0), lD1.mShapes.GetShape(2));
     lD1.mLinks.AddLink(lD1.mShapes.GetShape(1), lD1.mShapes.GetShape(4));
     lD1.mLinks.AddLink(lD1.mShapes.GetShape(1), lD1.mShapes.GetShape(5));
     lD1.mLinks.AddLink(lD1.mShapes.GetShape(2), lD1.mShapes.GetShape(3));
+    lD1.mLinks.AddLink(lD1.mShapes.GetShape(4), lD1.mShapes.GetShape(6));
+    lD1.mLinks.AddLink(lD1.mShapes.GetShape(5), lD1.mShapes.GetShape(7));
+    lD1.mLinks.AddLink(lD1.mShapes.GetShape(6), lD1.mShapes.GetShape(8));
 
     lD1.SetDebug();
 

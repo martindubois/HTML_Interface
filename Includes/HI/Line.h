@@ -11,6 +11,9 @@
 // ===== Includes ===========================================================
 #include <HI/Point.h>
 
+// ===== HILib ==============================================================
+class Straight;
+
 namespace HI
 {
 
@@ -61,9 +64,8 @@ namespace HI
 
     private:
 
+        void GetStraight(Straight * aOut) const;
         void GetDelta(double * aDX_pixel, double * aDY_pixel) const;
-
-        double GetSlope() const;
 
         bool IsCrossing_Vertical(const Line & aLine) const;
 

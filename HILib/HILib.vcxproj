@@ -47,6 +47,7 @@
     <ClInclude Include="HTTP.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="OS.h" />
+    <ClInclude Include="Straight.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
