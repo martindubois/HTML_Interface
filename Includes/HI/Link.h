@@ -38,6 +38,9 @@ namespace HI
         /// \return The length of the link in pixel
         double GetLength() const;
 
+        /// \return See HI::Line
+        Line GetLine() const;
+
         /// \param aShape One of the two connected shapes
         /// \return This method returns the pointer to the other connected shape.
         const Shape * GetOtherShape(const Shape * aShape) const;
@@ -49,24 +52,6 @@ namespace HI
         /// \retval false Not connected
         /// \retval true  Connected
         bool IsConnectedTo(const Shape * aShape) const;
-
-        /// \param aLink The Link to verify
-        /// \retval false No crossing
-        /// \retval true  Crossing
-        bool IsCrossing(const Link * aLink) const;
-
-        /// \retval false Not horizontal
-        /// \retval true  Horizontal
-        bool IsHorizontal() const;
-
-        /// \param aLink The Link to verify
-        /// \retval false No overlap
-        /// \retval true  Overlap
-        bool IsOverlapping(const Link * aLink) const;
-
-        /// \retval false Not vertical
-        /// \retval true  Vertical
-        bool IsVertical() const;
 
         void SetAutoDelete();
 
@@ -83,12 +68,6 @@ namespace HI
     private:
 
         void Init();
-
-        bool IsCrossing_Vertical(const Link * aLink) const;
-
-        void GetDelta(double * aDX_pixel, double * aDY_pixel) const;
-
-        double GetSlope() const;
 
         struct
         {

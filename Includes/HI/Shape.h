@@ -13,10 +13,12 @@
 
 // ===== Includes ===========================================================
 #include <HI/CSS_Colors.h>
+#include <HI/Point.h>
 
 namespace HI
 {
 
+    class Line        ;
     class SVG_Document;
 
     /// \brief HI::Shape
@@ -54,10 +56,6 @@ namespace HI
         /// \return The bottom in pixel
         unsigned int GetBottom() const;
 
-        /// \param aX_pixel The method puts the X value there.
-        /// \param aY_pixel The method puts the Y value there.
-        void GetCenter(unsigned int * aX_pixel, unsigned int * aY_pixel) const;
-
         /// \return This method return a pointer to an internal buffer.
         const char * GetName() const;
 
@@ -68,17 +66,12 @@ namespace HI
         /// \param aSizeY_pixel The method puts the height here.
         void GetSize(unsigned int * aSizeX_pixel, unsigned int * aSizeY_pixel) const;
 
-        /// \param aX_pixel
-        /// \param aY_pixel
-        /// \retval false No
-        /// \retval true  Yes
-        bool IsCenterAt(unsigned int aX_pixel, unsigned int aY_pixel) const;
+        /// \param aLine The line to look for intersection with
+        /// \retval false No intersection
+        /// \retval true  Intersection
+        bool IsCrossing(const Line & aLine) const;
 
         void SetAutoDelete();
-
-        /// \param aX_pixel The X position
-        /// \param aY_pixel The y position
-        void SetCenter(unsigned int aX_pixel, unsigned int aY_pixel);
 
         void SetDoNotMove();
 
@@ -104,11 +97,16 @@ namespace HI
 
         /// \param aDoc The document to generate into
         /// \exception std::exception
-        virtual void Generate_SVG(HI::SVG_Document * aDoc) const;
+        virtual void Generate_SVG(SVG_Document * aDoc) const;
+
+        Point mCenter;
 
     private:
 
         void Init(Type aType);
+
+        void Generate_SVG_Ellipse(SVG_Document * aDoc) const;
+        void Generate_SVG_Rect   (SVG_Document * aDoc) const;
 
         struct
         {
@@ -122,9 +120,6 @@ namespace HI
         std::string mName    ;
         Type        mType    ;
         std::string mTypeName;
-
-        unsigned int mCenterX_pixel;
-        unsigned int mCenterY_pixel;
 
         std::string mFillColor;
 

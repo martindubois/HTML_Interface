@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/ShapeList.cpp
 
-// CODE REVIEW 2020-05-25 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-09 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-25 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-09 KMS - Martin Dubois, P.Eng.
 
 // TODO ShapeList
 //      Add the Trim method to remove empty space on top and on left
@@ -67,14 +67,16 @@ namespace HI
         AddShape(lShape);
     }
 
-    const Shape * ShapeList::FindByCenter(unsigned int aX_pixel, unsigned int aY_pixel) const
+    const Shape * ShapeList::FindByCenter(const Point & aCenter) const
     {
+        assert(NULL != &aCenter);
+
         for (InternalList::const_iterator lIt = mShapes.begin(); lIt != mShapes.end(); lIt++)
         {
             const Shape * lShape = *lIt;
             assert(NULL != lShape);
 
-            if (lShape->IsCenterAt(aX_pixel, aY_pixel))
+            if (lShape->mCenter == aCenter)
             {
                 return lShape;
             }
@@ -188,6 +190,8 @@ namespace HI
 
     void ShapeList::PositionShapes(Grid * aGrid)
     {
+        assert(NULL != aGrid);
+
         ComputeGrid(aGrid);
 
         aGrid->Iterator_Reset();
@@ -199,7 +203,7 @@ namespace HI
 
             if (lShape->CanMove())
             {
-                lShape->SetCenter(aGrid->Iterator_GetX(), aGrid->Iterator_GetY());
+                lShape->mCenter = aGrid->Iterator_GetPosition();
                 aGrid->Iterator_Next();
             }
         }

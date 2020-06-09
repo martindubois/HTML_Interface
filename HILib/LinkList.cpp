@@ -4,15 +4,17 @@
 // Product   HTML_Interface
 // File      HILib/LinkList.cpp
 
-// CODE REVIEW 2020-05-27 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-09 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-27 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-09 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
 
 // ===== Includes ===========================================================
+#include <HI/Line.h>
 #include <HI/Link.h>
+#include <HI/Shape.h>
 
 #include <HI/LinkList.h>
 
@@ -103,26 +105,49 @@ namespace HI
 
             if (lLink->IsConnectedTo(aShape))
             {
-                const Shape * lOtherShape = lLink->GetOtherShape(aShape);
+                lResult += GetWeight(aShape, lLink);
+            }
+        }
 
-                lResult += lLink->GetLength();
+        return lResult;
+    }
 
-                for (InternalList::const_iterator lIt2 = mLinks.begin(); lIt2 != mLinks.end(); lIt2++)
+    // Private
+    /////////////////////////////////////////////////////////////////////////
+
+    double LinkList::GetWeight(const Shape * aShape, const Link * aLink) const
+    {
+        assert(NULL != aShape);
+        assert(NULL != aLink );
+
+        const Shape * lOtherShape = aLink->GetOtherShape(aShape);
+
+        double lResult = aLink->GetLength();
+
+        for (InternalList::const_iterator lIt2 = mLinks.begin(); lIt2 != mLinks.end(); lIt2++)
+        {
+            Link * lLink2 = *lIt2;
+            assert(NULL != lLink2);
+
+            if (aLink != lLink2)
+            {
+                Line lLine = aLink->GetLine();
+
+                if (lLine.IsOverlapping(lLink2->GetLine()))
                 {
-                    Link * lLink2 = *lIt2;
-                    assert(NULL != lLink2);
+                    lResult += 1000;
+                }
 
-                    if (lLink != lLink2)
+                if (!lLink2->IsConnectedTo(aShape) && !lLink2->IsConnectedTo(lOtherShape))
+                {
+                    if (lLine.IsCrossing(lLink2->GetLine()))
                     {
-                        if (lLink->IsOverlapping(lLink2))
-                        {
-                            lResult += 1000;
-                        }
+                        lResult += 100;
+                    }
 
-                        if (!lLink2->IsConnectedTo(aShape) && !lLink2->IsConnectedTo(lOtherShape) && lLink->IsCrossing(lLink2))
-                        {
-                            lResult += 100;
-                        }
+                    if ((lLink2->GetFrom()->IsCrossing(lLine)) || (lLink2->GetTo()->IsCrossing(lLine)))
+                    {
+                        lResult += 1000;
                     }
                 }
             }

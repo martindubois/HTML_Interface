@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Shape.cpp
 
-// CODE REVIEW 2020-05-25 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-09 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-25 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-09 KMS - Martin Dubois, P.Eng.
 
 // TODO Shape
 //      Add a line width
@@ -24,6 +24,7 @@
 #include <assert.h>
 
 // ===== Includes ===========================================================
+#include <HI/Line.h>
 #include <HI/SVG_Document.h>
 
 #include <HI/Shape.h>
@@ -79,18 +80,7 @@ namespace HI
     {
         assert(0 < mSizeY_pixel);
 
-        return mCenterY_pixel + mSizeY_pixel / 2;
-    }
-
-    // aX_pixel [---;-W-]
-    // aY_pixel [---;-W-]
-    void Shape::GetCenter(unsigned int * aX_pixel, unsigned int * aY_pixel) const
-    {
-        assert(NULL != aX_pixel);
-        assert(NULL != aY_pixel);
-
-        *aX_pixel = mCenterX_pixel;
-        *aY_pixel = mCenterY_pixel;
+        return mCenter.GetY() + mSizeY_pixel / 2;
     }
 
     const char * Shape::GetName() const
@@ -102,7 +92,7 @@ namespace HI
     {
         assert(0 < mSizeX_pixel);
 
-        return mCenterX_pixel + mSizeX_pixel / 2;
+        return mCenter.GetX() + mSizeX_pixel / 2;
     }
 
     // aSizeX_pixel [---;-W-]
@@ -116,20 +106,22 @@ namespace HI
         *aSizeY_pixel = mSizeY_pixel;
     }
 
-    bool Shape::IsCenterAt(unsigned int aX_pixel, unsigned int aY_pixel) const
+    bool Shape::IsCrossing(const Line & aLine) const
     {
-        return (mCenterX_pixel == aX_pixel) && (mCenterY_pixel == aY_pixel);
+        assert(NULL != &aLine);
+
+        unsigned int lRX_pixel = mSizeX_pixel / 2;
+        unsigned int lRY_pixel = mSizeY_pixel / 2;
+
+        Line lH(mCenter.GetX() - lRX_pixel, mCenter.GetY(), mCenter.GetX() + lRX_pixel, mCenter.GetY());
+        Line lV(mCenter.GetX(), mCenter.GetY() - lRY_pixel, mCenter.GetX(), mCenter.GetY() + lRY_pixel);
+
+        return lH.IsCrossing(aLine) || lV.IsCrossing(aLine);
     }
 
     void Shape::SetAutoDelete()
     {
         mFlags.mAutoDelete = true;
-    }
-
-    void Shape::SetCenter(unsigned int aX_pixel, unsigned int aY_pixel)
-    {
-        mCenterX_pixel = aX_pixel;
-        mCenterY_pixel = aY_pixel;
     }
 
     void Shape::SetFillColor(CSS_Color aColor)
@@ -170,9 +162,6 @@ namespace HI
         assert(0 < mSizeX_pixel);
         assert(0 < mSizeY_pixel);
 
-        unsigned int lX_pixel = mCenterX_pixel - mSizeX_pixel / 2;
-        unsigned int lY_pixel = mCenterY_pixel - mSizeY_pixel / 2;
-
         char lStyle[64];
 
         sprintf_s(lStyle, "fill:%s; stroke:black;", mFillColor.c_str());
@@ -181,29 +170,14 @@ namespace HI
 
         switch (mType)
         {
-        case TYPE_ELLIPSE:
-            aDoc->Attribute_Set(SVG_Document::ATTR_CX, mCenterX_pixel);
-            aDoc->Attribute_Set(SVG_Document::ATTR_CY, mCenterY_pixel);
-            aDoc->Attribute_Set(SVG_Document::ATTR_RX, mSizeX_pixel / 2);
-            aDoc->Attribute_Set(SVG_Document::ATTR_RY, mSizeY_pixel / 2);
-
-            aDoc->Tag(SVG_Document::TAG_ELLIPSE);
-            break;
-
-        case TYPE_RECT:
-            aDoc->Attribute_Set(SVG_Document::ATTR_HEIGHT, mSizeY_pixel);
-            aDoc->Attribute_Set(SVG_Document::ATTR_WIDTH , mSizeX_pixel);
-            aDoc->Attribute_Set(SVG_Document::ATTR_X     , lX_pixel);
-            aDoc->Attribute_Set(SVG_Document::ATTR_Y     , lY_pixel);
-
-            aDoc->Tag(SVG_Document::TAG_RECT);
-            break;
+        case TYPE_ELLIPSE: Generate_SVG_Ellipse(aDoc); break;
+        case TYPE_RECT   : Generate_SVG_Rect   (aDoc); break;
 
         default: assert(false);
         }
 
-        lX_pixel +=  5;
-        lY_pixel += 20;
+        unsigned int lX_pixel = mCenter.GetX() - mSizeX_pixel / 2 +  5;
+        unsigned int lY_pixel = mCenter.GetY() - mSizeY_pixel / 2 + 20;
 
         aDoc->Attribute_Set(SVG_Document::ATTR_X    , lX_pixel);
         aDoc->Attribute_Set(SVG_Document::ATTR_Y    , lY_pixel);
@@ -226,9 +200,6 @@ namespace HI
     {
         assert(TYPE_QTY > aType);
 
-        mCenterX_pixel = 0;
-        mCenterY_pixel = 0;
-
         mFillColor = "white";
 
         mFlags.mAutoDelete = false;
@@ -237,6 +208,30 @@ namespace HI
         mSizeY_pixel = SIZE_Y_DEFAULT_pixel;
 
         mType = aType;
+    }
+
+    void Shape::Generate_SVG_Ellipse(SVG_Document * aDoc) const
+    {
+        assert(NULL != aDoc);
+
+        aDoc->Attribute_Set(SVG_Document::ATTR_CX, mCenter.GetX());
+        aDoc->Attribute_Set(SVG_Document::ATTR_CY, mCenter.GetY());
+        aDoc->Attribute_Set(SVG_Document::ATTR_RX, mSizeX_pixel / 2);
+        aDoc->Attribute_Set(SVG_Document::ATTR_RY, mSizeY_pixel / 2);
+
+        aDoc->Tag(SVG_Document::TAG_ELLIPSE);
+    }
+
+    void Shape::Generate_SVG_Rect(SVG_Document * aDoc) const
+    {
+        assert(NULL != aDoc);
+
+        aDoc->Attribute_Set(SVG_Document::ATTR_HEIGHT, mSizeY_pixel);
+        aDoc->Attribute_Set(SVG_Document::ATTR_WIDTH , mSizeX_pixel);
+        aDoc->Attribute_Set(SVG_Document::ATTR_X     , mCenter.GetX() - mSizeX_pixel / 2);
+        aDoc->Attribute_Set(SVG_Document::ATTR_Y     , mCenter.GetY() - mSizeY_pixel / 2);
+
+        aDoc->Tag(SVG_Document::TAG_RECT);
     }
 
 }

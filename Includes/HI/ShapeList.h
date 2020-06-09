@@ -38,10 +38,9 @@ namespace HI
         /// \param aType     See Shape::TYPE_...
         void AddShape(const char * aTypeName, const char * aName, Shape::Type aType = Shape::TYPE_RECT);
 
-        /// \param aX_pixel
-        /// \param aY_pixel
+        /// \param aCenter
         /// \return This method returns a pointer to the found Shape or NULL.
-        const Shape * FindByCenter(unsigned int aX_pixel, unsigned int aY_pixel) const;
+        const Shape * FindByCenter(const Point & aCenter) const;
 
         /// \param aSizeX_pixel The method puts the diagram width there.
         /// \param aSizeY_pixel The method puts the diagram height there.

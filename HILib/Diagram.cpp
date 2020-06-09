@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Diagram.cpp
 
-// CODE REVIEW 2020-05-27 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-09 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-27 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-09 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -167,10 +167,7 @@ namespace HI
         assert(NULL != aGrid );
         assert(NULL != aShape);
 
-        unsigned int lX_pixel;
-        unsigned int lY_pixel;
-
-        aShape->GetCenter(&lX_pixel, &lY_pixel);
+        Point lCenter = aShape->mCenter;
 
         double lWeight = mLinks.GetWeight(aShape);
 
@@ -180,23 +177,22 @@ namespace HI
 
         do
         {
-            if (NULL == mShapes.FindByCenter(aGrid->Iterator_GetX(), aGrid->Iterator_GetY()))
+            if (NULL == mShapes.FindByCenter(aGrid->Iterator_GetPosition()))
             {
-                aShape->SetCenter(aGrid->Iterator_GetX(), aGrid->Iterator_GetY());
+                aShape->mCenter = aGrid->Iterator_GetPosition();
 
                 double lNewWeight = mLinks.GetWeight(aShape);
                 if (lWeight > lNewWeight)
                 {
                     lResult++;
                     lWeight  = lNewWeight;
-                    lX_pixel = aGrid->Iterator_GetX();
-                    lY_pixel = aGrid->Iterator_GetY();
+                    lCenter  = aGrid->Iterator_GetPosition();
                 }
             }
         }
         while (aGrid->Iterator_Next());
 
-        aShape->SetCenter(lX_pixel, lY_pixel);
+        aShape->mCenter = lCenter;
 
         return lResult;
     }

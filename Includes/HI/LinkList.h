@@ -56,6 +56,8 @@ namespace HI
 
     private:
 
+        double GetWeight(const Shape * aShape, const Link * aLink) const;
+
         typedef std::list<Link *> InternalList;
 
         InternalList mLinks;

@@ -6,6 +6,9 @@
 
 #pragma once
 
+// ===== Includes ===========================================================
+#include <HI/Point.h>
+
 class Grid
 {
 
@@ -13,8 +16,7 @@ public:
 
     Grid();
 
-    unsigned int Iterator_GetX ();
-    unsigned int Iterator_GetY ();
+    HI::Point    Iterator_GetPosition();
     bool         Iterator_Next (unsigned int aInc = 1);
     void         Iterator_Reset();
 
@@ -33,12 +35,7 @@ private:
 // Public
 /////////////////////////////////////////////////////////////////////////////
 
-inline unsigned int Grid::Iterator_GetX()
+inline HI::Point Grid::Iterator_GetPosition()
 {
-    return mIndexX * mDelta_pixel;
-}
-
-inline unsigned int Grid::Iterator_GetY()
-{
-    return mIndexY * mDelta_pixel;
+    return HI::Point(mIndexX * mDelta_pixel, mIndexY * mDelta_pixel);
 }

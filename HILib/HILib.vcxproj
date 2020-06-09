@@ -26,9 +26,12 @@
     <ClCompile Include="Document.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="HTML_Document.cpp" />
+    <ClCompile Include="Line.cpp" />
     <ClCompile Include="Link.cpp" />
     <ClCompile Include="LinkList.cpp" />
+    <ClCompile Include="Math.cpp" />
     <ClCompile Include="OS_Windows.cpp" />
+    <ClCompile Include="Point.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="ShapeList.cpp" />
@@ -42,6 +45,7 @@
   <ItemGroup>
     <ClInclude Include="Grid.h" />
     <ClInclude Include="HTTP.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="OS.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
