@@ -19,8 +19,10 @@ Includes/HI
 	Diagram.h
     Document.h
     HTML_Document.h
+	Line.h
 	Link.h
 	LinkList.h
+	Point.h
     Server.h
 	Shape.h
 	ShapeList.h
