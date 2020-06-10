@@ -197,18 +197,11 @@ namespace HI
             return false;
         }
 
-        double lDeltaX_pixel = aLine.mTo.GetX();
-        double lDeltaY_pixel = aLine.mTo.GetY();
+        Straight lB;
 
-        lDeltaX_pixel -= aLine.mFrom.GetX();
-        lDeltaY_pixel -= aLine.mFrom.GetY();
+        aLine.GetStraight(&lB);
 
-        double lFactor = mFrom.GetX();
-
-        lFactor -= aLine.mFrom.GetX();
-        lFactor /= lDeltaX_pixel;
-
-        double lY_pixel = aLine.mFrom.GetY() + lDeltaY_pixel * lFactor;
+        double lY_pixel = lB.Evaluate(mFrom.GetX());;
 
         return Math_Range_Include_Incl(mFrom.GetY(), mTo.GetY(), lY_pixel);
     }
