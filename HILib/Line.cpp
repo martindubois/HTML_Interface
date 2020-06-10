@@ -66,9 +66,14 @@ namespace HI
         {
             lX_pixel = aLine.mFrom.GetX();
 
+            if (!Math_Range_Include_Incl(mFrom.GetX(), mTo.GetX(), lX_pixel))
+            {
+                return false;
+            }
+
             double lY_pixel = lA.Evaluate(lX_pixel);
 
-            if (!Math_Range_Include_Incl(mFrom.GetY(), mTo.GetY(), lY_pixel))
+            if (!Math_Range_Include_Incl(aLine.mFrom.GetY(), aLine.mTo.GetY(), lY_pixel))
             {
                 return false;
             }
@@ -86,13 +91,18 @@ namespace HI
 
             lX_pixel = (lB.GetB() - lA.GetB()) / (lA.GetM() - lB.GetM());
 
+            if (!Math_Range_Include_Incl(mFrom.GetX(), mTo.GetX(), lX_pixel))
+            {
+                return false;
+            }
+
             if (!Math_Range_Include_Incl(aLine.mFrom.GetX(), aLine.mTo.GetX(), lX_pixel))
             {
                 return false;
             }
         }
 
-        return Math_Range_Include_Incl(mFrom.GetX(), mTo.GetX(), lX_pixel);
+        return true;
     }
 
     bool Line::IsHorizontal() const
