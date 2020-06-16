@@ -41,7 +41,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Export.cmd = Export.cmd
 		Export.cmd.txt = Export.cmd.txt
 		Export.txt = Export.txt
+		HTML_Interface.iss = HTML_Interface.iss
 		Import.cmd = Import.cmd
+		License.txt = License.txt
 		README.md = README.md
 		RunDoxygen.cmd = RunDoxygen.cmd
 		Test.cmd = Test.cmd
@@ -81,7 +83,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Static", "Static", "{CEC888
 	ProjectSection(SolutionItems) = preProject
 		Static\ErrorNotFound.html = Static\ErrorNotFound.html
 		Static\favicon.ico = Static\favicon.ico
-		Static\Tests\Server_SetupB.html = Static\Tests\Server_SetupB.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{40DB1B05-8814-414F-8A8D-CF3D34B39722}"

@@ -1,10 +1,10 @@
 @echo off
 
-rem Author     KMS - Martin Dubois, P.Eng.
-rem Copyright  (C) 2020 KMS. All rights reserved.
-rem	Product    HTML_Interface
-rem	File       Import.cmd
-rem	Usage      Import.cmd
+rem Author    KMS - Martin Dubois, P.Eng.
+rem Copyright (C) 2020 KMS. All rights reserved.
+rem	Product   HTML_Interface
+rem	File      Import.cmd
+rem	Usage     .\Import.cmd
 
 echo Executing  Import.cmd  ...
 
@@ -14,7 +14,7 @@ set EXPORT_FOLDER=K:\Export
 
 rem ===== Dependencies ======================================================
 
-set KMS_BASE="%EXPORT_FOLDER%\KmsBase\3.0.16_Windows"
+set KMS_BASE="%EXPORT_FOLDER%\KmsBase\3.0.19_Windows"
 
 rem ===== Constants =========================================================
 

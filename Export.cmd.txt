@@ -1,8 +1,8 @@
 
-# Author     KMS - Martin Dubois, P.Eng.
-# Copyright  (C) 2020 KMS. All rights reserved.
-# Product    HTML_Interface
-# File       Export.cmd.txt
+# Author    KMS - Martin Dubois, P.Eng.
+# Copyright (C) 2020 KMS. All rights reserved.
+# Product   HTML_Interface
+# File      Export.cmd.txt
 
 .
     RunDoxygen.cmd
@@ -10,11 +10,22 @@
 .	Binaries
 .	Libraries
 
+Debug	Binaries/Debug_32
+	GenDoc.exe
+
 Debug	Libraries/Debug_32
     HILib.lib
+	HILib.pdb
 
-Release .
+Installer	.
+# KmsVersion "HTML-Interface_" ".exe" 3
+	HTML-Interface_0.0.22.exe
+
+Release	.
     GenDoc.exe
+
+Release	Binaries/Release_32
+	GenDoc.exe
 
 Release	Libraries/Release_32
     HILib.lib
@@ -23,8 +34,15 @@ Scripts	.
     Import.cmd
     Import.cmd.txt
 
+x64/Debug	Binaries/Debug_64
+	GenDoc.exe
+
 x64/Debug	Libraries/Debug_64
     HILib.lib
+	HILib.pdb
+
+x64/Release	Binaries/Release_64
+	GenDoc.exe
 
 x64/Release	Libraries/Release_64
     HILib.lib
