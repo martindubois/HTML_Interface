@@ -36,7 +36,8 @@ namespace HI
         /// \param aTypeName The type
         /// \param aName     The name
         /// \param aType     See Shape::TYPE_...
-        void AddShape(const char * aTypeName, const char * aName, Shape::Type aType = Shape::TYPE_RECT);
+        /// \return This method returns a pointer to the new instance.
+        Shape * AddShape(const char * aTypeName, const char * aName, Shape::Type aType = Shape::TYPE_RECT);
 
         /// \param aCenter
         /// \return This method returns a pointer to the found Shape or NULL.

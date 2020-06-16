@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/LinkList.cpp
 
-// CODE REVIEW 2020-06-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-16 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-15 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-16 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -44,17 +44,19 @@ namespace HI
 
     // aFrom [-K-;R--]
     // aTo   [-K-;R--]
-    void LinkList::AddLink(const Shape * aFrom, const Shape * aTo)
+    Link * LinkList::AddLink(const Shape * aFrom, const Shape * aTo)
     {
         assert(NULL != aFrom);
         assert(NULL != aTo  );
 
-        Link * lLink = new Link(aFrom, aTo);
-        assert(NULL != lLink);
+        Link * lResult = new Link(aFrom, aTo);
+        assert(NULL != lResult);
 
-        lLink->SetAutoDelete();
+        lResult->SetAutoDelete();
 
-        mLinks.push_back(lLink);
+        mLinks.push_back(lResult);
+
+        return lResult;
     }
 
     double LinkList::GetLength(const Shape * aShape) const

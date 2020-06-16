@@ -34,7 +34,8 @@ namespace HI
 
         /// \param aFrom The Shape where the Link begins
         /// \param aTo   The Shape where the link ends
-        void AddLink(const Shape * aFrom, const Shape * aTo);
+        /// \return This method returns a pointer to the new Link instance.
+        Link * AddLink(const Shape * aFrom, const Shape * aTo);
 
         /// \param aShape The Shape of interrest
         /// \return The number of link connected to the shape

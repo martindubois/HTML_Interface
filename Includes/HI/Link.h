@@ -68,6 +68,9 @@ namespace HI
         /// \param aColor The color
         void SetColor(const char * aColor);
 
+        /// \param aDashArray The dash array
+        void SetDashArray(const char * aDashArray);
+
         /// \param aWeightFactor
         void SetWeightFactor(double aWeightFactor);
 
@@ -91,6 +94,7 @@ namespace HI
         mFlags;
 
         std::string mColor;
+        std::string mDashArray;
 
         const Shape * mFrom;
         const Shape * mTo  ;

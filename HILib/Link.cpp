@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Link.cpp
 
-// CODE REVIEW 2020-06-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-16 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-15 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-16 KMS - Martin Dubois, P.Eng.
 
 // TODO Link
 //      Add arrow
@@ -153,6 +153,13 @@ namespace HI
         mColor = aColor;
     }
 
+    void Link::SetDashArray(const char * aDashArray)
+    {
+        assert(NULL != aDashArray);
+
+        mDashArray = aDashArray;
+    }
+
     void Link::SetWeightFactor(double aWeightFactor)
     {
         assert(0 < aWeightFactor);
@@ -171,17 +178,21 @@ namespace HI
     {
         assert(NULL != aDoc);
 
+        assert(!mColor.empty());
+        assert(0 < mWidth_pixel);
+
         aDoc->Attribute_Set(SVG_Document::ATTR_X1, mFrom->mCenter.GetX());
         aDoc->Attribute_Set(SVG_Document::ATTR_Y1, mFrom->mCenter.GetY());
         aDoc->Attribute_Set(SVG_Document::ATTR_X2, mTo  ->mCenter.GetX());
         aDoc->Attribute_Set(SVG_Document::ATTR_Y2, mTo  ->mCenter.GetY());
 
-        char lStyle[64];
+        aDoc->Attribute_Set(SVG_Document::ATTR_STROKE      , mColor.c_str());
+        aDoc->Attribute_Set(SVG_Document::ATTR_STROKE_WIDTH, mWidth_pixel);
 
-        int lRet = sprintf_s(lStyle, "stroke:%s; stroke-width:%u;", mColor.c_str(), mWidth_pixel);
-        assert(0 < lRet);
-
-        aDoc->Attribute_Set(SVG_Document::ATTR_STYLE, lStyle);
+        if (!mDashArray.empty())
+        {
+            aDoc->Attribute_Set(SVG_Document::ATTR_STROKE_DASHARRAY, mDashArray.c_str());
+        }
 
         aDoc->Tag(SVG_Document::TAG_LINE);
     }

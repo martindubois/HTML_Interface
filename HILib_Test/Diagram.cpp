@@ -18,42 +18,48 @@
 KMS_TEST_BEGIN(Diagram_Base)
 
     HI::Diagram lD0;
+    HI::Link  * lL ;
+    HI::Shape * lS ;
 
     KMS_TEST_ASSERT(NULL == lD0.mLinks .GetLink (0));
     KMS_TEST_ASSERT(NULL == lD0.mShapes.GetShape(0));
 
-    lD0.mShapes.AddShape("Box", "Alpha - B - C - D");
-    lD0.mShapes.AddShape("Box", "Bravo - A - C");
-    lD0.mShapes.AddShape("Box", "Charlie - A - B");
-    lD0.mShapes.AddShape("Box", "Delta - A - E - F");
-    lD0.mShapes.AddShape("Box", "Echo - D - F");
-    lD0.mShapes.AddShape("Box", "Foxtrot - D - E - G");
-    lD0.mShapes.AddShape("Box", "Golf - F", HI::Shape::TYPE_ELLIPSE);
+    lS = lD0.mShapes.AddShape("Box", "Alpha - B - C - D");
+    lS->SetFillColor(HI::COLOR_ALICE_BLUE);
 
-    lD0.mShapes.GetShape(0)->SetFillColor(HI::COLOR_ALICE_BLUE);
-    lD0.mShapes.GetShape(1)->SetFillColor("LightGray");
-    lD0.mShapes.GetShape(1)->SetTitle("LightGray");
+    KMS_TEST_COMPARE(0, strcmp("Alpha - B - C - D", lS->GetName()));
 
-    lD0.mLinks.AddLink(lD0.mShapes.GetShape(0), lD0.mShapes.GetShape(1));
-    lD0.mLinks.AddLink(lD0.mShapes.GetShape(1), lD0.mShapes.GetShape(2));
-    lD0.mLinks.AddLink(lD0.mShapes.GetShape(2), lD0.mShapes.GetShape(0));
+    lS = lD0.mShapes.AddShape("Box", "Bravo - A - C");
+    lS->SetFillColor("LightGray");
+    lS->SetTitle    ("Light Gray");
 
-    lD0.mLinks.AddLink(lD0.mShapes.GetShape(0), lD0.mShapes.GetShape(3));
+    lS = lD0.mShapes.AddShape("Box", "Charlie - A - B");
+    lS = lD0.mShapes.AddShape("Box", "Delta - A - E - F");
+    lS = lD0.mShapes.AddShape("Box", "Echo - D - F");
+    lS = lD0.mShapes.AddShape("Box", "Foxtrot - D - E - G");
+    lS = lD0.mShapes.AddShape("Box", "Golf - F", HI::Shape::TYPE_ELLIPSE);
 
-    lD0.mLinks.GetLink(3)->SetColor(HI::COLOR_BLUE);
+    lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(0), lD0.mShapes.GetShape(1));
+    lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(1), lD0.mShapes.GetShape(2));
+    lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(2), lD0.mShapes.GetShape(0));
 
-    lD0.mLinks.AddLink(lD0.mShapes.GetShape(3), lD0.mShapes.GetShape(4));
-    lD0.mLinks.AddLink(lD0.mShapes.GetShape(4), lD0.mShapes.GetShape(5));
-    lD0.mLinks.AddLink(lD0.mShapes.GetShape(5), lD0.mShapes.GetShape(3));
+    lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(0), lD0.mShapes.GetShape(3));
+    lL->SetColor(HI::COLOR_BLUE);
 
-    lD0.mLinks.AddLink(lD0.mShapes.GetShape(5), lD0.mShapes.GetShape(6));
+    lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(3), lD0.mShapes.GetShape(4));
+    lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(4), lD0.mShapes.GetShape(5));
+    lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(5), lD0.mShapes.GetShape(3));
+    lL->SetDashArray("2,2");
 
-    lD0.mLinks.GetLink(7)->SetColor("Red");
-    lD0.mLinks.GetLink(7)->SetWeightFactor(2);
-    lD0.mLinks.GetLink(7)->SetWidth(3);
+    lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(5), lD0.mShapes.GetShape(6));
+    lL->SetColor       ("Red");
+    lL->SetWeightFactor(2);
+    lL->SetWidth       (3);
 
-    KMS_TEST_COMPARE(0, strcmp("Alpha - B - C - D", lD0.mShapes.GetShape(0)->GetName()));
+    KMS_TEST_ASSERT(NULL != lD0.mLinks.GetLink(0));
+    KMS_TEST_ASSERT(NULL == lD0.mLinks.GetLink(8));
 
+    KMS_TEST_ASSERT(NULL != lD0.mShapes.GetShape(0));
     KMS_TEST_ASSERT(NULL == lD0.mShapes.GetShape(7));
 
     lD0.PositionShapes();

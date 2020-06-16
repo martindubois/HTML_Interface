@@ -53,18 +53,20 @@ namespace HI
         mShapes.push_back(aShape);
     }
 
-    void ShapeList::AddShape(const char * aTypeName, const char * aName, Shape::Type aType)
+    Shape * ShapeList::AddShape(const char * aTypeName, const char * aName, Shape::Type aType)
     {
         assert(NULL            != aTypeName);
         assert(NULL            != aName    );
         assert(Shape::TYPE_QTY >  aType    );
 
-        Shape * lShape = new Shape(aTypeName, aName, aType);
-        assert(NULL != lShape);
+        Shape * lResult = new Shape(aTypeName, aName, aType);
+        assert(NULL != lResult);
 
-        lShape->SetAutoDelete();
+        lResult->SetAutoDelete();
 
-        AddShape(lShape);
+        AddShape(lResult);
+
+        return lResult;
     }
 
     const Shape * ShapeList::FindByCenter(const Point & aCenter) const
