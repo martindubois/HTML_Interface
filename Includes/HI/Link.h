@@ -1,5 +1,6 @@
 
 // Product HTML_Interface
+// License https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 
 /// \author    KMS - Martin Dubois, P.Eng.
 /// \copyright Copyright &copy; 2020 KMS. All rights reserved.
@@ -7,6 +8,9 @@
 /// \brief     HI::Link
 
 #pragma once
+
+// ===== Includes ===========================================================
+#include <HI/CSS_Colors.h>
 
 namespace HI
 {
@@ -48,18 +52,27 @@ namespace HI
         /// \return This method returns a pointer to the shape at the end of the link.
         const Shape * GetTo() const;
 
+        /// \return This method returns the length * the weight factor.
+        double GetWeight() const;
+
         /// \param aShape The shape of interreset
         /// \retval false Not connected
         /// \retval true  Connected
         bool IsConnectedTo(const Shape * aShape) const;
 
-        void SetAutoDelete();
+        virtual void SetAutoDelete();
 
-        /// \param aFrom The Shape where the link begins
-        void SetFrom(const Shape * aFrom);
+        /// \param aColor The color
+        void SetColor(CSS_Color aColor);
 
-        /// \param aTo The Shape where the link ends
-        void SetTo(const Shape * aTo);
+        /// \param aColor The color
+        void SetColor(const char * aColor);
+
+        /// \param aWeightFactor
+        void SetWeightFactor(double aWeightFactor);
+
+        /// \param aWidth_pixel The line width in pixel
+        void SetWidth(unsigned int aWidth_pixel);
 
         /// \param aDoc The document to generate into
         /// \exception std::exception
@@ -77,8 +90,13 @@ namespace HI
         }
         mFlags;
 
+        std::string mColor;
+
         const Shape * mFrom;
         const Shape * mTo  ;
+
+        double       mWeightFactor;
+        unsigned int mWidth_pixel ;
 
     };
 

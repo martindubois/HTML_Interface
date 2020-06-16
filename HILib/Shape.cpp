@@ -4,16 +4,15 @@
 // Product   HTML_Interface
 // File      HILib/Shape.cpp
 
-// CODE REVIEW 2020-06-09 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-15 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-09 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-15 KMS - Martin Dubois, P.Eng.
 
 // TODO Shape
 //      Add a line width
 //      Add a line color
 //      Add a type text color
 //      Add a name text color
-//      Add a tooltip
 //      Make type smaller than name
 //      Add a font size for the name and type
 //      Add GetRight and GetTop
@@ -36,6 +35,11 @@
 
 #define SIZE_X_DEFAULT_pixel (70)
 #define SIZE_Y_DEFAULT_pixel (50)
+
+// Static function declaration
+/////////////////////////////////////////////////////////////////////////////
+
+static void Generate_Text(HI::SVG_Document * aDoc, unsigned int aX_pixel, unsigned int aY_pixel, const char * aStyle, const char * aText);
 
 namespace HI
 {
@@ -155,6 +159,13 @@ namespace HI
         }
     }
 
+    void Shape::SetTitle(const char * aTitle)
+    {
+        assert(NULL != aTitle);
+
+        mTitle = aTitle;
+    }
+
     void Shape::Generate_SVG(SVG_Document * aDoc) const
     {
         assert(NULL != aDoc);
@@ -162,35 +173,37 @@ namespace HI
         assert(0 < mSizeX_pixel);
         assert(0 < mSizeY_pixel);
 
-        char lStyle[64];
+        aDoc->Tag_Begin(SVG_Document::TAG_G);
 
-        sprintf_s(lStyle, "fill:%s; stroke:black;", mFillColor.c_str());
+            char lStyle[64];
 
-        aDoc->Attribute_Set(SVG_Document::ATTR_STYLE, lStyle);
+            sprintf_s(lStyle, "fill:%s; stroke:black;", mFillColor.c_str());
 
-        switch (mType)
-        {
-        case TYPE_ELLIPSE: Generate_SVG_Ellipse(aDoc); break;
-        case TYPE_RECT   : Generate_SVG_Rect   (aDoc); break;
+            aDoc->Attribute_Set(SVG_Document::ATTR_STYLE, lStyle);
 
-        default: assert(false);
-        }
+            switch (mType)
+            {
+            case TYPE_ELLIPSE: Generate_SVG_Ellipse(aDoc); break;
+            case TYPE_RECT   : Generate_SVG_Rect   (aDoc); break;
 
-        unsigned int lX_pixel = mCenter.GetX() - mSizeX_pixel / 2 +  5;
-        unsigned int lY_pixel = mCenter.GetY() - mSizeY_pixel / 2 + 20;
+            default: assert(false);
+            }
 
-        aDoc->Attribute_Set(SVG_Document::ATTR_X    , lX_pixel);
-        aDoc->Attribute_Set(SVG_Document::ATTR_Y    , lY_pixel);
-        aDoc->Attribute_Set(SVG_Document::ATTR_STYLE, "fill:grey;");
+            unsigned int lX_pixel = mCenter.GetX() - mSizeX_pixel / 2 +  5;
+            unsigned int lY_pixel = mCenter.GetY() - mSizeY_pixel / 2 + 20;
 
-        aDoc->Tag(SVG_Document::TAG_TEXT, mTypeName.c_str());
+            Generate_Text(aDoc, lX_pixel, lY_pixel, "fill:grey;", mTypeName.c_str());
 
-        lY_pixel += 20;
+            lY_pixel += 20;
 
-        aDoc->Attribute_Set(SVG_Document::ATTR_X, lX_pixel);
-        aDoc->Attribute_Set(SVG_Document::ATTR_Y, lY_pixel);
+            Generate_Text(aDoc, lX_pixel, lY_pixel, NULL, mName.c_str());
 
-        aDoc->Tag(SVG_Document::TAG_TEXT, mName.c_str());
+            if (!mTitle.empty())
+            {
+                aDoc->Tag(SVG_Document::TAG_TITLE, mTitle.c_str());
+            }
+
+        aDoc->Tag_End();
     }
 
     // Private
@@ -234,4 +247,23 @@ namespace HI
         aDoc->Tag(SVG_Document::TAG_RECT);
     }
 
+}
+
+// Static function declaration
+/////////////////////////////////////////////////////////////////////////////
+
+void Generate_Text(HI::SVG_Document * aDoc, unsigned int aX_pixel, unsigned int aY_pixel, const char * aStyle, const char * aText)
+{
+    assert(NULL != aDoc );
+    assert(NULL != aText);
+
+    aDoc->Attribute_Set(HI::SVG_Document::ATTR_X, aX_pixel);
+    aDoc->Attribute_Set(HI::SVG_Document::ATTR_Y, aY_pixel);
+
+    if (NULL != aStyle)
+    {
+        aDoc->Attribute_Set(HI::SVG_Document::ATTR_STYLE, aStyle);
+    }
+
+    aDoc->Tag(HI::SVG_Document::TAG_TEXT, aText);
 }

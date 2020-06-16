@@ -4,6 +4,8 @@
 // Product   HTML_Interface
 // File      HILib/Grid.h
 
+// CODE REVIEW 2020-06-15 KMS - Martin Dubois, P.Eng.
+
 #pragma once
 
 // ===== Includes ===========================================================
@@ -31,11 +33,3 @@ private:
     unsigned int mIndexY;
 
 };
-
-// Public
-/////////////////////////////////////////////////////////////////////////////
-
-inline HI::Point Grid::Iterator_GetPosition()
-{
-    return HI::Point(mIndexX * mDelta_pixel, mIndexY * mDelta_pixel);
-}

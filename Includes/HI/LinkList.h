@@ -1,5 +1,6 @@
 
 // Product HTML_Interface
+// License https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 
 /// \author    KMS - Martin Dubois, P.Eng.
 /// \copyright Copyright &copy; 2020 KMS. All rights reserved.
@@ -45,6 +46,10 @@ namespace HI
         /// \param aShape The Shape of interrest
         /// \return The total length of all link connected to the shape, in pixel.
         double GetLength(const Shape * aShape) const;
+
+        /// \param aIndex Index of the link to retrieve
+        /// \return This method return a pointer to a Link instance or NULL if aIndex is not valid.
+        Link * GetLink(unsigned int aIndex);
 
         /// \param aDoc The document to generate into
         /// \exception std::exception

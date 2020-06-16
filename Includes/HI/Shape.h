@@ -1,5 +1,6 @@
 
 // Product HTML_Interface
+// License https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 
 /// \author    KMS - Martin Dubois, P.Eng.
 /// \copyright Copyright &copy; 2020 KMS. All rights reserved.
@@ -71,9 +72,7 @@ namespace HI
         /// \retval true  Intersection
         bool IsCrossing(const Line & aLine) const;
 
-        void SetAutoDelete();
-
-        void SetDoNotMove();
+        virtual void SetAutoDelete();
 
         /// \param aColor The color
         void SetFillColor(CSS_Color aColor);
@@ -85,15 +84,8 @@ namespace HI
         /// \param aName The name
         void SetName(const char * aName);
 
-        /// \param aX_pixel The width
-        /// \param aY_pixel The height
-        void SetSize(unsigned int aX_pixel, unsigned int aY_pixel);
-
-        /// \param aType See TYPE_...
-        void SetType(Type aType);
-
-        /// \param aTypeName The type
-        void SetTypeName(const char * aTypeName);
+        /// \param aTitle The title
+        void SetTitle(const char * aTitle);
 
         /// \param aDoc The document to generate into
         /// \exception std::exception
@@ -118,6 +110,7 @@ namespace HI
         mFlags;
 
         std::string mName    ;
+        std::string mTitle   ;
         Type        mType    ;
         std::string mTypeName;
 

@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/LinkList.cpp
 
-// CODE REVIEW 2020-06-09 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-15 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-09 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-15 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -77,6 +77,25 @@ namespace HI
         return lResult_pixel;
     }
 
+    Link * LinkList::GetLink(unsigned int aIndex)
+    {
+        InternalList::iterator lIt = mLinks.begin();
+
+        for (unsigned int i = 0; i < aIndex; i++)
+        {
+            lIt++;
+        }
+
+        if (mLinks.end() == lIt)
+        {
+            return NULL;
+        }
+
+        assert(NULL != *lIt);
+
+        return *lIt;
+    }
+
     void LinkList::Generate_SVG(SVG_Document * aDoc) const
     {
         assert(NULL != aDoc);
@@ -122,7 +141,7 @@ namespace HI
 
         const Shape * lOtherShape = aLink->GetOtherShape(aShape);
 
-        double lResult = aLink->GetLength();
+        double lResult = aLink->GetWeight();
 
         for (InternalList::const_iterator lIt2 = mLinks.begin(); lIt2 != mLinks.end(); lIt2++)
         {

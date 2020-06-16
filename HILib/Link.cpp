@@ -4,12 +4,11 @@
 // Product   HTML_Interface
 // File      HILib/Link.cpp
 
-// CODE REVIEW 2020-06-09 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-15 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-09 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-15 KMS - Martin Dubois, P.Eng.
 
 // TODO Link
-//      Add way to change color and width
 //      Add arrow
 //      Add a minimal length
 //      Add a tooltip
@@ -19,6 +18,7 @@
 #include <math.h>
 
 // ===== Includes ===========================================================
+#include <HI/CSS_Colors.h>
 #include <HI/Line.h>
 #include <HI/SVG_Document.h>
 #include <HI/Shape.h>
@@ -44,13 +44,16 @@ namespace HI
 
     // aFrom [-K-;R--]
     // aTo   [-K-;R--]
-    Link::Link(const Shape * aFrom, const Shape * aTo) : mFrom(aFrom), mTo(aTo)
+    Link::Link(const Shape * aFrom, const Shape * aTo)
     {
         assert(NULL  != aFrom);
         assert(NULL  != aTo  );
         assert(aFrom != aTo  );
 
         Init();
+
+        mFrom = aFrom;
+        mTo   = aTo  ;
     }
 
     Link::~Link()
@@ -108,6 +111,13 @@ namespace HI
         return mTo;
     }
 
+    double Link::GetWeight() const
+    {
+        assert(0 < mWeightFactor);
+
+        return mWeightFactor * GetLength();
+    }
+
     // aShape [---;---]
     bool Link::IsConnectedTo(const Shape * aShape) const
     {
@@ -125,6 +135,38 @@ namespace HI
         mFlags.mAutoDelete = true;
     }
 
+    void Link::SetColor(CSS_Color aColor)
+    {
+        assert(COLOR_INVALID != aColor);
+
+        char lColor[64];;
+
+        CSS_Colors::RetrieveName(lColor, sizeof(lColor), aColor);
+
+        mColor = lColor;
+    }
+
+    void Link::SetColor(const char * aColor)
+    {
+        assert(NULL != aColor);
+
+        mColor = aColor;
+    }
+
+    void Link::SetWeightFactor(double aWeightFactor)
+    {
+        assert(0 < aWeightFactor);
+
+        mWeightFactor = aWeightFactor;
+    }
+
+    void Link::SetWidth(unsigned int aWidth_pixel)
+    {
+        assert(0 < aWidth_pixel);
+
+        mWidth_pixel = aWidth_pixel;
+    }
+
     void Link::Generate_SVG(SVG_Document * aDoc) const
     {
         assert(NULL != aDoc);
@@ -134,7 +176,12 @@ namespace HI
         aDoc->Attribute_Set(SVG_Document::ATTR_X2, mTo  ->mCenter.GetX());
         aDoc->Attribute_Set(SVG_Document::ATTR_Y2, mTo  ->mCenter.GetY());
 
-        aDoc->Attribute_Set(SVG_Document::ATTR_STYLE, "stroke:black;");
+        char lStyle[64];
+
+        int lRet = sprintf_s(lStyle, "stroke:%s; stroke-width:%u;", mColor.c_str(), mWidth_pixel);
+        assert(0 < lRet);
+
+        aDoc->Attribute_Set(SVG_Document::ATTR_STYLE, lStyle);
 
         aDoc->Tag(SVG_Document::TAG_LINE);
     }
@@ -144,7 +191,15 @@ namespace HI
 
     void Link::Init()
     {
+        mColor = "black";
+
         mFlags.mAutoDelete = false;
+
+        mFrom = NULL;
+        mTo   = NULL;
+
+        mWeightFactor = 1.0;
+        mWidth_pixel  = 1  ;
     }
 
 }
