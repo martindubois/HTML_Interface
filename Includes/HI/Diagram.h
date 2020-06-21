@@ -40,6 +40,16 @@ namespace HI
 
         /// \param aFolder See FOLDER_...
         /// \param aName   The file name, without extension
+        /// \exception std::exception
+        void Generate_CPP(FolderId aFolder, const char * aName);
+
+        /// \param aFolder The folder name or NULL to create the file into the current folder
+        /// \param aName   The file name, without extension
+        /// \exception std::exception
+        void Generate_CPP(const char * aFolder, const char * aName);
+
+        /// \param aFolder See FOLDER_...
+        /// \param aName   The file name, without extension
         /// \param aTitle  The title
         /// \exception std::exception
         void Generate_HTML(FolderId aFolder, const char * aName, const char * aTitle);

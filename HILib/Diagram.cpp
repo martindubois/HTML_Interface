@@ -12,6 +12,7 @@
 #include <assert.h>
 
 // ===== Includes ===========================================================
+#include <HI/CPP_Document.h>
 #include <HI/HTML_Document.h>
 #include <HI/SVG_Document.h>
 #include <HI/Shape.h>
@@ -39,6 +40,36 @@ namespace HI
     void Diagram::SetDebug()
     {
         mFlags.mDebug = true;
+    }
+
+    void Diagram::Generate_CPP(FolderId aFolder, const char * aName)
+    {
+        assert(FOLDER_QTY >  aFolder);
+        assert(NULL       != aName  );
+
+        CPP_Document lDoc;
+
+        lDoc.Create(aFolder, aName);
+
+            mShapes.Generate_CPP(&lDoc);
+            mLinks .Generate_CPP(&lDoc, mShapes);
+
+        lDoc.Close();
+    }
+
+    void Diagram::Generate_CPP(const char * aFolder, const char * aName)
+    {
+        assert(NULL != aFolder);
+        assert(NULL != aName  );
+
+        CPP_Document lDoc;
+
+        lDoc.Create(aFolder, aName);
+
+            mShapes.Generate_CPP(&lDoc);
+            mLinks .Generate_CPP(&lDoc, mShapes);
+
+        lDoc.Close();
     }
 
     void Diagram::Generate_HTML(FolderId aFolder, const char * aName, const char * aTitle)

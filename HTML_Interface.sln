@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HI", "HI", "{97B3B0A6-608C-4516-94D3-CEC74B8AAA7B}"
 	ProjectSection(SolutionItems) = preProject
 		Includes\HI\Browser.h = Includes\HI\Browser.h
+		Includes\HI\CPP_Document.h = Includes\HI\CPP_Document.h
 		Includes\HI\CSS_Colors.h = Includes\HI\CSS_Colors.h
 		Includes\HI\CSS_Document.h = Includes\HI\CSS_Document.h
 		Includes\HI\Diagram.h = Includes\HI\Diagram.h

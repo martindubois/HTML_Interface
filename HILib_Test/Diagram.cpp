@@ -66,6 +66,10 @@ KMS_TEST_BEGIN(Diagram_Base)
 
     KMS_TEST_ASSERT(0 < lD0.mLinks.GetLength(lD0.mShapes.GetShape(0)));
 
+    lD0.Generate_CPP("HILib_Test\\Tests", "Diagrame_Base_0");
+
+    lD0.Generate_CPP(HI::FOLDER_TEMP, "Diagrame_Base_0");
+
     lD0.Generate_HTML(HI::FOLDER_CURRENT, "Diagram_Base_0", "Diagram - Base - 0");
 
     HI::Diagram lD1;

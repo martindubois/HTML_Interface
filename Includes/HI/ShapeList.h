@@ -20,6 +20,9 @@ class Grid;
 namespace HI
 {
 
+    class CPP_Document;
+    class SVG_Document;
+
     /// \brief HI::ShapeList
     class ShapeList
     {
@@ -47,6 +50,11 @@ namespace HI
         /// \param aSizeY_pixel The method puts the diagram height there.
         void GetDiagramSize(unsigned int * aSizeX_pixel, unsigned int * aSizeY_pixel) const;
 
+        /// \param aShape
+        /// \return This method returns the index of the shape into the list.
+        /// \exception std::exception
+        unsigned int GetIndex(const Shape * aShape) const;
+
         /// \param aSizeX_pixel The method puts the maximum shape width there.
         /// \param aSizeY_pixel The method puts the maximum shape height there.
         void GetMaximumSize(unsigned int * aSizeX_pixel, unsigned int * aSizeY_pixel) const;
@@ -57,9 +65,13 @@ namespace HI
 
         /// \param aDoc The document to generate into
         /// \exception std::exception
+        void Generate_CPP(HI::CPP_Document * aDoc) const;
+
+        /// \param aDoc The document to generate into
+        /// \exception std::exception
         void Generate_SVG(HI::SVG_Document * aDoc) const;
 
-    // internal:
+        // internal:
 
         Shape * Iterator_Get  ();
         void    Iterator_Next ();

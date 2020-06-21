@@ -15,9 +15,11 @@
 namespace HI
 {
 
+    class CPP_Document;
     class Link        ;
     class SVG_Document;
     class Shape       ;
+    class ShapeList   ;
 
     /// \brief HI::LinkList
     class LinkList
@@ -51,6 +53,11 @@ namespace HI
         /// \param aIndex Index of the link to retrieve
         /// \return This method return a pointer to a Link instance or NULL if aIndex is not valid.
         Link * GetLink(unsigned int aIndex);
+
+        /// \param aDoc    The document to generate into
+        /// \param aShapes
+        /// \exception std::exception
+        void Generate_CPP(HI::CPP_Document * aDoc, const ShapeList & aShapes) const;
 
         /// \param aDoc The document to generate into
         /// \exception std::exception

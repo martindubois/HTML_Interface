@@ -98,6 +98,23 @@ namespace HI
         return *lIt;
     }
 
+    void LinkList::Generate_CPP(CPP_Document * aDoc, const ShapeList & aShapes) const
+    {
+        assert(NULL !=  aDoc   );
+        assert(NULL != &aShapes);
+
+        unsigned int lIndex = 0;
+
+        for (InternalList::const_iterator lIt = mLinks.begin(); lIt != mLinks.end(); lIt++)
+        {
+            assert(NULL != (*lIt));
+
+            (*lIt)->Generate_CPP(aDoc, lIndex, aShapes);
+
+            lIndex++;
+        }
+    }
+
     void LinkList::Generate_SVG(SVG_Document * aDoc) const
     {
         assert(NULL != aDoc);

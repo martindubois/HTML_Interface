@@ -19,6 +19,7 @@
 namespace HI
 {
 
+    class CPP_Document;
     class Line        ;
     class SVG_Document;
 
@@ -86,6 +87,11 @@ namespace HI
 
         /// \param aTitle The title
         void SetTitle(const char * aTitle);
+
+        /// \param aDoc   The document to generate into
+        /// \param aIndex The index of the Shape into the document
+        /// \exception std::exception
+        virtual void Generate_CPP(CPP_Document * aDoc, unsigned int aIndex) const;
 
         /// \param aDoc The document to generate into
         /// \exception std::exception

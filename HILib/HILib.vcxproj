@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Browser.cpp" />
+    <ClCompile Include="CPP_Document.cpp" />
     <ClCompile Include="CSS_Colors.cpp" />
     <ClCompile Include="CSS_Document.cpp" />
     <ClCompile Include="Diagram.cpp" />

@@ -23,10 +23,14 @@
 #include <assert.h>
 
 // ===== Includes ===========================================================
+#include <HI/CPP_Document.h>
 #include <HI/Line.h>
 #include <HI/SVG_Document.h>
 
 #include <HI/Shape.h>
+
+// ===== HILib ==============================================================
+#include "Utils.h"
 
 // Constants
 /////////////////////////////////////////////////////////////////////////////
@@ -35,6 +39,12 @@
 
 #define SIZE_X_DEFAULT_pixel (70)
 #define SIZE_Y_DEFAULT_pixel (50)
+
+static const char * TYPE_NAMES[HI::Shape::TYPE_QTY] =
+{
+    "TYPE_ELLIPSE",
+    "TYPE_RECT"   ,
+};
 
 // Static function declaration
 /////////////////////////////////////////////////////////////////////////////
@@ -164,6 +174,26 @@ namespace HI
         assert(NULL != aTitle);
 
         mTitle = aTitle;
+    }
+
+    // TODO HI.Shape.Generate_CPP
+    //      Replace new line with "\n" whant setting the title.
+
+    void Shape::Generate_CPP(CPP_Document * aDoc, unsigned int aIndex) const
+    {
+        assert(NULL != aDoc);
+
+        FILE * lFile = aDoc->GetFile();
+        assert(NULL != lFile);
+
+        fprintf(lFile, EOL);
+        fprintf(lFile, "    HI::Shape * lShape%02u = new HI::Shape(\"%s\", \"%s\", HI::Shape::%s);" EOL, aIndex, mTypeName.c_str(), mName.c_str(), TYPE_NAMES[mType]);
+        fprintf(lFile, "    assert(NULL != lShape%02u);" EOL, aIndex);
+        fprintf(lFile, EOL);
+        fprintf(lFile, "    lShape%02u->SetAutoDelete();"       EOL, aIndex);
+        fprintf(lFile, "    lShape%02u->SetFillColor (\"%s\");" EOL, aIndex, mFillColor.c_str());
+        fprintf(lFile, "    lShape%02u->SetName      (\"%s\");" EOL, aIndex, mName     .c_str());
+        fprintf(lFile, "    lShape%02u->SetTitle     (\"%s\");" EOL, aIndex, mTitle    .c_str());
     }
 
     void Shape::Generate_SVG(SVG_Document * aDoc) const

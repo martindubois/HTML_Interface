@@ -11,12 +11,15 @@
 
 // ===== Includes ===========================================================
 #include <HI/CSS_Colors.h>
+#include <HI/Line.h>
 
 namespace HI
 {
 
+    class CPP_Document;
     class SVG_Document;
     class Shape       ;
+    class ShapeList   ;
 
     /// \brief HI::Link
     class Link
@@ -76,6 +79,12 @@ namespace HI
 
         /// \param aWidth_pixel The line width in pixel
         void SetWidth(unsigned int aWidth_pixel);
+
+        /// \param aDoc    The document to generate into
+        /// \param aIndex
+        /// \param aShapes
+        /// \exception std::exception
+        void Generate_CPP(HI::CPP_Document * aDoc, unsigned int aIndex, const ShapeList & aShapes) const;
 
         /// \param aDoc The document to generate into
         /// \exception std::exception

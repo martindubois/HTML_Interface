@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Link.cpp
 
-// CODE REVIEW 2020-06-16 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-16 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
 
 // TODO Link
 //      Add arrow
@@ -18,15 +18,18 @@
 #include <math.h>
 
 // ===== Includes ===========================================================
+#include <HI/CPP_Document.h>
 #include <HI/CSS_Colors.h>
 #include <HI/Line.h>
 #include <HI/SVG_Document.h>
 #include <HI/Shape.h>
+#include <HI/ShapeList.h>
 
 #include <HI/Link.h>
 
 // ===== HILib ==============================================================
 #include "Math.h"
+#include "Utils.h"
 
 namespace HI
 {
@@ -172,6 +175,28 @@ namespace HI
         assert(0 < aWidth_pixel);
 
         mWidth_pixel = aWidth_pixel;
+    }
+
+    void Link::Generate_CPP(CPP_Document * aDoc, unsigned int aIndex, const ShapeList & aShapes) const
+    {
+        assert(NULL !=  aDoc   );
+        assert(NULL != &aShapes);
+
+        unsigned int lFrom = aShapes.GetIndex(mFrom);
+        unsigned int lTo   = aShapes.GetIndex(mTo  );
+
+        FILE * lFile = aDoc->GetFile();
+        assert(NULL != lFile);
+
+        fprintf(lFile, EOL);
+        fprintf(lFile, "    HI::Link * lLink%02u = new HI::Link(lShape%02u, lShape%02u);" EOL, aIndex, lFrom, lTo);
+        fprintf(lFile, "    assert(NULL != lLink%02u);" EOL, aIndex);
+        fprintf(lFile, EOL);
+        fprintf(lFile, "    lLink%02u->SetAutoDelete  ();"       EOL, aIndex);
+        fprintf(lFile, "    lLink%02u->SetColor       (\"%s\");" EOL, aIndex, mColor    .c_str());
+        fprintf(lFile, "    lLink%02u->SetDashArray   (\"%s\");" EOL, aIndex, mDashArray.c_str());
+        fprintf(lFile, "    lLink%02u->SetWeightFactor(%f);"     EOL, aIndex, mWeightFactor);
+        fprintf(lFile, "    lLink%02u->SetWidth       (%u);"     EOL, aIndex, mWidth_pixel );
     }
 
     void Link::Generate_SVG(SVG_Document * aDoc) const

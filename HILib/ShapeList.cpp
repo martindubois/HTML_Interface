@@ -21,6 +21,7 @@
 
 // ===== HILib ==============================================================
 #include "Grid.h"
+#include "Utils.h"
 
 // Static function declarations
 /////////////////////////////////////////////////////////////////////////////
@@ -116,6 +117,31 @@ namespace HI
         }
     }
 
+    // NOT TESTED HI.ShapeList.GetIndex.Error
+    //            The shape is not in the list.
+
+    // aShape [---;---]
+    unsigned int ShapeList::GetIndex(const Shape * aShape) const
+    {
+        assert(NULL != aShape);
+
+        unsigned int lIndex = 0;
+
+        for (InternalList::const_iterator lShape = mShapes.begin(); lShape != mShapes.end(); lShape++)
+        {
+            assert(NULL != *lShape);
+
+            if (*lShape == aShape)
+            {
+                return lIndex;
+            }
+
+            lIndex++;
+        }
+
+        Utl_ThrowError("ERROR", __LINE__, "Shape is not in the ShapeList");
+    }
+
     void ShapeList::GetMaximumSize(unsigned int * aSizeX_pixel, unsigned int * aSizeY_pixel) const
     {
         assert(NULL != aSizeX_pixel);
@@ -156,6 +182,22 @@ namespace HI
         assert(NULL != *lIt);
 
         return *lIt;
+    }
+
+    void ShapeList::Generate_CPP(CPP_Document * aDoc) const
+    {
+        assert(NULL != aDoc);
+
+        unsigned int lIndex = 0;
+
+        for (InternalList::const_iterator lShape = mShapes.begin(); lShape != mShapes.end(); lShape++)
+        {
+            assert(NULL != (*lShape));
+
+            (*lShape)->Generate_CPP(aDoc, lIndex);
+
+            lIndex++;
+        }
     }
 
     void ShapeList::Generate_SVG(SVG_Document * aDoc) const
