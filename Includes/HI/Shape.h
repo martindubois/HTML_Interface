@@ -93,6 +93,12 @@ namespace HI
 
         Point mCenter;
 
+    // Internal
+
+        unsigned int LinkCount_Get  () const;
+        void         LinkCount_Inc  () const;
+        void         LinkCount_Reset();
+
     private:
 
         void Init(Type aType);
@@ -118,6 +124,8 @@ namespace HI
 
         unsigned int mSizeX_pixel;
         unsigned int mSizeY_pixel;
+
+        mutable unsigned int mLinkCount;
 
     };
 

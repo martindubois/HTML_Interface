@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/LinkList.cpp
 
-// CODE REVIEW 2020-06-16 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-16 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -131,6 +131,18 @@ namespace HI
         }
 
         return lResult;
+    }
+
+    void LinkList::LinkCounts_Update() const
+    {
+        for (InternalList::const_iterator lIt = mLinks.begin(); lIt != mLinks.end(); lIt++)
+        {
+            Link * lLink = *lIt;
+            assert(NULL != lLink);
+
+            lLink->GetFrom()->LinkCount_Inc();
+            lLink->GetTo  ()->LinkCount_Inc();
+        }
     }
 
     // Private

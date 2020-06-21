@@ -67,6 +67,9 @@ namespace HI
 
         void PositionShapes(Grid * aGrid);
 
+        void LinkCounts_Reset();
+        void LinkCounts_Sort ();
+
     private:
 
         void ComputeGrid(Grid * aGrid) const;

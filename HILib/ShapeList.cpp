@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/ShapeList.cpp
 
-// CODE REVIEW 2020-06-09 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-09 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
 
 // TODO ShapeList
 //      Add the Trim method to remove empty space on top and on left
@@ -21,6 +21,11 @@
 
 // ===== HILib ==============================================================
 #include "Grid.h"
+
+// Static function declarations
+/////////////////////////////////////////////////////////////////////////////
+
+static bool CompareShape(const HI::Shape * aA, const HI::Shape * aB);
 
 namespace HI
 {
@@ -211,6 +216,21 @@ namespace HI
         }
     }
 
+    void ShapeList::LinkCounts_Reset()
+    {
+        for (InternalList::iterator lIt = mShapes.begin(); lIt != mShapes.end(); lIt++)
+        {
+            assert(NULL != (*lIt));
+
+            (*lIt)->LinkCount_Reset();
+        }
+    }
+
+    void ShapeList::LinkCounts_Sort()
+    {
+        mShapes.sort(CompareShape);
+    }
+
     // Private
     /////////////////////////////////////////////////////////////////////////
 
@@ -247,4 +267,15 @@ namespace HI
         };
     }
 
+}
+
+// Static functions
+/////////////////////////////////////////////////////////////////////////////
+
+bool CompareShape(const HI::Shape * aA, const HI::Shape * aB)
+{
+    assert(NULL != aA);
+    assert(NULL != aB);
+
+    return aA->LinkCount_Get() < aB->LinkCount_Get();
 }

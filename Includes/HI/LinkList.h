@@ -60,6 +60,8 @@ namespace HI
 
         double GetWeight(const Shape * aShape) const;
 
+        void LinkCounts_Update() const;
+
     private:
 
         double GetWeight(const Shape * aShape, const Link * aLink) const;

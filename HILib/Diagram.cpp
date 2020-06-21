@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Diagram.cpp
 
-// CODE REVIEW 2020-06-09 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-09 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -103,6 +103,12 @@ namespace HI
     void Diagram::PositionShapes()
     {
         Grid lGrid;
+
+        mShapes.LinkCounts_Reset();
+
+        mLinks.LinkCounts_Update();
+
+        mShapes.LinkCounts_Sort();
 
         mShapes.PositionShapes(&lGrid);
 

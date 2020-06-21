@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Shape.cpp
 
-// CODE REVIEW 2020-06-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-15 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
 
 // TODO Shape
 //      Add a line width
@@ -205,6 +205,13 @@ namespace HI
 
         aDoc->Tag_End();
     }
+
+    // Internal
+    /////////////////////////////////////////////////////////////////////////
+
+    unsigned int Shape::LinkCount_Get  () const { return mLinkCount; }
+    void         Shape::LinkCount_Inc  () const { mLinkCount++; }
+    void         Shape::LinkCount_Reset()       { mLinkCount = 0; }
 
     // Private
     /////////////////////////////////////////////////////////////////////////
