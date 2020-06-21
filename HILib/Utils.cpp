@@ -4,12 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/Utils.cpp
 
-// CODE REVIEW 2020-05-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-15 KMS - Martin Dubois, P.Eng.
-
-// Includes
-/////////////////////////////////////////////////////////////////////////////
+// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -111,9 +108,22 @@ void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, const char * aFol
     if (0 >= lRet)
     {
         // NOT TESTED Utils.Folder.Error
-        //            sprintf_s( , , ,  ) of sprintf_s( , , , ,  ) fails.
-        throw std::exception("ERROR  115  sprintf_s( , , , ,  )  failed", lRet);
+        //            sprintf_s( , , ,  ) or sprintf_s( , , , ,  ) fails.
+        Utl_ThrowError("ERROR", __LINE__, "sprintf_s failed", lRet);
     }
+}
+
+void Utl_ThrowError(const char * aType, unsigned int aCode, const char * aMessage, int aData)
+{
+    assert(NULL != aType   );
+    assert(   0 != aCode   );
+    assert(NULL != aMessage);
+
+    char lWhat[128];
+
+    sprintf_s(lWhat, "%s  %u  %s", aType, aCode, aMessage);
+
+    throw std::exception(lWhat, aData);
 }
 
 // NOT TESTED Utils.Verify
@@ -123,7 +133,7 @@ void Utl_VerifyReturn(int aRet)
 {
     if (0 >= aRet)
     {
-        throw std::exception("ERROR  126  Write failed", aRet);
+        Utl_ThrowError("ERROR", __LINE__, "Write failed", aRet);
     }
 }
 
@@ -131,12 +141,12 @@ void Utl_VerifyReturn(int aRet, unsigned int aMax)
 {
     if (0 >= aRet)
     {
-        throw std::exception("ERROR  134  Formating failed", aRet);
+        Utl_ThrowError("ERROR", __LINE__, "Formating failed", aRet);
     }
 
     if (aMax <= static_cast<unsigned int>(aRet))
     {
-        throw std::exception("ERROR  139  Formating failed", aRet);
+        Utl_ThrowError("ERROR", __LINE__, "Formating failed", aRet);
     }
 }
 
@@ -154,7 +164,7 @@ void Init_Exec()
     {
         // NOT TESTED Utils.Folder.Error
         //            strrchr( ,  ) fails.
-        throw std::exception("ERROR  157  strrchr( ,  )  failed");
+        Utl_ThrowError("ERROR", __LINE__, "strrchr( ,  )  failed");
     }
 
     *lPtr = '\0';

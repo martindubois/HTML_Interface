@@ -4,10 +4,7 @@
 // Product    HTML_Interface
 // File       HILib/OS_Windows.cpp
 
-// CODE REVIEW 2020-05-06 KMS - Martin Dubois, P.Eng.
-
-// Includes
-/////////////////////////////////////////////////////////////////////////////
+// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -22,6 +19,7 @@
 
 // ===== HILib ==============================================================
 #include "OS.h"
+#include "Utils.h"
 
 // Constants
 /////////////////////////////////////////////////////////////////////////////
@@ -76,7 +74,7 @@ void OS_GetEnvironmentVariable(const char * aName, char * aOut, unsigned int aOu
     {
         // NOT TESTED OS.Environment.Error
         //            GetEnvironmentVariable( , ,  ) fails.
-        throw std::exception("ERROR  079  GetEnvironmentVariable( , ,  )  failed");
+        Utl_ThrowError("ERROR", __LINE__, "GetEnvironmentVariable( , ,  )  failed");
     }
 }
 
@@ -93,7 +91,7 @@ void OS_GetModuleFileName(char * aOut, unsigned int aOutSize_byte)
     {
         // NOT TESTED OS.Module.Error
         //            GetModuleFileName( , ,  ) fails.
-        throw std::exception("ERROR  096  GetModuleFileName( , ,  )  failed");
+        Utl_ThrowError("ERROR", __LINE__, "GetModuleFileName( , ,  )  failed");
     }
 }
 
@@ -134,7 +132,7 @@ void OS_CreateDirectory(const char * aName)
         case ERROR_ALREADY_EXISTS: break;
 
         default:
-            throw std::exception("ERROR  137  CreateDirectory( ,  )  failed");
+            Utl_ThrowError("ERROR", __LINE__, "CreateDirectory( ,  )  failed");
         }
     }
 }
@@ -267,7 +265,7 @@ void OS_Process_Terminate(void * aProcess)
 
         if (!lRet1)
         {
-            throw std::exception("ERROR  270  TerminateProcess(  )  failed");
+            Utl_ThrowError("ERROR", __LINE__, "TerminateProcess(  )  failed");
         }
     }
 }
@@ -328,7 +326,7 @@ void OS_Socket_Startup()
         {
             // NOT TESTED  OS.Socket.Error
             //             WSAStartup( ,  ) fail
-            throw std::exception("ERROR  331  WSAStartup( ,  )  failed", lRet);
+            Utl_ThrowError("ERROR", __LINE__, "WSAStartup( ,  )  failed", lRet);
         }
     }
 }

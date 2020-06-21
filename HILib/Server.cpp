@@ -4,9 +4,6 @@
 // Procuct    HTML_Interface
 // File       HILib/Server.cpp
 
-// Includes
-/////////////////////////////////////////////////////////////////////////////
-
 // ===== C ==================================================================
 #include <assert.h>
 #include <stdio.h>
@@ -379,7 +376,7 @@ namespace HI
         {
             // NOT TESTED  Server.Error
             //             send( , , ,  ) fails.
-            throw std::exception("ERROR  348  send( , , ,  )  failed", lRet);
+            Utl_ThrowError("ERROR", __LINE__, "send( , , ,  )  failed", lRet);
         }
     }
 

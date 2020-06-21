@@ -4,12 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/Document.cpp
 
-// CODE REVIEW 2020-05-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-15 KMS - Martin Dubois, P.Eng.
-
-// Includes
-/////////////////////////////////////////////////////////////////////////////
+// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -64,7 +61,7 @@ namespace HI
             {
                 // NOT TESTED Document.Close.Error
                 //            fclose(  ) fails.
-                throw std::exception("ERROR  067  fclose(  )  failed", lRet);
+                Utl_ThrowError("ERROR", __LINE__, "failed", lRet);
             }
         }
     }
@@ -80,7 +77,7 @@ namespace HI
             {
                 // NOT TESTED Document.Comment.Error
                 //            fprintf( , ,  ) fails.
-                throw std::exception("ERROR  081  fprintf( , ,  )  failed", lRet);
+                Utl_ThrowError("ERROR", __LINE__, "fprintf( , ,  )  failed", lRet);
             }
 
         Comment_End();
@@ -154,7 +151,7 @@ namespace HI
     {
         if (!DeleteFile(mFileName.c_str()))
         {
-            throw std::exception("ERROR  142  DeleteFile(  )  failed");
+            Utl_ThrowError("ERROR", __LINE__, "DeleteFile(  )  failed");
         }
 
         mFileName.clear();
@@ -216,7 +213,7 @@ namespace HI
         errno_t lErr = fopen_s(&mFile, aFileName, "wb");
         if (0 != lErr)
         {
-            throw std::exception("ERROR  199  fopen( , ,  )  failed", lErr);
+            Utl_ThrowError("ERROR", __LINE__, "fopen( , ,  )  failed", lErr);
         }
 
         assert(NULL != mFile);

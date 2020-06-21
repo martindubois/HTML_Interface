@@ -4,12 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/XML_Document.cpp
 
-// CODE REVIEW 2020-05-22 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-22 KMS - Martin Dubois, P.Eng.
-
-// Includes
-/////////////////////////////////////////////////////////////////////////////
+// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -146,7 +143,7 @@ namespace HI
             {
                 // NOT TESTED XML_Document.Tag.Error
                 //            fprintf( , ,  ) fails.
-                throw std::exception("ERROR  120  fprintf( , ,  )  failed");
+                Utl_ThrowError("ERROR", __LINE__, "fprintf( , ,  )  failed");
             }
 
         Tag_End();

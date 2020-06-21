@@ -4,12 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/Browser.cpp
 
-// CODE REVIEW 2020-05-18 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-18 KMS - Martin Dubois, P.Eng.
-
-// Includes
-/////////////////////////////////////////////////////////////////////////////
+// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -196,7 +193,7 @@ namespace HI
 
             if (!lRet)
             {
-                throw std::exception("ERROR  188  Cannot open browser");
+                Utl_ThrowError("ERROR", __LINE__, "Cannot open browser");
             }
         }
 
@@ -276,7 +273,7 @@ namespace HI
 
             if (!lRet)
             {
-                throw std::exception("ERROR  268  Cannot start browser");
+                Utl_ThrowError("ERROR", __LINE__, "Cannot start browser");
             }
         }
     }

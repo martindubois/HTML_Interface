@@ -6,17 +6,21 @@
 
 #pragma once
 
-// Includes
-/////////////////////////////////////////////////////////////////////////////
-
 // ===== Includes ===========================================================
 #include <HI/Types.h>
+
+// Constants
+/////////////////////////////////////////////////////////////////////////////
+
+#define EOL "\n"
 
 // Functions
 /////////////////////////////////////////////////////////////////////////////
 
 extern void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, HI::FolderId aFolder, const char * aName, const char * aExtension);
 extern void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, const char * aFolder, const char * aName, const char * aExtension);
+
+extern void Utl_ThrowError(const char * aType, unsigned int aCode, const char * aMessage, int aData = 0);
 
 extern void Utl_VerifyReturn(int aRet);
 extern void Utl_VerifyReturn(int aRet, unsigned int aMax);
