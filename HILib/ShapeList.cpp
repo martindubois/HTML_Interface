@@ -140,6 +140,8 @@ namespace HI
         }
 
         Utl_ThrowError("ERROR", __LINE__, "Shape is not in the ShapeList");
+
+        return 0xffffffff;
     }
 
     void ShapeList::GetMaximumSize(unsigned int * aSizeX_pixel, unsigned int * aSizeY_pixel) const

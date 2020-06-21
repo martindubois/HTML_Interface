@@ -16,6 +16,8 @@ rem ===== Dependencies ======================================================
 
 set KMS_BASE="%EXPORT_FOLDER%\KmsBase\3.0.19_Windows"
 
+if not exist %EXPORT_FOLDER% set KMS_BASE="C:\Program Files\KmsBase"
+
 rem ===== Constants =========================================================
 
 set DST_FOLDER="%CD%\Import"
