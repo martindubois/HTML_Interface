@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Shape.cpp
 
-// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-22 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-22 KMS - Martin Dubois, P.Eng.
 
 // TODO Shape
 //      Add a line width
@@ -78,11 +78,6 @@ namespace HI
 
     Shape::~Shape()
     {
-    }
-
-    bool Shape::CanMove() const
-    {
-        return !mFlags.mDoNotMove;
     }
 
     bool Shape::GetAutoDelete() const
@@ -187,13 +182,12 @@ namespace HI
         assert(NULL != lFile);
 
         fprintf(lFile, EOL);
-        fprintf(lFile, "    HI::Shape * lShape%02u = new HI::Shape(\"%s\", \"%s\", HI::Shape::%s);" EOL, aIndex, mTypeName.c_str(), mName.c_str(), TYPE_NAMES[mType]);
+        fprintf(lFile, "    HI::Shape * lShape%02u = lResult->mShapes.AddShape(\"%s\", \"%s\", HI::Shape::%s);" EOL, aIndex, mTypeName.c_str(), mName.c_str(), TYPE_NAMES[mType]);
         fprintf(lFile, "    assert(NULL != lShape%02u);" EOL, aIndex);
         fprintf(lFile, EOL);
-        fprintf(lFile, "    lShape%02u->SetAutoDelete();"       EOL, aIndex);
         fprintf(lFile, "    lShape%02u->SetFillColor (\"%s\");" EOL, aIndex, mFillColor.c_str());
-        fprintf(lFile, "    lShape%02u->SetName      (\"%s\");" EOL, aIndex, mName     .c_str());
-        fprintf(lFile, "    lShape%02u->SetTitle     (\"%s\");" EOL, aIndex, mTitle    .c_str());
+
+        if (!mTitle.empty()) { fprintf(lFile, "    lShape%02u->SetTitle     (\"%s\");" EOL, aIndex, mTitle.c_str()); }
     }
 
     void Shape::Generate_SVG(SVG_Document * aDoc) const

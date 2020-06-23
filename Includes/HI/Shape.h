@@ -47,10 +47,6 @@ namespace HI
 
         virtual ~Shape();
 
-        /// \retval false Cannot move
-        /// \retval true  Can move
-        bool CanMove() const;
-
         /// \retval false Do not delete
         /// \retval true  Delete when no longer needed
         bool GetAutoDelete() const;
@@ -115,9 +111,8 @@ namespace HI
         struct
         {
             unsigned int mAutoDelete : 1;
-            unsigned int mDoNotMove  : 1;
 
-            unsigned int mReserved0 : 30;
+            unsigned int mReserved0 : 31;
         }
         mFlags;
 

@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Link.cpp
 
-// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-22 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-22 KMS - Martin Dubois, P.Eng.
 
 // TODO Link
 //      Add arrow
@@ -189,14 +189,14 @@ namespace HI
         assert(NULL != lFile);
 
         fprintf(lFile, EOL);
-        fprintf(lFile, "    HI::Link * lLink%02u = new HI::Link(lShape%02u, lShape%02u);" EOL, aIndex, lFrom, lTo);
+        fprintf(lFile, "    HI::Link * lLink%02u = lResult->mLinks.AddLink(lShape%02u, lShape%02u);" EOL, aIndex, lFrom, lTo);
         fprintf(lFile, "    assert(NULL != lLink%02u);" EOL, aIndex);
         fprintf(lFile, EOL);
-        fprintf(lFile, "    lLink%02u->SetAutoDelete  ();"       EOL, aIndex);
         fprintf(lFile, "    lLink%02u->SetColor       (\"%s\");" EOL, aIndex, mColor    .c_str());
-        fprintf(lFile, "    lLink%02u->SetDashArray   (\"%s\");" EOL, aIndex, mDashArray.c_str());
-        fprintf(lFile, "    lLink%02u->SetWeightFactor(%f);"     EOL, aIndex, mWeightFactor);
-        fprintf(lFile, "    lLink%02u->SetWidth       (%u);"     EOL, aIndex, mWidth_pixel );
+
+        if (!mDashArray.empty() ) { fprintf(lFile, "    lLink%02u->SetDashArray   (\"%s\");" EOL, aIndex, mDashArray.c_str()); }
+        if (1.0 != mWeightFactor) { fprintf(lFile, "    lLink%02u->SetWeightFactor(%f);"     EOL, aIndex, mWeightFactor     ); }
+        if (1   != mWidth_pixel ) { fprintf(lFile, "    lLink%02u->SetWidth       (%u);"     EOL, aIndex, mWidth_pixel      ); }
     }
 
     void Link::Generate_SVG(SVG_Document * aDoc) const

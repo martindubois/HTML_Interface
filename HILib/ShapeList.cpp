@@ -247,13 +247,43 @@ namespace HI
 
         aGrid->Iterator_Reset();
 
-        for (InternalList::iterator lIt = mShapes.begin(); lIt != mShapes.end(); lIt++)
+        InternalList::iterator lF;
+        Shape                * lShape;
+
+        for (lF = mShapes.begin(); lF != mShapes.end(); lF++)
         {
-            Shape * lShape = *lIt;
+            lShape = *lF;
             assert(NULL != lShape);
 
-            if (lShape->CanMove())
+            if (0 < lShape->LinkCount_Get()) { break; }
+
+            lShape->mCenter = aGrid->Iterator_GetPosition();
+            aGrid->Iterator_Next();
+        }
+
+        if (mShapes.end() != lF)
+        {
+            unsigned int                   lIndex = 0;
+            InternalList::reverse_iterator lR;
+
+            for (lR = mShapes.rbegin(); lR != mShapes.rend(); lR++)
             {
+                lShape = *lR;
+
+                lShape->mCenter = aGrid->Iterator_GetCorner(lIndex);
+
+                lIndex++;
+
+                if (*lF == lShape) { return; }
+
+                if (4 == lIndex) { break; }
+            }
+
+            for (; *lF != *lR; lF++)
+            {
+                lShape = *lF;
+                assert(NULL != lShape);
+
                 lShape->mCenter = aGrid->Iterator_GetPosition();
                 aGrid->Iterator_Next();
             }
@@ -295,15 +325,15 @@ namespace HI
 
         if (lSizeX_pixel < lSizeY_pixel)
         {
-            aGrid->mDelta_pixel = lSizeY_pixel / 2 * 3;
+            aGrid->mDelta_pixel = lSizeY_pixel / 3 * 4;
         }
         else
         {
-            aGrid->mDelta_pixel = lSizeX_pixel / 2 * 3;
+            aGrid->mDelta_pixel = lSizeX_pixel / 3 * 4;
         }
 
         aGrid->mCountX = 1280 / aGrid->mDelta_pixel;
-        aGrid->mCountY = static_cast<unsigned int>(mShapes.size() * 2 / aGrid->mCountX);
+        aGrid->mCountY = static_cast<unsigned int>(mShapes.size() / aGrid->mCountX + 5);
 
         if (aGrid->mCountX > aGrid->mCountY)
         {

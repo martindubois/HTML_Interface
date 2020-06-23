@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Grid.cpp
 
-// CODE REVIEW 2020-06-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-22 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-15 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-22 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -20,6 +20,35 @@
 Grid::Grid() : mCountX(0), mCountY(0), mDelta_pixel(0)
 {
     Iterator_Reset();
+}
+
+HI::Point Grid::Iterator_GetCorner(unsigned int aIndex)
+{
+    unsigned int lFirst_pixel = mDelta_pixel / 2;
+    HI::Point    lResult;
+
+    if (0 == aIndex)
+    {
+        mIndexY += (0 == mIndexX) ? 1 : 2;
+        mIndexX = mCountX - 1;
+    }
+
+    unsigned int lBottom_pixel = lFirst_pixel + (mCountY - 2) * mDelta_pixel;
+    unsigned int lLeft_pixel   = lFirst_pixel +                 mDelta_pixel;
+    unsigned int lRight_pixel  = lFirst_pixel + (mCountX - 2) * mDelta_pixel;
+    unsigned int lTop_pixel    = lFirst_pixel +  mIndexY      * mDelta_pixel;
+
+    switch (aIndex)
+    {
+    case 0: lResult.Set(lLeft_pixel , lTop_pixel   ); break;
+    case 1: lResult.Set(lRight_pixel, lTop_pixel   ); break;
+    case 2: lResult.Set(lLeft_pixel , lBottom_pixel); break;
+    case 3: lResult.Set(lRight_pixel, lBottom_pixel); break;
+
+    default: assert(false);
+    }
+
+    return lResult;
 }
 
 HI::Point Grid::Iterator_GetPosition()

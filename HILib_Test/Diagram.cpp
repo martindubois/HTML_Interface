@@ -12,6 +12,9 @@
 #include <HI/Link.h>
 #include <HI/Shape.h>
 
+// ===== HILib_Test =========================================================
+extern HI::Diagram * Diagram_0();
+
 // Tests
 /////////////////////////////////////////////////////////////////////////////
 
@@ -98,5 +101,11 @@ KMS_TEST_BEGIN(Diagram_Base)
     lD1.PositionShapes();
 
     lD1.Generate_HTML(HI::FOLDER_CURRENT, "Diagram_Base_1", "Diagram - Base - 1");
+
+    HI::Diagram * lD2 = Diagram_0();
+    KMS_TEST_ASSERT(NULL != lD2);
+
+    lD2->PositionShapes();
+    lD2->Generate_HTML(HI::FOLDER_CURRENT, "Diagram 0", "Diagram_0");
 
 KMS_TEST_END

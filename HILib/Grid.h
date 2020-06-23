@@ -4,7 +4,7 @@
 // Product   HTML_Interface
 // File      HILib/Grid.h
 
-// CODE REVIEW 2020-06-15 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-22 KMS - Martin Dubois, P.Eng.
 
 #pragma once
 
@@ -18,6 +18,7 @@ public:
 
     Grid();
 
+    HI::Point    Iterator_GetCorner  (unsigned int aIndex);
     HI::Point    Iterator_GetPosition();
     bool         Iterator_Next (unsigned int aInc = 1);
     void         Iterator_Reset();
