@@ -10,7 +10,7 @@
 #include <HI/Diagram.h>
 #include <HI/Link.h>
 
-HI::Diagram * Diagrame_Base_0()
+HI::Diagram * Diagram_Base_0()
 {
     HI::Diagram * lResult = new HI::Diagram();
     assert(NULL != lResult);

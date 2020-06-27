@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Diagram.cpp
 
-// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-27 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-27 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -141,7 +141,7 @@ namespace HI
 
         mShapes.LinkCounts_Sort();
 
-        mShapes.PositionShapes(&lGrid);
+        mShapes.PositionShapes(&lGrid, mLinks);
 
         PositionShapes(&lGrid);
     }
@@ -214,20 +214,22 @@ namespace HI
 
         do
         {
-            if (NULL == mShapes.FindByCenter(aGrid->Iterator_GetPosition()))
+            HI::Point lPosition = aGrid->Iterator_GetPosition();
+
+            if (NULL == mShapes.FindByCenter(lPosition))
             {
-                aShape->mCenter = aGrid->Iterator_GetPosition();
+                aShape->mCenter = lPosition;
 
                 double lNewWeight = mLinks.GetWeight(aShape);
                 if (lWeight > lNewWeight)
                 {
                     lResult++;
                     lWeight  = lNewWeight;
-                    lCenter  = aGrid->Iterator_GetPosition();
+                    lCenter  = lPosition;
                 }
             }
         }
-        while (aGrid->Iterator_Next());
+        while (aGrid->Iterator_NextPosition());
 
         aShape->mCenter = lCenter;
 

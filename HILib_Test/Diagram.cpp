@@ -14,6 +14,7 @@
 
 // ===== HILib_Test =========================================================
 extern HI::Diagram * Diagram_0();
+extern HI::Diagram * Diagram_1();
 
 // Tests
 /////////////////////////////////////////////////////////////////////////////
@@ -69,9 +70,9 @@ KMS_TEST_BEGIN(Diagram_Base)
 
     KMS_TEST_ASSERT(0 < lD0.mLinks.GetLength(lD0.mShapes.GetShape(0)));
 
-    lD0.Generate_CPP("HILib_Test\\Tests", "Diagrame_Base_0");
+    lD0.Generate_CPP("HILib_Test\\Tests", "Diagram_Base_0");
 
-    lD0.Generate_CPP(HI::FOLDER_TEMP, "Diagrame_Base_0");
+    lD0.Generate_CPP(HI::FOLDER_TEMP, "Diagram_Base_0");
 
     lD0.Generate_HTML(HI::FOLDER_CURRENT, "Diagram_Base_0", "Diagram - Base - 0");
 
@@ -106,6 +107,12 @@ KMS_TEST_BEGIN(Diagram_Base)
     KMS_TEST_ASSERT(NULL != lD2);
 
     lD2->PositionShapes();
-    lD2->Generate_HTML(HI::FOLDER_CURRENT, "Diagram 0", "Diagram_0");
+    lD2->Generate_HTML(HI::FOLDER_CURRENT, "Diagram_0", "Diagram 0");
 
-KMS_TEST_END
+    HI::Diagram * lD3 = Diagram_1();
+    KMS_TEST_ASSERT(NULL != lD3);
+
+    lD3->PositionShapes();
+    lD3->Generate_HTML(HI::FOLDER_CURRENT, "Diagram_1", "Diagram 1");
+
+    KMS_TEST_END

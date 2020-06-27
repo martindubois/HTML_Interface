@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/ShapeList.cpp
 
-// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-27 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-27 KMS - Martin Dubois, P.Eng.
 
 // TODO ShapeList
 //      Add the Trim method to remove empty space on top and on left
@@ -16,6 +16,7 @@
 
 // ===== Includes ===========================================================
 #include <HI/Shape.h>
+#include <HI/LinkList.h>
 
 #include <HI/ShapeList.h>
 
@@ -239,53 +240,48 @@ namespace HI
         mIterator = mShapes.begin();
     }
 
-    void ShapeList::PositionShapes(Grid * aGrid)
+    void ShapeList::PositionShapes(Grid * aGrid, const LinkList & aLinks)
     {
-        assert(NULL != aGrid);
+        assert(NULL !=  aGrid );
+        assert(NULL != &aLinks);
 
         ComputeGrid(aGrid);
 
-        aGrid->Iterator_Reset();
+        PositionSingles(aGrid);
 
-        InternalList::iterator lF;
-        Shape                * lShape;
+        Shape * lGroups[Grid::GROUP_QTY];
 
-        for (lF = mShapes.begin(); lF != mShapes.end(); lF++)
+        for (InternalList::reverse_iterator lIt = mShapes.rbegin(); lIt != mShapes.rend(); lIt++)
         {
-            lShape = *lF;
-            assert(NULL != lShape);
+            unsigned int i;
 
-            if (0 < lShape->LinkCount_Get()) { break; }
+            Shape * lShape = *lIt;
 
-            lShape->mCenter = aGrid->Iterator_GetPosition();
-            aGrid->Iterator_Next();
-        }
+            if (0 >= lShape->LinkCount_Get()) { break; }
 
-        if (mShapes.end() != lF)
-        {
-            unsigned int                   lIndex = 0;
-            InternalList::reverse_iterator lR;
+            unsigned int lGroupCount = aGrid->Iterator_GetGroupCount();
 
-            for (lR = mShapes.rbegin(); lR != mShapes.rend(); lR++)
+            for (i = 0; i < lGroupCount; i++)
             {
-                lShape = *lR;
-
-                lShape->mCenter = aGrid->Iterator_GetCorner(lIndex);
-
-                lIndex++;
-
-                if (*lF == lShape) { return; }
-
-                if (4 == lIndex) { break; }
+                if (NULL != aLinks.Find(lGroups[i], lShape))
+                {
+                    PositionGroupMember(aGrid, lShape, i);
+                    break;
+                }
             }
 
-            for (; *lF != *lR; lF++)
+            if (lGroupCount <= i)
             {
-                lShape = *lF;
-                assert(NULL != lShape);
-
-                lShape->mCenter = aGrid->Iterator_GetPosition();
-                aGrid->Iterator_Next();
+                if (Grid::GROUP_QTY > lGroupCount)
+                {
+                    lGroups[lGroupCount] = lShape;
+                    lShape->mCenter = aGrid->Iterator_GetGroupCenter();
+                }
+                else
+                {
+                    lShape->mCenter = aGrid->Iterator_GetPosition();
+                    aGrid->Iterator_NextPosition();
+                }
             }
         }
     }
@@ -323,22 +319,45 @@ namespace HI
         assert(0 < lSizeX_pixel);
         assert(0 < lSizeY_pixel);
 
-        if (lSizeX_pixel < lSizeY_pixel)
+        aGrid->Compute(lSizeX_pixel, lSizeY_pixel, mShapes.size());
+    }
+
+    void ShapeList::PositionGroupMember(Grid * aGrid, Shape * aShape, unsigned int aGroupIndex)
+    {
+        assert(NULL != aGrid );
+        assert(NULL != aShape);
+
+        if (aGrid->Iterator_IsGroupFull(aGroupIndex))
         {
-            aGrid->mDelta_pixel = lSizeY_pixel / 3 * 4;
+            aShape->mCenter = aGrid->Iterator_GetPosition();
+            aGrid->Iterator_NextPosition();
         }
         else
         {
-            aGrid->mDelta_pixel = lSizeX_pixel / 3 * 4;
+            aShape->mCenter = aGrid->Iterator_GetGroupPosition(aGroupIndex);
         }
 
-        aGrid->mCountX = 1280 / aGrid->mDelta_pixel;
-        aGrid->mCountY = static_cast<unsigned int>(mShapes.size() / aGrid->mCountX + 5);
+    }
 
-        if (aGrid->mCountX > aGrid->mCountY)
+    // NOT TESTED HI.ShapeList.PositionSingle
+    //            Shape without connexion
+
+    void ShapeList::PositionSingles(Grid * aGrid)
+    {
+        assert(NULL != aGrid);
+
+        aGrid->Iterator_Reset();
+
+        for (InternalList::iterator lIt = mShapes.begin(); lIt != mShapes.end(); lIt++)
         {
-            aGrid->mCountY = aGrid->mCountX;
-        };
+            Shape * lShape = *lIt;
+            assert(NULL != lShape);
+
+            if (0 < lShape->LinkCount_Get()) { break; }
+
+            lShape->mCenter = aGrid->Iterator_GetPosition();
+            aGrid->Iterator_NextPosition();
+        }
     }
 
 }

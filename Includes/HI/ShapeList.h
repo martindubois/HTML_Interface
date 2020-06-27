@@ -21,6 +21,7 @@ namespace HI
 {
 
     class CPP_Document;
+    class LinkList    ;
     class SVG_Document;
 
     /// \brief HI::ShapeList
@@ -77,7 +78,7 @@ namespace HI
         void    Iterator_Next ();
         void    Iterator_Reset();
 
-        void PositionShapes(Grid * aGrid);
+        void PositionShapes(Grid * aGrid, const LinkList & aLinks);
 
         void LinkCounts_Reset();
         void LinkCounts_Sort ();
@@ -85,6 +86,9 @@ namespace HI
     private:
 
         void ComputeGrid(Grid * aGrid) const;
+
+        void PositionGroupMember(Grid * aGrid, Shape * aShape, unsigned int aGroupIndex);
+        void PositionSingles    (Grid * aGrid);
 
         typedef std::list<Shape *> InternalList;
 

@@ -39,6 +39,11 @@ namespace HI
         /// \return This method returns a pointer to the new Link instance.
         Link * AddLink(const Shape * aFrom, const Shape * aTo);
 
+        /// \param aA
+        /// \param aB
+        /// \return This method returns a pointer to a Link instance.
+        const Link * Find(const Shape * aA, const Shape * aB) const;
+
         /// \param aShape The Shape of interrest
         /// \return The number of link connected to the shape
         unsigned int GetCount(const Shape * aShape) const;

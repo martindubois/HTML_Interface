@@ -16,20 +16,36 @@ class Grid
 
 public:
 
+    enum
+    {
+        GROUP_ELEMENT_QTY = 5,
+        GROUP_QTY         = 4,
+    };
+
     Grid();
 
-    HI::Point    Iterator_GetCorner  (unsigned int aIndex);
-    HI::Point    Iterator_GetPosition();
-    bool         Iterator_Next (unsigned int aInc = 1);
-    void         Iterator_Reset();
+    void Compute(unsigned int aSizeMaxX_pixel, unsigned int aSizeMaxY_pixel, unsigned int aShapeCount);
 
-    unsigned int mCountX;
-    unsigned int mCountY;
-
-    unsigned int mDelta_pixel;
+    HI::Point    Iterator_GetGroupCenter  ();
+    HI::Point    Iterator_GetGroupPosition(unsigned int aGroup);
+    unsigned int Iterator_GetGroupCount   ();
+    HI::Point    Iterator_GetPosition     ();
+    bool         Iterator_IsGroupFull     (unsigned int aGroup);
+    bool         Iterator_NextPosition    ();
+    void         Iterator_Reset           ();
 
 private:
 
+    HI::Point PosToPixel(unsigned int aX, unsigned int aY) const;
+
+    unsigned int mCountX;
+    unsigned int mCountY;
+    unsigned int mDelta_pixel;
+    unsigned int mFirstX_pixel;
+    unsigned int mFirstY_pixel;
+    unsigned int mGroupCount;
+    unsigned int mGroups[GROUP_QTY][2];
+    unsigned int mIndexE[GROUP_QTY];
     unsigned int mIndexX;
     unsigned int mIndexY;
 

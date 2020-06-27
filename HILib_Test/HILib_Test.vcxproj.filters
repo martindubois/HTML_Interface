@@ -39,10 +39,13 @@
     <ClCompile Include="Diagram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Tests\Diagrame_Base_0.cpp">
+    <ClCompile Include="Diagram_0.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tests\Diagram_Base_0.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
-    <ClCompile Include="Diagram_0.cpp">
+    <ClCompile Include="Diagram_1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

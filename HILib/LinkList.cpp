@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/LinkList.cpp
 
-// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-06-27 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-06-27 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -57,6 +57,26 @@ namespace HI
         mLinks.push_back(lResult);
 
         return lResult;
+    }
+
+    const Link * LinkList::Find(const Shape * aA, const Shape * aB) const
+    {
+        assert(NULL != aA);
+        assert(NULL != aB);
+        assert(aA   != aB);
+
+        for (InternalList::const_iterator lIt = mLinks.begin(); lIt != mLinks.end(); lIt++)
+        {
+            Link * lResult = (*lIt);
+            assert(NULL != lResult);
+
+            if (lResult->IsConnectedTo(aA) && lResult->IsConnectedTo(aB))
+            {
+                return lResult;
+            }
+        }
+
+        return NULL;
     }
 
     double LinkList::GetLength(const Shape * aShape) const
