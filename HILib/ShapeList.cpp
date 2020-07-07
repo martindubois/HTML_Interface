@@ -319,7 +319,7 @@ namespace HI
         assert(0 < lSizeX_pixel);
         assert(0 < lSizeY_pixel);
 
-        aGrid->Compute(lSizeX_pixel, lSizeY_pixel, mShapes.size());
+        aGrid->Compute(lSizeX_pixel, lSizeY_pixel, static_cast<unsigned int>(mShapes.size()));
     }
 
     void ShapeList::PositionGroupMember(Grid * aGrid, Shape * aShape, unsigned int aGroupIndex)

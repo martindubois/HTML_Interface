@@ -19,7 +19,7 @@ Debug	Libraries/Debug_32
 
 Installer	.
 # KmsVersion "HTML-Interface_" ".exe" 3
-	HTML-Interface_1.0.0.exe
+	HTML-Interface_1.0.1.exe
 
 Release	.
     GenDoc.exe
