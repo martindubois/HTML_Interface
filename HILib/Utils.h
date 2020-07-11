@@ -1,8 +1,10 @@
 
-// Author     KMS - Martin Dubois, P.Eng.
-// Copyright  (C) 2020 KMS. All rights reserved.
-// Product    HTML_Interface
-// File       HILib/Utils.h
+// Author    KMS - Martin Dubois, P.Eng.
+// Copyright (C) 2020 KMS. All rights reserved.
+// Product   HTML_Interface
+// File      HILib/Utils.h
+
+// CODE REVIEW 2020-07-11 KMS - Martin Dubois, P.Eng.
 
 #pragma once
 
@@ -25,3 +27,4 @@ extern void Utl_ThrowError(const char * aType, unsigned int aCode, const char * 
 extern void Utl_VerifyReturn(int aRet);
 extern void Utl_VerifyReturn(int aRet, unsigned int aMax);
 
+extern void Utl_WriteCString(FILE * aOut, const char * aIn);

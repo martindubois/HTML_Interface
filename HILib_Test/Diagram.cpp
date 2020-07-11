@@ -34,14 +34,21 @@ KMS_TEST_BEGIN(Diagram_Base)
     KMS_TEST_COMPARE(0, strcmp("Alpha - B - C - D", lS->GetName()));
 
     lS = lD0.mShapes.AddShape("Box", "Bravo - A - C");
-    lS->SetFillColor("LightGray");
-    lS->SetTitle    ("Light Gray");
+    lS->SetFillColor  ("LightGray");
+    lS->SetStrokeWidth(4);
+    lS->SetTitle      ("Light Gray");
+    lS->AppendToTitle ("!");
 
     lS = lD0.mShapes.AddShape("Box", "Charlie - A - B");
     lS = lD0.mShapes.AddShape("Box", "Delta - A - E - F");
     lS = lD0.mShapes.AddShape("Box", "Echo - D - F");
     lS = lD0.mShapes.AddShape("Box", "Foxtrot - D - E - G");
     lS = lD0.mShapes.AddShape("Box", "Golf - F", HI::Shape::TYPE_ELLIPSE);
+    lS = lD0.mShapes.AddShape("Box", "Hotel - G", HI::Shape::TYPE_IMAGE);
+
+    lS->SetImage(HI::FOLDER_STATIC, "KMS.png");
+    lS->SetSize(80, 60);
+    lS->SetTextOnImage();
 
     lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(0), lD0.mShapes.GetShape(1));
     lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(1), lD0.mShapes.GetShape(2));
@@ -60,13 +67,18 @@ KMS_TEST_BEGIN(Diagram_Base)
     lL->SetWeightFactor(2);
     lL->SetWidth       (3);
 
+    lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(6), lD0.mShapes.GetShape(7));
+
     KMS_TEST_ASSERT(NULL != lD0.mLinks.GetLink(0));
-    KMS_TEST_ASSERT(NULL == lD0.mLinks.GetLink(8));
+    KMS_TEST_ASSERT(NULL == lD0.mLinks.GetLink(9));
 
     KMS_TEST_ASSERT(NULL != lD0.mShapes.GetShape(0));
-    KMS_TEST_ASSERT(NULL == lD0.mShapes.GetShape(7));
+    KMS_TEST_ASSERT(NULL == lD0.mShapes.GetShape(8));
 
     lD0.PositionShapes();
+
+    KMS_TEST_ASSERT(0 < lS->GetLeft());
+    KMS_TEST_ASSERT(0 < lS->GetTop ());
 
     KMS_TEST_ASSERT(0 < lD0.mLinks.GetLength(lD0.mShapes.GetShape(0)));
 

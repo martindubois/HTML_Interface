@@ -1,12 +1,10 @@
 
-// Author     KMS - Martin Dubois, P.Eng.
-// Copyright  (C) 2000 KMS. All rights reserved.
-// Product    HTML_Interface
-// File       HILib/Utils.cpp
+// Author    KMS - Martin Dubois, P.Eng.
+// Copyright (C) 2000 KMS. All rights reserved.
+// Product   HTML_Interface
+// File      HILib/Utils.cpp
 
-// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
-
-// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-07-11 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -51,10 +49,7 @@ static void Initialize();
 // aExtension [--O;R--]
 void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, HI::FolderId aFolder, const char * aName, const char * aExtension)
 {
-    assert(NULL           != aOut         );
-    assert(             0 <  aOutSize_byte);
-    assert(HI::FOLDER_QTY >  aFolder      );
-    assert(NULL           != aName        );
+    assert(HI::FOLDER_QTY > aFolder);
 
     if (!sInitDone)
     {
@@ -65,7 +60,7 @@ void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, HI::FolderId aFol
 }
 
 // aOut       [---;-W-]
-// aName      [---;R--]
+// aFolder    [--O;R--]
 // aExtension [--O;R--]
 void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, const char * aFolder, const char * aName, const char * aExtension)
 {
@@ -81,9 +76,6 @@ void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, const char * aFol
     {
         if (NULL == aExtension)
         {
-            // NOT TESTED Utils.Folder
-            //            Retrieve filename relative to the current folder
-            //            without extension.
             lRet = sprintf_s(aOut, aOutSize_byte, "%s", aName);
         }
         else
@@ -95,8 +87,6 @@ void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, const char * aFol
     {
         if (NULL == aExtension)
         {
-            // NOT TESTED Utils.Folder
-            //            Retrieve filename without extension.
             lRet = sprintf_s(aOut, aOutSize_byte, "%s\\%s", aFolder, aName);
         }
         else
@@ -105,12 +95,7 @@ void Utl_MakeFileName(char * aOut, unsigned int aOutSize_byte, const char * aFol
         }
     }
 
-    if (0 >= lRet)
-    {
-        // NOT TESTED Utils.Folder.Error
-        //            sprintf_s( , , ,  ) or sprintf_s( , , , ,  ) fails.
-        Utl_ThrowError("ERROR", __LINE__, "sprintf_s failed", lRet);
-    }
+    Utl_VerifyReturn(lRet, aOutSize_byte);
 }
 
 void Utl_ThrowError(const char * aType, unsigned int aCode, const char * aMessage, int aData)
@@ -125,9 +110,6 @@ void Utl_ThrowError(const char * aType, unsigned int aCode, const char * aMessag
 
     throw std::exception(lWhat, aData);
 }
-
-// NOT TESTED Utils.Verify
-//            Utl_VerifyReturn detects an error.
 
 void Utl_VerifyReturn(int aRet)
 {
@@ -150,6 +132,28 @@ void Utl_VerifyReturn(int aRet, unsigned int aMax)
     }
 }
 
+void Utl_WriteCString(FILE * aOut, const char * aIn)
+{
+    assert(NULL != aOut);
+    assert(NULL != aIn);
+
+    const char * lIn = aIn;
+    while ('\0' != (*lIn))
+    {
+        switch (*lIn)
+        {
+        case '\\': fprintf(aOut, "\\\\"); break;
+        case '\n': fprintf(aOut, "\\n" ); break;
+        case '\r': fprintf(aOut, "\\r" ); break;
+        case '\t': fprintf(aOut, "\\t" ); break;
+
+        default: fprintf(aOut, "%c", *lIn);
+        }
+
+        lIn++;
+    }
+}
+
 // Static functions
 /////////////////////////////////////////////////////////////////////////////
 
@@ -160,12 +164,7 @@ void Init_Exec()
     OS_GetModuleFileName(lFolder, sizeof(lFolder));
 
     char * lPtr = strrchr(lFolder, '\\');
-    if (NULL == lPtr)
-    {
-        // NOT TESTED Utils.Folder.Error
-        //            strrchr( ,  ) fails.
-        Utl_ThrowError("ERROR", __LINE__, "strrchr( ,  )  failed");
-    }
+    assert(NULL != lPtr);
 
     *lPtr = '\0';
 

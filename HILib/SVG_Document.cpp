@@ -4,12 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/SVG_Document.cpp
 
-// CODE REVIEW 2020-05-22 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-07-11 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-05-22 KMS - Martin Dubois, P.Eng.
-
-// Includes
-/////////////////////////////////////////////////////////////////////////////
+// TEST COVERAGE 2020-07-11 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -36,7 +33,7 @@ static const HI::XML_Document::Data ATTRIBUTES[HI::SVG_Document::ATTR_QTY] =
     { "ATTR_FX"              , "fx"               },
     { "ATTR_FY"              , "fy"               },
     { "ATTR_HEIGHT"          , "height"           },
-    { "ATTR_HREF"            , "xlink:href"       },
+    { "ATTR_HREF"            , "href"             },
     { "ATTR_ID"              , "id"               },
     { "ATTR_LENGTH_ADJUST"   , "lengthAdjust"     },
     { "ATTR_MARKER_HEIGHT"   , "markerHeight"     },
