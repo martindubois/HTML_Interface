@@ -5,4 +5,9 @@ License   https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 Product   HTML_Interface
 File      HILib/_DocUser/HTML_Interface.HILib.ReadMe.txt
 
+- HI::Diagram
+	- SetBackgroundColor methode
+	- Uniforme margin
+- HI::XML_Document - Attribute with units
+
 1.0.1 Windows

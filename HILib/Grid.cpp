@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Grid.cpp
 
-// CODE REVIEW 2020-06-27 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-07-20 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-27 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-07-20 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -25,6 +25,8 @@ static int GROUP_OFFSETS[Grid::GROUP_QTY][Grid::GROUP_ELEMENT_QTY][2] =
     { { -1, 0 }, { -1,  1 }, { 0,  1 }, {  1,  1 }, {  1, 0 } },
     { {  1, 0 }, {  1,  1 }, { 0,  1 }, { -1,  1 }, { -1, 1 } },
 };
+
+#define MARGIN_pixel (20)
 
 #define X 0
 #define Y 1
@@ -51,8 +53,8 @@ void Grid::Compute(unsigned int aSizeMaxX_pixel, unsigned int aSizeMaxY_pixel, u
     assert(2 <= aSizeMaxY_pixel);
     assert(0 <  aShapeCount    );
 
-    mFirstX_pixel = aSizeMaxX_pixel / 2 + 1;
-    mFirstY_pixel = aSizeMaxY_pixel / 2 + 1;
+    mFirstX_pixel = aSizeMaxX_pixel / 2 + MARGIN_pixel;
+    mFirstY_pixel = aSizeMaxY_pixel / 2 + MARGIN_pixel;
 
     assert(2 <= mFirstX_pixel);
     assert(2 <= mFirstY_pixel);

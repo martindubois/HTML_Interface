@@ -58,6 +58,16 @@ namespace HI
 
         };
 
+        typedef enum
+        {
+            UNIT_NONE   ,
+            UNIT_PERCENT,
+            UNIT_PIXEL  ,
+
+            UNIT_QTY
+        }
+        Unit;
+
         /// \param aOut See Info
         /// \param aIn  See Data
         static void Info_Copy(Info * aOut, const Data & aIn);
@@ -76,6 +86,18 @@ namespace HI
         /// \exception std::exception
         void Attribute_Set(unsigned int aAttribute, unsigned int aValue);
 
+        /// \param aAttribute The attribute index
+        /// \param aValue     The attribute value
+        /// \param aUnit      See HI::XML_Document::Unit
+        /// \exception std::exception
+        void Attribute_Set(unsigned int aAttribute, unsigned int aValue, Unit aUnit);
+
+        /// \param aAttribute The attribute index
+        /// \param aValue     The attribute value
+        /// \param aUnit      Unit
+        /// \exception std::exception
+        void Attribute_Set(unsigned int aAttribute, unsigned int aValue, const char * aUnit);
+
         /// \param aAttribute The attribute name
         /// \param aValue     The attribute value
         /// \exception std::exception
@@ -85,6 +107,18 @@ namespace HI
         /// \param aValue     The attribute value
         /// \exception std::exception
         void Attribute_Set(const char * aAttribute, unsigned int aValue);
+
+        /// \param aAttribute The attribute name
+        /// \param aValue     The attribute value
+        /// \param aUnit      See HI::XML_Document::Unit
+        /// \exception std::exception
+        void Attribute_Set(const char * aAttribute, unsigned int aValue, Unit aUnit);
+
+        /// \param aAttribute The attribute name
+        /// \param aValue     The attribute value
+        /// \param aUnit      Unit
+        /// \exception std::exception
+        void Attribute_Set(const char * aAttribute, unsigned int aValue, const char * aUnit);
 
         /// \param aTag The tag index
         /// \exception std::exception

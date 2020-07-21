@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Diagram.cpp
 
-// CODE REVIEW 2020-06-27 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-07-20 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-27 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-07-20 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -21,6 +21,12 @@
 
 // ===== HILib ==============================================================
 #include "Grid.h"
+#include "Utils.h"
+
+// Constants
+/////////////////////////////////////////////////////////////////////////////
+
+#define MARGIN_pixel (20)
 
 namespace HI
 {
@@ -37,6 +43,22 @@ namespace HI
     {
     }
 
+    void Diagram::SetBackgroundColor(CSS_Color aColor)
+    {
+        char lColor[64];
+
+        CSS_Colors::RetrieveName(lColor, sizeof(lColor), aColor);
+
+        SetBackgroundColor(lColor);
+    }
+
+    void Diagram::SetBackgroundColor(const char * aColor)
+    {
+        assert(NULL != aColor);
+
+        mBackgroundColor = aColor;
+    }
+
     void Diagram::SetDebug()
     {
         mFlags.mDebug = true;
@@ -51,10 +73,7 @@ namespace HI
 
         lDoc.Create(aFolder, aName);
 
-            mShapes.Generate_CPP(&lDoc);
-            mLinks .Generate_CPP(&lDoc, mShapes);
-
-        lDoc.Close();
+        Generate_CPP(&lDoc);
     }
 
     void Diagram::Generate_CPP(const char * aFolder, const char * aName)
@@ -66,10 +85,7 @@ namespace HI
 
         lDoc.Create(aFolder, aName);
 
-            mShapes.Generate_CPP(&lDoc);
-            mLinks .Generate_CPP(&lDoc, mShapes);
-
-        lDoc.Close();
+        Generate_CPP(&lDoc);
     }
 
     void Diagram::Generate_HTML(FolderId aFolder, const char * aName, const char * aTitle)
@@ -107,6 +123,16 @@ namespace HI
     void Diagram::Generate_SVG(SVG_Document * aDoc)
     {
         assert(NULL != aDoc);
+
+        if (!mBackgroundColor.empty())
+        {
+            aDoc->Attribute_Set(SVG_Document::ATTR_FILL, mBackgroundColor.c_str());
+
+            aDoc->Attribute_Set(SVG_Document::ATTR_HEIGHT, 100, XML_Document::UNIT_PERCENT);
+            aDoc->Attribute_Set(SVG_Document::ATTR_WIDTH , 100, XML_Document::UNIT_PERCENT);
+
+            aDoc->Tag(SVG_Document::TAG_RECT);
+        }
 
         mLinks .Generate_SVG(aDoc);
         mShapes.Generate_SVG(aDoc);
@@ -156,6 +182,22 @@ namespace HI
         sprintf_s(lName, "Diagram_Debug_Iteration_%03u", aIteration);
 
         Generate_SVG(FOLDER_TEMP, lName);
+    }
+
+    void Diagram::Generate_CPP(CPP_Document * aDoc) const
+    {
+        assert(NULL != aDoc);
+
+        if (!mBackgroundColor.empty())
+        {
+            int lRet = fprintf(aDoc->GetFile(), "    lResult->SetBackgroundColor(\"%s\");" EOL, mBackgroundColor.c_str());
+            assert(0 < lRet);
+        }
+
+        mShapes.Generate_CPP(aDoc);
+        mLinks .Generate_CPP(aDoc, mShapes);
+
+        aDoc->Close();
     }
 
     void Diagram::PositionShapes(Grid * aGrid)
@@ -244,6 +286,9 @@ namespace HI
         unsigned int lSizeY_pixel;
 
         mShapes.GetDiagramSize(&lSizeX_pixel, &lSizeY_pixel);
+
+        lSizeX_pixel += MARGIN_pixel;
+        lSizeY_pixel += MARGIN_pixel;
 
         aDoc->Attribute_Set(SVG_Document::ATTR_HEIGHT, lSizeY_pixel);
         aDoc->Attribute_Set(SVG_Document::ATTR_WIDTH , lSizeX_pixel);

@@ -19,6 +19,7 @@ class Grid;
 namespace HI
 {
 
+    class CPP_Document ;
     class HTML_Document;
     class SVG_Document ;
 
@@ -31,6 +32,12 @@ namespace HI
         Diagram();
 
         ~Diagram();
+
+        /// \param aColor
+        void SetBackgroundColor(CSS_Color aColor);
+
+        /// \param aColor
+        void SetBackgroundColor(const char * aColor);
 
         /// \param aSizeX_pixel The method puts the diagram width there.
         /// \param aSizeY_pixel The method puts the diagram height there.
@@ -87,6 +94,8 @@ namespace HI
 
         void DebugIteration(unsigned int aIteration);
 
+        void Generate_CPP(CPP_Document * aDoc) const;
+
         void         PositionShapes(Grid * aGrid);
         unsigned int PositionShape (Grid * aGrid, Shape * aShape);
 
@@ -99,6 +108,8 @@ namespace HI
             unsigned mReserved0 : 31;
         }
         mFlags;
+
+        std::string mBackgroundColor;
 
     };
 

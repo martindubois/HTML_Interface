@@ -4,9 +4,9 @@
 // Product    HTML_Interface
 // File       HILib/XML_Document.cpp
 
-// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-07-20 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-07-20 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -16,6 +16,11 @@
 
 // ===== HILib ==============================================================
 #include "Utils.h"
+
+// Constants
+/////////////////////////////////////////////////////////////////////////////
+
+static const char * UNIT_NAMES[] = { "", "%", "px" };
 
 namespace HI
 {
@@ -62,6 +67,21 @@ namespace HI
         XML_Document::Attribute_Set(mAttrList[aAttr].mName, aValue);
     }
 
+    void XML_Document::Attribute_Set(unsigned int aAttr, unsigned int aValue, Unit aUnit)
+    {
+        assert(mAttrQty > aAttr);
+        assert(UNIT_QTY > aUnit);
+
+        XML_Document::Attribute_Set(mAttrList[aAttr].mName, aValue, UNIT_NAMES[aUnit]);
+    }
+
+    void XML_Document::Attribute_Set(unsigned int aAttr, unsigned int aValue, const char * aUnit)
+    {
+        assert(mAttrQty > aAttr);
+
+        XML_Document::Attribute_Set(mAttrList[aAttr].mName, aValue, aUnit);
+    }
+
     void XML_Document::Attribute_Set(const char * aAttr, const char * aValue)
     {
         assert(NULL != aAttr );
@@ -79,9 +99,25 @@ namespace HI
     {
         assert(NULL != aAttr);
 
+        XML_Document::Attribute_Set(aAttr, aValue, UNIT_NONE);
+    }
+
+    void XML_Document::Attribute_Set(const char * aAttr, unsigned int aValue, Unit aUnit)
+    {
+        assert(NULL     != aAttr);
+        assert(UNIT_QTY >  aUnit);
+
+        Attribute_Set(aAttr, aValue, UNIT_NAMES[aUnit]);
+    }
+
+    void XML_Document::Attribute_Set(const char * aAttr, unsigned int aValue, const char * aUnit)
+    {
+        assert(NULL != aAttr);
+        assert(NULL != aUnit);
+
         char lValue[16];
 
-        int lRet = sprintf_s(lValue, "%u", aValue);
+        int lRet = sprintf_s(lValue, "%u%s", aValue, aUnit);
         Utl_VerifyReturn(lRet, sizeof(lValue));
 
         XML_Document::Attribute_Set(aAttr, lValue);
