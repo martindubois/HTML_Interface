@@ -105,6 +105,8 @@ namespace HI
         /// \param aName The name
         void SetName(const char * aName);
 
+        void SetNameOnImage();
+
         /// \param aSizeX_pixel The width in pixel
         /// \param aSizeY_pixel The height in pixel
         void SetSize(unsigned int aSizeX_pixel, unsigned int aSizeY_pixel);
@@ -112,7 +114,7 @@ namespace HI
         /// \param aStrokeWidth_pixel The line width in pixel
         void SetStrokeWidth(unsigned int aStrokeWidth_pixel);
 
-        void SetTextOnImage();
+        void SetTypeOnImage();
 
         /// \param aTitle The title
         void SetTitle(const char * aTitle);
@@ -141,16 +143,20 @@ namespace HI
         void Generate_SVG_Ellipse(SVG_Document * aDoc) const;
         void Generate_SVG_HWXY   (SVG_Document * aDoc) const;
         void Generate_SVG_Image  (SVG_Document * aDoc) const;
+        void Generate_SVG_Name   (SVG_Document * aDoc) const;
         void Generate_SVG_Rect   (SVG_Document * aDoc) const;
         void Generate_SVG_Shape  (SVG_Document * aDoc) const;
         void Generate_SVG_Texts  (SVG_Document * aDoc) const;
+        void Generate_SVG_Title  (SVG_Document * aDoc) const;
+        void Generate_SVG_Type   (SVG_Document * aDoc) const;
 
         struct
         {
-            unsigned int mAutoDelete  : 1;  
-            unsigned int mTextOnImage : 1;
+            unsigned int mAutoDelete  : 1;
+            unsigned int mNameOnImage : 1;
+            unsigned int mTypeOnImage : 1;
 
-            unsigned int mReserved0 : 30;
+            unsigned int mReserved0 : 29;
         }
         mFlags;
 

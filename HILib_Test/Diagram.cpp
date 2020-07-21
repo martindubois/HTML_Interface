@@ -8,6 +8,7 @@
 #include <KmsTest.h>
 
 // ===== Includes ===========================================================
+#include <HI/CSS_Colors.h>
 #include <HI/Diagram.h>
 #include <HI/Link.h>
 #include <HI/Shape.h>
@@ -27,6 +28,8 @@ KMS_TEST_BEGIN(Diagram_Base)
 
     KMS_TEST_ASSERT(NULL == lD0.mLinks .GetLink (0));
     KMS_TEST_ASSERT(NULL == lD0.mShapes.GetShape(0));
+
+    lD0.SetBackgroundColor(HI::COLOR_ALICE_BLUE);
 
     lS = lD0.mShapes.AddShape("Box", "Alpha - B - C - D");
     lS->SetFillColor(HI::COLOR_ALICE_BLUE);
@@ -48,7 +51,8 @@ KMS_TEST_BEGIN(Diagram_Base)
 
     lS->SetImage(HI::FOLDER_STATIC, "KMS.png");
     lS->SetSize(80, 60);
-    lS->SetTextOnImage();
+    lS->SetNameOnImage();
+    lS->SetTypeOnImage();
 
     lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(0), lD0.mShapes.GetShape(1));
     lL = lD0.mLinks.AddLink(lD0.mShapes.GetShape(1), lD0.mShapes.GetShape(2));

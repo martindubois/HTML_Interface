@@ -4,9 +4,9 @@
 // Product   HTML_Interface
 // File      HILib/Shape.cpp
 
-// CODE REVIEW 2020-07-11 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2020-07-20 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-07-11 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2020-07-20 KMS - Martin Dubois, P.Eng.
 
 // TODO Shape
 //      Add a line color
@@ -225,6 +225,11 @@ namespace HI
         }
     }
 
+    void Shape::SetNameOnImage()
+    {
+        mFlags.mNameOnImage = true;
+    }
+
     void Shape::SetSize(unsigned int aSizeX_pixel, unsigned int aSizeY_pixel)
     {
         assert(0 < aSizeX_pixel);
@@ -246,9 +251,9 @@ namespace HI
         mStrokeWidth_pixel = aStrokeWidth_pixel;
     }
 
-    void Shape::SetTextOnImage()
+    void Shape::SetTypeOnImage()
     {
-        mFlags.mTextOnImage = true;
+        mFlags.mTypeOnImage = true;
     }
 
     void Shape::SetTitle(const char * aTitle)
@@ -282,8 +287,10 @@ namespace HI
         {   fprintf(lFile, "    lShape%02u->SetSize       (%u, %u);" EOL, aIndex, mSizeX_pixel, mSizeY_pixel); }
         if (STROKE_WIDTH_DEFAULT_pixel != mStrokeWidth_pixel)
         {   fprintf(lFile, "    lShape%02u->SetStrokeWidth(%u);"     EOL, aIndex, mStrokeWidth_pixel); }
-        if (mFlags.mTextOnImage)
-        {   fprintf(lFile, "    lShape%02u->SetTextOnImage();"       EOL, aIndex); }
+        if (mFlags.mNameOnImage)
+        {   fprintf(lFile, "    lShape%02u->SetNameOnImage();"       EOL, aIndex); }
+        if (mFlags.mTypeOnImage)
+        {   fprintf(lFile, "    lShape%02u->SetTypeOnImage();"       EOL, aIndex); }
         if (!mTitle.empty())
         {
             fprintf(lFile, "    lShape%02u->SetTitle      (\""          , aIndex);
@@ -312,10 +319,7 @@ namespace HI
             default: assert(false);
             }
 
-            if (!mTitle.empty())
-            {
-                aDoc->Tag(SVG_Document::TAG_TITLE, mTitle.c_str());
-            }
+            Generate_SVG_Title(aDoc);
         }
         aDoc->Tag_End();
     }
@@ -375,6 +379,9 @@ namespace HI
         aDoc->Attribute_Set(SVG_Document::ATTR_Y, mCenter.GetY() - mSizeY_pixel / 2);
     }
 
+    // NOT TESTED HI.Shape.Generate_SVG
+    //            Image without SetNameOnImage
+
     void Shape::Generate_SVG_Image(SVG_Document * aDoc) const
     {
         assert(NULL != aDoc);
@@ -385,10 +392,32 @@ namespace HI
 
         aDoc->Tag(SVG_Document::TAG_IMAGE);
 
-        if (mFlags.mTextOnImage)
+        if (mFlags.mTypeOnImage)
         {
-            Generate_SVG_Texts(aDoc);
+            Generate_SVG_Type(aDoc);
         }
+
+        if (mFlags.mNameOnImage)
+        {
+            Generate_SVG_Name(aDoc);
+        }
+        else
+        {
+            if (mTitle.empty())
+            {
+                aDoc->Tag(SVG_Document::TAG_TITLE, mName.c_str());
+            }
+        }
+    }
+
+    void Shape::Generate_SVG_Name(SVG_Document * aDoc) const
+    {
+        assert(NULL != aDoc);
+
+        unsigned int lX_pixel = mCenter.GetX() - mSizeX_pixel / 2 + 5;
+        unsigned int lY_pixel = mCenter.GetY() - mSizeY_pixel / 2 + 40;
+
+        Generate_Text(aDoc, lX_pixel, lY_pixel, NULL, mName.c_str());
     }
 
     void Shape::Generate_SVG_Rect(SVG_Document * aDoc) const
@@ -427,16 +456,28 @@ namespace HI
 
     void Shape::Generate_SVG_Texts(SVG_Document * aDoc) const
     {
+        Generate_SVG_Type(aDoc);
+        Generate_SVG_Name(aDoc);
+    }
+
+    void Shape::Generate_SVG_Title(SVG_Document * aDoc) const
+    {
+        assert(NULL != aDoc);
+
+        if (!mTitle.empty())
+        {
+            aDoc->Tag(SVG_Document::TAG_TITLE, mTitle.c_str());
+        }
+    }
+
+    void Shape::Generate_SVG_Type(SVG_Document * aDoc) const
+    {
         assert(NULL != aDoc);
 
         unsigned int lX_pixel = mCenter.GetX() - mSizeX_pixel / 2 + 5;
         unsigned int lY_pixel = mCenter.GetY() - mSizeY_pixel / 2 + 20;
 
         Generate_Text(aDoc, lX_pixel, lY_pixel, "fill:grey;", mTypeName.c_str());
-
-        lY_pixel += 20;
-
-        Generate_Text(aDoc, lX_pixel, lY_pixel, NULL, mName.c_str());
     }
 
 }

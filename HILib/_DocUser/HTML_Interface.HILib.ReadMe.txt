@@ -6,8 +6,12 @@ Product   HTML_Interface
 File      HILib/_DocUser/HTML_Interface.HILib.ReadMe.txt
 
 - HI::Diagram
-	- SetBackgroundColor methode
+	- SetBackgroundColor
 	- Uniforme margin
+- HI::Shape
+	- SetNameOnImage
+	- SetTypeOnImage
+	- TYPE_IMAGE
 - HI::XML_Document - Attribute with units
 
 1.0.1 Windows
