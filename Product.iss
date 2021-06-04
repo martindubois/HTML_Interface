@@ -1,9 +1,9 @@
 
 ; Author    KMS - Martin Dubois, P.Eng.
-; Copyright (C) 2020 KMS. All rights reserved.
+; Copyright (C) 2020-2021 KMS. All rights reserved.
 ; License   http://www.apache.org/licenses/LICENSE-2.0
 ; Product   HTML_Interface
-; File      HTML_Interface.iss
+; File      Product.iss
 
 [Setup]
 AllowNetworkDrive=no
@@ -13,13 +13,13 @@ AppName=HTML_Interface
 AppPublisher=KMS
 AppPublisherURL=http://www.kms-quebec.com
 AppSupportURL=http://www.kms-quebec.com
-AppVersion=1.0.1
+AppVersion=1.0.2
 ArchitecturesAllowed=x64 x86
 ArchitecturesInstallIn64BitMode=x64
 DefaultDirName={pf}\HTML_Interface
 LicenseFile=License.txt
 MinVersion=10.0
-OutputBaseFilename=HTML-Interface_1.0.1
+OutputBaseFilename=HTML-Interface_1.0.2
 OutputDir=Installer
 
 [Files]

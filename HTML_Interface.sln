@@ -1,32 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.421
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Includes", "Includes", "{5B921471-4E1C-4E70-8A13-30A75AA411C1}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HI", "HI", "{97B3B0A6-608C-4516-94D3-CEC74B8AAA7B}"
-	ProjectSection(SolutionItems) = preProject
-		Includes\HI\Browser.h = Includes\HI\Browser.h
-		Includes\HI\CPP_Document.h = Includes\HI\CPP_Document.h
-		Includes\HI\CSS_Colors.h = Includes\HI\CSS_Colors.h
-		Includes\HI\CSS_Document.h = Includes\HI\CSS_Document.h
-		Includes\HI\Diagram.h = Includes\HI\Diagram.h
-		Includes\HI\Document.h = Includes\HI\Document.h
-		Includes\HI\HTML_Document.h = Includes\HI\HTML_Document.h
-		Includes\HI\JS_Document.h = Includes\HI\JS_Document.h
-		Includes\HI\Line.h = Includes\HI\Line.h
-		Includes\HI\Link.h = Includes\HI\Link.h
-		Includes\HI\LinkList.h = Includes\HI\LinkList.h
-		Includes\HI\Point.h = Includes\HI\Point.h
-		Includes\HI\Server.h = Includes\HI\Server.h
-		Includes\HI\Shape.h = Includes\HI\Shape.h
-		Includes\HI\ShapeList.h = Includes\HI\ShapeList.h
-		Includes\HI\SVG_Document.h = Includes\HI\SVG_Document.h
-		Includes\HI\Types.h = Includes\HI\Types.h
-		Includes\HI\XML_Document.h = Includes\HI\XML_Document.h
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HILib", "HILib\HILib.vcxproj", "{51712226-EC62-4CBC-8916-BF0B427DBE3D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GenDoc", "GenDoc\GenDoc.vcxproj", "{0366F18D-3DEC-4213-A12C-D86F643839D3}"
@@ -34,62 +10,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GenDoc", "GenDoc\GenDoc.vcx
 		{51712226-EC62-4CBC-8916-BF0B427DBE3D} = {51712226-EC62-4CBC-8916-BF0B427DBE3D}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AA9B71A5-ABDC-4279-80C6-59F3900E2886}"
-	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
-		Build.cmd = Build.cmd
-		DoxyFile_en.txt = DoxyFile_en.txt
-		Export.cmd = Export.cmd
-		Export.cmd.txt = Export.cmd.txt
-		Export.txt = Export.txt
-		HTML_Interface.iss = HTML_Interface.iss
-		Import.cmd = Import.cmd
-		License.txt = License.txt
-		README.md = README.md
-		RunDoxygen.cmd = RunDoxygen.cmd
-		Test.cmd = Test.cmd
-		ViewTestResult.cmd = ViewTestResult.cmd
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_DocDev", "_DocDev", "{3AA81B60-77F8-4F00-BEA2-BC382B714F68}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Procedures", "Procedures", "{0CE10567-E157-4059-83BB-FD25C1DF42E5}"
 	ProjectSection(SolutionItems) = preProject
-		_DocDev\Procedures\Build.txt = _DocDev\Procedures\Build.txt
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{E3F31287-BE8C-4A86-B7E7-8BDCFECD71D5}"
-	ProjectSection(SolutionItems) = preProject
-		Common\Version.h = Common\Version.h
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{589F85DC-423E-4A36-A101-22D553B46F50}"
-	ProjectSection(SolutionItems) = preProject
-		Scripts\Import.cmd = Scripts\Import.cmd
-		Scripts\Import.cmd.txt = Scripts\Import.cmd.txt
-		Scripts\Import.txt = Scripts\Import.txt
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_DocUser", "_DocUser", "{A5A6982E-75D9-4309-A687-108CB3302997}"
-	ProjectSection(SolutionItems) = preProject
-		_DocUser\HTML_Interface.ReadMe.txt = _DocUser\HTML_Interface.ReadMe.txt
+		_DocDev\Build.txt = _DocDev\Build.txt
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HILib_Test", "HILib_Test\HILib_Test.vcxproj", "{863826BB-546A-4E45-9EE3-82A75B3DBC23}"
 	ProjectSection(ProjectDependencies) = postProject
 		{51712226-EC62-4CBC-8916-BF0B427DBE3D} = {51712226-EC62-4CBC-8916-BF0B427DBE3D}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Static", "Static", "{CEC88802-827A-4697-BB84-15448668D287}"
-	ProjectSection(SolutionItems) = preProject
-		Static\ErrorNotFound.html = Static\ErrorNotFound.html
-		Static\favicon.ico = Static\favicon.ico
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{40DB1B05-8814-414F-8A8D-CF3D34B39722}"
-	ProjectSection(SolutionItems) = preProject
-		Static\Tests\AutoClose.html = Static\Tests\AutoClose.html
-		Static\Tests\Server_SetupB.html = Static\Tests\Server_SetupB.html
 	EndProjectSection
 EndProject
 Global
@@ -127,11 +55,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{97B3B0A6-608C-4516-94D3-CEC74B8AAA7B} = {5B921471-4E1C-4E70-8A13-30A75AA411C1}
-		{0CE10567-E157-4059-83BB-FD25C1DF42E5} = {3AA81B60-77F8-4F00-BEA2-BC382B714F68}
-		{40DB1B05-8814-414F-8A8D-CF3D34B39722} = {CEC88802-827A-4697-BB84-15448668D287}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F422AB75-8A78-47B0-924D-90265ECF390C}

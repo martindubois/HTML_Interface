@@ -5,6 +5,7 @@ License   https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 Product   HTML_Interface
 File      HILib/_DocUser/HTML_Interface.HILib.ReadMe.txt
 
+1.0.2 Windows
 - HI::Diagram
 	- SetBackgroundColor
 	- Uniforme margin
@@ -13,5 +14,6 @@ File      HILib/_DocUser/HTML_Interface.HILib.ReadMe.txt
 	- SetTypeOnImage
 	- TYPE_IMAGE
 - HI::XML_Document - Attribute with units
+- VisualStudio 2019
 
 1.0.1 Windows
