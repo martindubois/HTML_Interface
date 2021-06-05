@@ -1,8 +1,10 @@
 
-// Product  HTML_Interface
+// Product HTML_Interface
+// License https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 
-/// \author KMS - Martin Dubois, P.Eng.
-/// \file   Includes/HI/Server.h
+/// \author    KMS - Martin Dubois, P.Eng.
+/// \copyright Copyright &copy; 2021 KMS
+/// \file      Includes/HI/Server.h
 
 #pragma once
 
@@ -44,6 +46,7 @@ namespace HI
         void AddProcessor(unsigned int aCode, const char * aName, IRequestProcessor * aProcessor);
 
         uint16_t GetPort() const;
+        void     SetPort(uint16_t aPort);
 
         void SetDebug(bool aDebug);
 

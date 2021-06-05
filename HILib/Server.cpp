@@ -1,8 +1,9 @@
 
-// Author     KMS - Martin Dubois, P.Eng.
-// Copyright  (C) 2020 KMS. All rights reserved.
-// Procuct    HTML_Interface
-// File       HILib/Server.cpp
+// Author    KMS - Martin Dubois, P.Eng.
+// Copyright (C) 2020-2021 KMS. All rights reserved.
+// License   https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
+// Procuct   HTML_Interface
+// File      HILib/Server.cpp
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -78,6 +79,11 @@ namespace HI
         assert(0 != mBinded.sin_port);
 
         return ntohs(mBinded.sin_port);
+    }
+
+    void Server::SetPort(uint16_t aPort)
+    {
+        mLocal.sin_port = htons(aPort);
     }
 
     void Server::SetDebug(bool aDebug)
