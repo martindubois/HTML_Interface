@@ -23,7 +23,7 @@ Import/Binaries/Release_32 .
 
 Installer	.
 # KmsVersion "HTML-Interface_" ".exe" 3
-	HTML-Interface_1.0.4.exe
+	HTML-Interface_1.0.5.exe
 
 Release	.
     GenDoc.exe

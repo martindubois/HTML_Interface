@@ -18,9 +18,9 @@
 
 // ===== Includes ===========================================================
 #include <HI/Server.h>
+#include <HTTP.h>
 
 // ===== HILib ==============================================================
-#include "HTTP.h"
 #include "OS.h"
 #include "Utils.h"
 
@@ -150,6 +150,16 @@ namespace HI
         if (STATE_STOPPING == mState)
         {
             mState = STATE_STOPPED;
+        }
+    }
+
+    void Server::SendData(unsigned int aStatusCode, const char * aStatusName, unsigned int aDataSize_byte, const void * aData)
+    {
+        SendHeader(aStatusCode, aStatusName, aDataSize_byte);
+
+        if (0 < aDataSize_byte)
+        {
+            SendData(aData, aDataSize_byte);
         }
     }
 

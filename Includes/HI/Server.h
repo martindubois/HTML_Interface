@@ -58,6 +58,9 @@ namespace HI
         void Run();
 
         /// \exception std::exception
+        void SendData(unsigned int aStatusCode, const char * aStatusName, unsigned int aDataSize_byte = 0, const void * aData = NULL);
+
+        /// \exception std::exception
         void SendFile(FolderId aFolder, const char * aName, const char * aExtension);
 
         /// \exception std::exception
