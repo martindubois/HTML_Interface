@@ -74,14 +74,14 @@ namespace HI
         mProcessors.push_back(Processor(aCode, aName, aProcessor));
     }
 
-    uint16_t Server::GetPort() const
+    uint16_t Server::GetLocalPort() const
     {
         assert(0 != mBinded.sin_port);
 
         return ntohs(mBinded.sin_port);
     }
 
-    void Server::SetPort(uint16_t aPort)
+    void Server::SetLocalPort(uint16_t aPort)
     {
         mLocal.sin_port = htons(aPort);
     }

@@ -102,7 +102,7 @@ namespace HI
 
         char lURL[1024];
 
-        sprintf_s(lURL, "http://localhost:%u/%s.html", aServer->GetPort(), aName);
+        sprintf_s(lURL, "http://localhost:%u/%s.html", aServer->GetLocalPort(), aName);
 
         Open(lURL);
     }

@@ -45,8 +45,8 @@ namespace HI
 
         void AddProcessor(unsigned int aCode, const char * aName, IRequestProcessor * aProcessor);
 
-        uint16_t GetPort() const;
-        void     SetPort(uint16_t aPort);
+        uint16_t GetLocalPort() const;
+        void     SetLocalPort(uint16_t aPort);
 
         void SetDebug(bool aDebug);
 

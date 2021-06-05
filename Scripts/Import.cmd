@@ -10,7 +10,7 @@ echo Executing  Import.cmd %1  ...
 
 rem ===== Initialisation ====================================================
 
-set KMS_COPY_EXE="C:\Software\KmsTools\KmsCopy.exe"
+set KMS_COPY_EXE="KmsCopy.exe"
 
 rem ===== Verification ======================================================
 

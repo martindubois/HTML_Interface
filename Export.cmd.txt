@@ -1,6 +1,7 @@
 
 # Author    KMS - Martin Dubois, P.Eng.
-# Copyright (C) 2020 KMS. All rights reserved.
+# Copyright (C) 2020-2021 KMS. All rights reserved.
+# License   https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 # Product   HTML_Interface
 # File      Export.cmd.txt
 
@@ -17,9 +18,12 @@ Debug	Libraries/Debug_32
     HILib.lib
 	HILib.pdb
 
+Import/Binaries/Release_32 .
+    KmsCopy.exe
+
 Installer	.
 # KmsVersion "HTML-Interface_" ".exe" 3
-	HTML-Interface_1.0.3.exe
+	HTML-Interface_1.0.4.exe
 
 Release	.
     GenDoc.exe
