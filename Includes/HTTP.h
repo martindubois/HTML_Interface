@@ -21,7 +21,7 @@
 #define HTTP_ACCEPTER_STRING "Accepter"
 
 #define HTTP_NO_CONTENT        (204)
-#define HTTP_NO_CONTENT_STIRNG "No Content"
+#define HTTP_NO_CONTENT_STRING "No Content"
 
 #define HTTP_RESET_CONTENT        (205)
 #define HTTP_RESET_CONTENT_STRING "Reset Content"

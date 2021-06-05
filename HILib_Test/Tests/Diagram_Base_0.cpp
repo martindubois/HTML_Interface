@@ -31,7 +31,6 @@ HI::Diagram * Diagram_Base_0()
     lShape01->SetSize       (104, 50);
     lShape01->SetStrokeWidth(4);
     lShape01->SetNameOnImage();
-    lShape01->SetTypeOnImage();
     lShape01->SetTitle      ("Light Gray!");
 
     HI::Shape * lShape02 = lResult->mShapes.AddShape("Box", "Charlie - A - B", HI::Shape::TYPE_RECT);

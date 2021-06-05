@@ -1,9 +1,14 @@
 
 Author    KMS - Martin Dubois, P.Eng.
-Copyright (C) 2020-2021 KMS. All rights reserved.
+Copyright (C) 2020-2021 KMS
 License   https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 Product   HTML_Interface
 File      HILib/_DocUser/HTML_Interface.HILib.ReadMe.txt
+
+1.0.6 Windows - Dev
+- HI::Server
+	- Processes OPTIONS request
+	- Include "Access-Control-Allow-Origin: *" in response header
 
 1.0.5 Windows - Dev
 - HI::Server::SendData

@@ -5,8 +5,9 @@
 // Procuct   HTML_Interface
 // File      HILib/Server.cpp
 
+#include "Component.h"
+
 // ===== C ==================================================================
-#include <assert.h>
 #include <stdio.h>
 
 // ===== C++ ================================================================
@@ -306,6 +307,34 @@ namespace HI
         SendFile(FOLDER_STATIC, aRequest, NULL);
     }
 
+    void Server::ProcessOptions(const char* aRequest)
+    {
+        assert(NULL != aRequest);
+
+        for (ProcessorList::iterator lIt = mProcessors.begin(); lIt != mProcessors.end(); lIt++)
+        {
+            if (lIt->Match(aRequest))
+            {
+                char lTimeStr[32];
+
+                OS_GetTime(lTimeStr, sizeof(lTimeStr));
+
+                char lHeader[256];
+
+                sprintf_s(lHeader,
+                    "HTTP/1.1 %u %s\r\n"
+                    "Allow: OPTIONS, GET, POST\r\n"
+                    "Date: %s GMT\r\n"
+                    "Server: HTML_Interface\r\n"
+                    "\r\n",
+                    HTTP_NO_CONTENT, HTTP_NO_CONTENT_STRING,
+                    lTimeStr);
+
+                SendData(lHeader, static_cast<unsigned int>(strlen(lHeader)));
+            }
+        }
+    }
+
     void Server::ProcessPost(const char * aRequest)
     {
         assert(NULL != aRequest);
@@ -334,6 +363,10 @@ namespace HI
         if (1 == sscanf_s(aRequest, "GET /%s", lRequest, static_cast<unsigned int>(sizeof(lRequest))))
         {
             ProcessGet(lRequest);
+        }
+        else if (1 == sscanf_s(aRequest, "OPTIONS /%s", lRequest SIZE_INFO(sizeof(lRequest))))
+        {
+            ProcessOptions(lRequest);
         }
         else if (1 == sscanf_s(aRequest, "POST /%s", lRequest, static_cast<unsigned int>(sizeof(lRequest))))
         {
@@ -490,6 +523,7 @@ namespace HI
             "Server: HTML_Interface\r\n"
             "Content-Length: %u\r\n"
             "Content-Type: text/html\r\n"
+            "Access-Control-Allow-Origin: *\r\n"
             "\r\n",
             aStatusCode, aStatusName,
             lTimeStr,

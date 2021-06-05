@@ -80,9 +80,6 @@
     <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HTTP.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Straight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -116,6 +116,7 @@ namespace HI
         void CloseSocket    ();
 
         void ProcessGet    (const char * aRequest);
+        void ProcessOptions(const char * aRequest);
         void ProcessPost   (const char * aRequest);
         void ProcessRequest(const char * aRequest);
 
