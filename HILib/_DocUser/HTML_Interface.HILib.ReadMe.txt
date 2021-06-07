@@ -5,6 +5,9 @@ License   https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 Product   HTML_Interface
 File      HILib/_DocUser/HTML_Interface.HILib.ReadMe.txt
 
+1.0.7 Windows - Dev
+- HI::Server::SendResponse
+
 1.0.6 Windows - Dev
 - HI::Server
 	- Processes OPTIONS request

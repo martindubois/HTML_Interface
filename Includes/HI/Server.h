@@ -39,6 +39,9 @@ namespace HI
 
         };
 
+        static const char* CONTENT_TYPE_HTML;
+        static const char* CONTENT_TYPE_JSON;
+
         Server();
 
         ~Server();
@@ -58,10 +61,10 @@ namespace HI
         void Run();
 
         /// \exception std::exception
-        void SendData(unsigned int aStatusCode, const char * aStatusName, unsigned int aDataSize_byte = 0, const void * aData = NULL);
+        void SendResponse(unsigned int aStatusCode, const char* aStatusName, const char* aContentType = NULL, unsigned int aDataSize_byte = 0, const void* aData = NULL);
 
         /// \exception std::exception
-        void SendFile(FolderId aFolder, const char * aName, const char * aExtension);
+        void SendResponse(FolderId aFolder, const char * aName, const char * aExtension);
 
         /// \exception std::exception
         void Start();
@@ -115,9 +118,9 @@ namespace HI
         void CloseConnection();
         void CloseSocket    ();
 
-        void ProcessGet    (const char * aRequest);
+        void ProcessGet    (const char * aSelector, const char * aRequest);
         void ProcessOptions(const char * aRequest);
-        void ProcessPost   (const char * aRequest);
+        void ProcessPost   (const char * aSelector, const char * aRequest);
         void ProcessRequest(const char * aRequest);
 
         void ReceiveAndProcessRequest();
@@ -132,7 +135,7 @@ namespace HI
         void SendFile(unsigned int aStatusCode, const char * aStatusName, FolderId aFolder, const char * aName);
         void SendFile(unsigned int aStatusCode, const char * aStatusName, const char * aFileName);
 
-        void SendHeader(unsigned int aStatusCode, const char * aStatusName, unsigned int aDataSize_byte);
+        void SendHeader(unsigned int aStatusCode, const char* aStatusName, const char* aContentType = NULL, unsigned int aDataSize_byte = 0);
 
         void Trace(const char * aMessage);
 

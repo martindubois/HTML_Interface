@@ -36,6 +36,11 @@ namespace HI
     // Public
     /////////////////////////////////////////////////////////////////////////
 
+    // TODO HILib.Server
+    //      Ass many other CONTENT_TYPE_ constants
+    const char* Server::CONTENT_TYPE_HTML = "text/html";
+    const char* Server::CONTENT_TYPE_JSON = "application/json";
+
     Server::Server() : mConnection(INVALID_SOCKET), mSocket(INVALID_SOCKET), mState(STATE_INVALID)
     {
         OS_Socket_Startup();
@@ -154,9 +159,9 @@ namespace HI
         }
     }
 
-    void Server::SendData(unsigned int aStatusCode, const char * aStatusName, unsigned int aDataSize_byte, const void * aData)
+    void Server::SendResponse(unsigned int aStatusCode, const char* aStatusName, const char* aContentType, unsigned int aDataSize_byte, const void* aData)
     {
-        SendHeader(aStatusCode, aStatusName, aDataSize_byte);
+        SendHeader(aStatusCode, aStatusName, aContentType, aDataSize_byte);
 
         if (0 < aDataSize_byte)
         {
@@ -165,7 +170,7 @@ namespace HI
     }
 
     // aExtension [--O:R--]
-    void Server::SendFile(FolderId aFolder, const char * aName, const char * aExtension)
+    void Server::SendResponse(FolderId aFolder, const char * aName, const char * aExtension)
     {
         assert(FOLDER_QTY >  aFolder);
         assert(NULL       != aName  );
@@ -174,6 +179,8 @@ namespace HI
 
         Utl_MakeFileName(lFileName, sizeof(lFileName), aFolder, aName, aExtension);
 
+        // TODO HILib.Server
+        //      Use a content type based on the extension
         SendFile(lFileName);
     }
 
@@ -291,13 +298,11 @@ namespace HI
         mSocket = INVALID_SOCKET;
     }
 
-    void Server::ProcessGet(const char * aRequest)
+    void Server::ProcessGet(const char * aSelector, const char * aRequest)
     {
-        assert(NULL != aRequest);
-
         for (ProcessorList::iterator lIt = mProcessors.begin(); lIt != mProcessors.end(); lIt++)
         {
-            if (lIt->Match(aRequest))
+            if (lIt->Match(aSelector))
             {
                 lIt->ProcessGet(this, aRequest);
                 return;
@@ -307,13 +312,11 @@ namespace HI
         SendFile(FOLDER_STATIC, aRequest, NULL);
     }
 
-    void Server::ProcessOptions(const char* aRequest)
+    void Server::ProcessOptions(const char * aSelector)
     {
-        assert(NULL != aRequest);
-
         for (ProcessorList::iterator lIt = mProcessors.begin(); lIt != mProcessors.end(); lIt++)
         {
-            if (lIt->Match(aRequest))
+            if (lIt->Match(aSelector))
             {
                 char lTimeStr[32];
 
@@ -321,27 +324,32 @@ namespace HI
 
                 char lHeader[256];
 
+                // TODO HILib.Server
+                //      Associate flags with processor in order to indicate
+                //      is GET or POST are allowed.
+
                 sprintf_s(lHeader,
                     "HTTP/1.1 %u %s\r\n"
-                    "Allow: OPTIONS, GET, POST\r\n"
                     "Date: %s GMT\r\n"
                     "Server: HTML_Interface\r\n"
+                    "Access-Control-Allow-Origin: *\r\n"
+                    "Access-Control-Allow-Methods: GET, POST, OPTIONS\r\n"
+                    "Access-Control-Allow-Headers: Content-Type\r\n"
                     "\r\n",
                     HTTP_NO_CONTENT, HTTP_NO_CONTENT_STRING,
                     lTimeStr);
 
                 SendData(lHeader, static_cast<unsigned int>(strlen(lHeader)));
+                break;
             }
         }
     }
 
-    void Server::ProcessPost(const char * aRequest)
+    void Server::ProcessPost(const char * aSelector, const char * aRequest)
     {
-        assert(NULL != aRequest);
-
         for (ProcessorList::iterator lIt = mProcessors.begin(); lIt != mProcessors.end(); lIt++)
         {
-            if (lIt->Match(aRequest))
+            if (lIt->Match(aSelector))
             {
                 lIt->ProcessPost(this, aRequest);
                 return;
@@ -358,19 +366,19 @@ namespace HI
             printf("Server::ProcessRequest( \"%s\" )\n", aRequest);
         }
 
-        char lRequest[MAX_REQUEST_SIZE_byte];
+        char lSelector[MAX_REQUEST_SIZE_byte];
 
-        if (1 == sscanf_s(aRequest, "GET /%s", lRequest, static_cast<unsigned int>(sizeof(lRequest))))
+        if (1 == sscanf_s(aRequest, "GET /%s", lSelector SIZE_INFO(sizeof(lSelector))))
         {
-            ProcessGet(lRequest);
+            ProcessGet(lSelector, aRequest);
         }
-        else if (1 == sscanf_s(aRequest, "OPTIONS /%s", lRequest SIZE_INFO(sizeof(lRequest))))
+        else if (1 == sscanf_s(aRequest, "OPTIONS /%s", lSelector SIZE_INFO(sizeof(lSelector))))
         {
-            ProcessOptions(lRequest);
+            ProcessOptions(lSelector);
         }
-        else if (1 == sscanf_s(aRequest, "POST /%s", lRequest, static_cast<unsigned int>(sizeof(lRequest))))
+        else if (1 == sscanf_s(aRequest, "POST /%s", lSelector SIZE_INFO(sizeof(lSelector))))
         {
-            ProcessPost(lRequest);
+            ProcessPost(lSelector, aRequest);
         }
         else
         {
@@ -388,7 +396,14 @@ namespace HI
 
         memset(&lRequest, 0, sizeof(lRequest));
 
-        int lRet = recv(mConnection, lRequest, sizeof(lRequest) - 1, 0);
+        int lRet;
+        
+        do
+        {
+            lRet = recv(mConnection, lRequest, sizeof(lRequest) - 1, 0);
+        }
+        while (0 == lRet);
+
         if ((0 > lRet) || (sizeof(lRequest) < lRet))
         {
             // NOT TESTED  Server.Error
@@ -431,7 +446,7 @@ namespace HI
 
     void Server::SendErrorNotFound()
     {
-        SendFile(HTTP_ERROR_NOT_FOUND, HTTP_ERROR_NOT_FOUND_STRING, FOLDER_STATIC, "ErrorNotFound");
+        SendFile(HTTP_NOT_FOUND, HTTP_NOT_FOUND_STRING, FOLDER_STATIC, "ErrorNotFound");
     }
 
     void Server::SendFile(const char * aFileName)
@@ -443,7 +458,7 @@ namespace HI
 
         if (OS_ReadFile(aFileName, &lData, &lDataSize_byte))
         {
-            SendHeader(HTTP_OK, HTTP_OK_STRING, lDataSize_byte);
+            SendHeader(HTTP_OK, HTTP_OK_STRING, CONTENT_TYPE_HTML, lDataSize_byte);
 
             SendData(lData, lDataSize_byte);
 
@@ -475,7 +490,7 @@ namespace HI
 
         if (mFlags.mDebug)
         {
-            printf("Server::SendHeader( %u, \"%s\", \"%s\" )\n", aStatusCode, aStatusName, aFileName);
+            printf("Server::SendFile( %u, \"%s\", \"%s\" )\n", aStatusCode, aStatusName, aFileName);
         }
 
         void       * lData;
@@ -483,7 +498,7 @@ namespace HI
 
         if (OS_ReadFile(aFileName, &lData, &lDataSize_byte))
         {
-            SendHeader(aStatusCode, aStatusName, lDataSize_byte);
+            SendHeader(aStatusCode, aStatusName, CONTENT_TYPE_HTML, lDataSize_byte);
 
             SendData(lData, lDataSize_byte);
 
@@ -491,9 +506,9 @@ namespace HI
         }
         else
         {
-            if (HTTP_ERROR_NOT_FOUND == aStatusCode)
+            if (HTTP_NOT_FOUND == aStatusCode)
             {
-                SendHeader(aStatusCode, aStatusName, 0);
+                SendHeader(aStatusCode, aStatusName);
             }
             else
             {
@@ -502,13 +517,13 @@ namespace HI
         }
     }
 
-    void Server::SendHeader(unsigned int aStatusCode, const char * aStatusName, unsigned int aDataSize_byte)
+    void Server::SendHeader(unsigned int aStatusCode, const char* aStatusName, const char* aContentType, unsigned int aDataSize_byte)
     {
         assert(NULL != aStatusName);
 
         if (mFlags.mDebug)
         {
-            printf("Server::SendHeader( %u, \"%s\", %u bytes )\n", aStatusCode, aStatusName, aDataSize_byte);
+            printf("Server::SendHeader( %u, \"%s\", \"%s\", %u bytes )\n", aStatusCode, aStatusName, aContentType, aDataSize_byte);
         }
 
         char lTimeStr[32];
@@ -517,17 +532,38 @@ namespace HI
 
         char lHeader[256];
 
-        sprintf_s(lHeader,
-            "HTTP/1.1 %u %s\r\n"
-            "Date: %s GMT\r\n"
-            "Server: HTML_Interface\r\n"
-            "Content-Length: %u\r\n"
-            "Content-Type: text/html\r\n"
-            "Access-Control-Allow-Origin: *\r\n"
-            "\r\n",
-            aStatusCode, aStatusName,
-            lTimeStr,
-            aDataSize_byte);
+        // TODO HILib.Server
+        //      The 2 first line of header are always the same, use the same
+        //      code to generate them.
+
+        if (NULL == aContentType)
+        {
+            sprintf_s(lHeader,
+                "HTTP/1.1 %u %s\r\n"
+                "Date: %s GMT\r\n"
+                "Server: HTML_Interface\r\n"
+                "Content-Length: %u\r\n"
+                "Access-Control-Allow-Origin: *\r\n"
+                "\r\n",
+                aStatusCode, aStatusName,
+                lTimeStr,
+                aDataSize_byte);
+        }
+        else
+        {
+            sprintf_s(lHeader,
+                "HTTP/1.1 %u %s\r\n"
+                "Date: %s GMT\r\n"
+                "Server: HTML_Interface\r\n"
+                "Content-Length: %u\r\n"
+                "Content-Type: %s\r\n"
+                "Access-Control-Allow-Origin: *\r\n"
+                "\r\n",
+                aStatusCode, aStatusName,
+                lTimeStr,
+                aDataSize_byte,
+                aContentType);
+        }
         
         SendData(lHeader, static_cast<unsigned int>(strlen(lHeader)));
     }

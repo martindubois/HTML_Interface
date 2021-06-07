@@ -32,14 +32,14 @@
 #define HTTP_FORBIDDEN        (403)
 #define HTTP_FORBIDDEN_STRING "Forbidden"
 
-#define HTTP_ERROR_NOT_FOUND        (404)
-#define HTTP_ERROR_NOT_FOUND_STRING "Not Found"
-
 #define HTTP_METHOD_NOT_ALLOWED        (405)
 #define HTTP_METHOD_NOT_ALLOWED_STRING "Method Not Allowed"
 
 #define HTTP_NOT_ACCEPTABLE        (406)
 #define HTTP_NOT_ACCEPTABLE_STRING "Not Acceptable"
+
+#define HTTP_NOT_FOUND        (404)
+#define HTTP_NOT_FOUND_STRING "Not Found"
 
 #define HTTP_REQUEST_TIMEOUT        (408)
 #define HTTP_REQUEST_TIMEOUT_STRING "Request Timeout"
