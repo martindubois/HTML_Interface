@@ -41,21 +41,27 @@ HI::Diagram * Diagram_Base_0()
     assert(NULL != lShape03);
 
     lShape03->SetSize       (96, 50);
+    lShape03->SetNameOnImage();
+    lShape03->SetTypeOnImage();
 
     HI::Shape * lShape04 = lResult->mShapes.AddShape("Box", "Golf - F", HI::Shape::TYPE_ELLIPSE);
     assert(NULL != lShape04);
 
+    lShape04->SetTypeOnImage();
 
     HI::Shape * lShape05 = lResult->mShapes.AddShape("Box", "Alpha - B - C - D", HI::Shape::TYPE_RECT);
     assert(NULL != lShape05);
 
     lShape05->SetFillColor  ("AliceBlue");
     lShape05->SetSize       (136, 50);
+    lShape05->SetNameOnImage();
+    lShape05->SetTypeOnImage();
 
     HI::Shape * lShape06 = lResult->mShapes.AddShape("Box", "Delta - A - E - F", HI::Shape::TYPE_RECT);
     assert(NULL != lShape06);
 
     lShape06->SetSize       (136, 50);
+    lShape06->SetTypeOnImage();
 
     HI::Shape * lShape07 = lResult->mShapes.AddShape("Box", "Foxtrot - D - E - G", HI::Shape::TYPE_RECT);
     assert(NULL != lShape07);

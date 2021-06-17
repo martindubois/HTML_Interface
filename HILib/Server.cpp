@@ -409,16 +409,11 @@ namespace HI
                 break;
             }
         }
-        while (0 == lRet);
 
-        if ((0 > lRet) || (sizeof(lRequest) < lRet))
+        if ((0 < lRet) && (sizeof(lRequest) > lRet))
         {
-            // NOT TESTED  Server.Error
-            //             recv( , , ,  ) fails.
-            ReportError("ERROR  316  recv( , , ,  )  failed", lRet);
+            ProcessRequest(lRequest);
         }
-
-        ProcessRequest(lRequest);
     }
 
     void Server::ReportError(const char * aMessage, int aCode)
