@@ -131,4 +131,4 @@ KMS_TEST_BEGIN(Diagram_Base)
     lD3->PositionShapes();
     lD3->Generate_HTML(HI::FOLDER_CURRENT, "Diagram_1", "Diagram 1");
 
-    KMS_TEST_END
+KMS_TEST_END

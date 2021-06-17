@@ -309,7 +309,7 @@ namespace HI
             }
         }
 
-        SendFile(FOLDER_STATIC, aRequest, NULL);
+        SendResponse(FOLDER_STATIC, aSelector, NULL);
     }
 
     void Server::ProcessOptions(const char * aSelector)
@@ -396,11 +396,18 @@ namespace HI
 
         memset(&lRequest, 0, sizeof(lRequest));
 
-        int lRet;
+        DWORD lTimeout_ms = 200;
+
+        int lRet = setsockopt(mConnection, SOL_SOCKET, SO_RCVTIMEO, reinterpret_cast<char *>(&lTimeout_ms), sizeof(lTimeout_ms));
+        assert(0 == lRet);
         
-        do
+        for (unsigned int lRetry = 0; lRetry < 3; lRetry ++)
         {
             lRet = recv(mConnection, lRequest, sizeof(lRequest) - 1, 0);
+            if (0 != lRet)
+            {
+                break;
+            }
         }
         while (0 == lRet);
 
