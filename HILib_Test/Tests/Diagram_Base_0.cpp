@@ -30,44 +30,39 @@ HI::Diagram * Diagram_Base_0()
     lShape01->SetFillColor  ("LightGray");
     lShape01->SetSize       (104, 50);
     lShape01->SetStrokeWidth(4);
-    lShape01->SetTypeOnImage();
     lShape01->SetTitle      ("Light Gray!");
 
     HI::Shape * lShape02 = lResult->mShapes.AddShape("Box", "Charlie - A - B", HI::Shape::TYPE_RECT);
     assert(NULL != lShape02);
 
     lShape02->SetSize       (120, 50);
-    lShape02->SetTypeOnImage();
 
     HI::Shape * lShape03 = lResult->mShapes.AddShape("Box", "Echo - D - F", HI::Shape::TYPE_RECT);
     assert(NULL != lShape03);
 
     lShape03->SetSize       (96, 50);
-    lShape03->SetTypeOnImage();
 
     HI::Shape * lShape04 = lResult->mShapes.AddShape("Box", "Golf - F", HI::Shape::TYPE_ELLIPSE);
     assert(NULL != lShape04);
 
-    lShape04->SetTypeOnImage();
 
     HI::Shape * lShape05 = lResult->mShapes.AddShape("Box", "Alpha - B - C - D", HI::Shape::TYPE_RECT);
     assert(NULL != lShape05);
 
     lShape05->SetFillColor  ("AliceBlue");
     lShape05->SetSize       (136, 50);
-    lShape05->SetTypeOnImage();
 
     HI::Shape * lShape06 = lResult->mShapes.AddShape("Box", "Delta - A - E - F", HI::Shape::TYPE_RECT);
     assert(NULL != lShape06);
 
     lShape06->SetSize       (136, 50);
+    lShape06->SetNameOnImage();
     lShape06->SetTypeOnImage();
 
     HI::Shape * lShape07 = lResult->mShapes.AddShape("Box", "Foxtrot - D - E - G", HI::Shape::TYPE_RECT);
     assert(NULL != lShape07);
 
     lShape07->SetSize       (152, 50);
-    lShape07->SetTypeOnImage();
 
     HI::Link * lLink00 = lResult->mLinks.AddLink(lShape05, lShape01);
     assert(NULL != lLink00);

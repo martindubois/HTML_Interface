@@ -13,13 +13,13 @@ AppName=HTML_Interface
 AppPublisher=KMS
 AppPublisherURL=http://www.kms-quebec.com
 AppSupportURL=http://www.kms-quebec.com
-AppVersion=1.0.9
+AppVersion=1.0.10
 ArchitecturesAllowed=x64 x86
 ArchitecturesInstallIn64BitMode=x64
 DefaultDirName={pf}\HTML_Interface
 LicenseFile=License.txt
 MinVersion=10.0
-OutputBaseFilename=HTML-Interface_1.0.9
+OutputBaseFilename=HTML-Interface_1.0.10
 OutputDir=Installer
 
 [Files]
