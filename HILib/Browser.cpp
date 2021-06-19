@@ -1,12 +1,13 @@
 
 // Author     KMS - Martin Dubois, P.Eng.
-// Copyright  (C) 2020 KMS. All rights reserved.
+// Copyright  (C) 2020-2021 KMS. All rights reserved.
+// License    https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 // Product    HTML_Interface
 // File       HILib/Browser.cpp
 
-// CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
+// CODE REVIEW 2021-06-19 KMS - Martin Dubois, P.Eng.
 
-// TEST COVERAGE 2020-06-21 KMS - Martin Dubois, P.Eng.
+// TEST COVERAGE 2021-06-19 KMS - Martin Dubois, P.Eng.
 
 // ===== C ==================================================================
 #include <assert.h>
@@ -29,10 +30,18 @@
 #include "OS.h"
 #include "Utils.h"
 
-// Static function declarations
+// Constants
 /////////////////////////////////////////////////////////////////////////////
 
-static bool Start_Chrome(const char * aFileName);
+static const HI::Browser::BrowserType ORDER[HI::Browser::BROWSER_TYPE_QTY][HI::Browser::BROWSER_TYPE_QTY - 1] =
+{
+    { HI::Browser::CHROME, HI::Browser::EDGE  , HI::Browser::DEFAULT_BROWSER },
+    { HI::Browser::EDGE  , HI::Browser::CHROME, HI::Browser::DEFAULT_BROWSER },
+
+    { HI::Browser::DEFAULT_BROWSER, HI::Browser::EDGE, HI::Browser::CHROME },
+
+    { HI::Browser::NO_BROWSER },
+};
 
 namespace HI
 {
@@ -40,53 +49,68 @@ namespace HI
     // Public
     /////////////////////////////////////////////////////////////////////////
 
-    Browser::Browser() : mPrefered(PREFERED_CHROME), mState(STATE_INIT)
+    Browser::Browser() : mAppMode(false), mKioskMode(false), mPrefered(CHROME), mState(STATE_INIT)
     {
     }
 
+    // NOT TESTED  Browser.Detach
+    //             Detach on delete
+
     Browser::~Browser()
     {
-        switch (mState)
+        switch (State_Get())
         {
-        // NOT TESTED  Browser.Detach
-        //             Detach on delete
         case STATE_OPEN: OS_Process_Close(mProcess); break;
         }
     }
 
-    void Browser::SetPrefered(Prefered aIn)
+    bool Browser::IsOpen()
     {
-        assert(PREFERED_QTY > aIn);
+        return STATE_OPEN == State_Get();
+    }
 
-        assert(PREFERED_QTY > mPrefered);
+    void Browser::SetAppMode  (bool aIn) { mAppMode   = aIn; }
+    void Browser::SetKioskMode(bool aIn) { mKioskMode = aIn; }
+
+    void Browser::SetPrefered(BrowserType aIn)
+    {
+        assert(BROWSER_TYPE_QTY > aIn);
+
+        assert(BROWSER_TYPE_QTY > mPrefered);
 
         mPrefered = aIn;
     }
 
     void Browser::Close()
     {
-        assert(STATE_OPEN == mState);
+        switch (State_Get())
+        {
+        case STATE_OPEN:
+            mState = STATE_INIT;
 
-        mState = STATE_INIT;
-
-        OS_Process_Terminate(mProcess);
+            OS_Process_Terminate(mProcess);
+            break;
+        }
     }
 
     // NOT TESTED  Browser.Detach
 
     void Browser::Detach()
     {
-        assert(STATE_OPEN == mState);
+        switch (State_Get())
+        {
+        case STATE_OPEN:
+            mState = STATE_INIT;
 
-        mState = STATE_INIT;
-
-        OS_Process_Close(mProcess);
+            OS_Process_Close(mProcess);
+            break;
+        }
     }
 
-    void Browser::Open(FolderId aFolder, const char * aName)
+    void Browser::Open(FolderId aFolder, const char* aName)
     {
-        assert(FOLDER_QTY >  aFolder);
-        assert(NULL       != aName  );
+        assert(FOLDER_QTY > aFolder);
+        assert(NULL != aName);
 
         char lFileName[1024];
 
@@ -95,10 +119,10 @@ namespace HI
         Open(lFileName);
     }
 
-    void Browser::Open(const Server * aServer, const char * aName)
+    void Browser::Open(const Server* aServer, const char* aName)
     {
         assert(NULL != aServer);
-        assert(NULL != aName  );
+        assert(NULL != aName);
 
         char lURL[1024];
 
@@ -107,9 +131,9 @@ namespace HI
         Open(lURL);
     }
 
-    void Browser::ParseArguments(int aCount, const char ** aVector)
+    void Browser::ParseArguments(int aCount, const char** aVector)
     {
-        assert(   1 <= aCount );
+        assert(1 <= aCount);
         assert(NULL != aVector);
 
         for (int i = 1; i < aCount; i++)
@@ -120,30 +144,35 @@ namespace HI
         }
     }
 
-    bool Browser::ParseAssignation(const char * aAssignation)
+    bool Browser::ParseAssignation(const char* aAssignation)
     {
         assert(NULL != aAssignation);
 
-        if (0 == strcmp("Browser.Prefered=Chrome" , aAssignation)) { mPrefered = PREFERED_CHROME ; return true; }
-        if (0 == strcmp("Browser.Prefered=Default", aAssignation)) { mPrefered = PREFERED_DEFAULT; return true; }
-        if (0 == strcmp("Browser.Prefered=None"   , aAssignation)) { mPrefered = PREFERED_NONE   ; return true; }
+        if (0 == strcmp("Browser.AppMode=false"   , aAssignation)) { mAppMode = false; return true; }
+        if (0 == strcmp("Browser.AppMode=true"    , aAssignation)) { mAppMode = true ; return true; }
+        if (0 == strcmp("Browser.KioskMode=false" , aAssignation)) { mKioskMode = false; return true; }
+        if (0 == strcmp("Browser.KioskMode=true"  , aAssignation)) { mKioskMode = true ; return true; }
+        if (0 == strcmp("Browser.Prefered=Chrome" , aAssignation)) { mPrefered = CHROME         ; return true; }
+        if (0 == strcmp("Browser.Prefered=Default", aAssignation)) { mPrefered = DEFAULT_BROWSER; return true; }
+        if (0 == strcmp("Browser.Prefered=Edge"   , aAssignation)) { mPrefered = EDGE           ; return true; }
+        if (0 == strcmp("Browser.Prefered=None"   , aAssignation)) { mPrefered = NO_BROWSER     ; return true; }
 
         return false;
     }
 
-    void Browser::Start(FolderId aFolder, const char * aName)
+    void Browser::Start(FolderId aFolder, const char* aName)
     {
-        assert(FOLDER_QTY >  aFolder);
-        assert(NULL       != aName  );
+        assert(FOLDER_QTY > aFolder);
+        assert(NULL != aName);
 
-        char lFileName[1024 +  64];
+        char lFileName[1024 + 64];
 
         Utl_MakeFileName(lFileName, sizeof(lFileName), aFolder, aName, "html");
 
         Start(lFileName);
     }
 
-    void Browser::Start(const char * aFolder, const char * aName)
+    void Browser::Start(const char* aFolder, const char* aName)
     {
         assert(NULL != aName);
 
@@ -157,65 +186,103 @@ namespace HI
     // Private
     /////////////////////////////////////////////////////////////////////////
 
+    void Browser::BuildCmd_Chrome(const char* aFileName, char* aOut, unsigned int aOutSize_byte)
+    {
+        assert(NULL != aFileName);
+        assert(NULL != aOut);
+        assert(0 < aOutSize_byte);
+
+        const char* lCommon = "--disable-background-mode --disable-plugins --start-maximized";
+
+        if (mKioskMode)
+        {
+            sprintf_s(aOut, aOutSize_byte, "\"%s\" %s --kiosk \"%s\"", OS_CHROME_EXE, lCommon, aFileName);
+        }
+        else if (mAppMode)
+        {
+            sprintf_s(aOut, aOutSize_byte, "\"%s\" %s --app=\"%s\" --new-window", OS_CHROME_EXE, lCommon, aFileName);
+        }
+        else
+        {
+            sprintf_s(aOut, aOutSize_byte, "\"%s\" %s \"%s\"", OS_CHROME_EXE, lCommon, aFileName);
+        }
+    }
+
+    void Browser::BuildCmd_Edge(const char* aFileName, char* aOut, unsigned int aOutSize_byte)
+    {
+        assert(NULL != aFileName);
+        assert(NULL != aOut);
+        assert(0 < aOutSize_byte);
+
+        if (mKioskMode)
+        {
+            sprintf_s(aOut, aOutSize_byte, "\"%s\" --kiosk \"%s\" --edge-kiosk-type=fullscreen --no-first-run", OS_EDGE_EXE, aFileName);
+        }
+        else
+        {
+            sprintf_s(aOut, aOutSize_byte, "\"%s\" \"%s\"", OS_EDGE_EXE, aFileName);
+        }
+    }
+
     // NOT TESTED  Browser.Open
-    //             Open the default OS browser.
-    //             Open no browser.
     //             Open the second choice when opening the first choice
     //             fails.
 
-    void Browser::Open(const char * aFileName)
+    void Browser::Open(const char* aFileName)
     {
         assert(STATE_INIT == mState);
 
         assert(NULL != aFileName);
 
-        bool lRet;
-
-        switch (mPrefered)
+        for (unsigned int i = 0; i < NO_BROWSER; i++)
         {
-        case PREFERED_CHROME : lRet = Open_Chrome (aFileName); break;
-        case PREFERED_DEFAULT: lRet = Open_Default(aFileName); break;
+            bool lRet;
 
-        case PREFERED_NONE: return;
-
-        default: assert(false);
-        }
-
-        if (!lRet)
-        {
-            switch (mPrefered)
+            switch (ORDER[mPrefered][i])
             {
-            case PREFERED_CHROME : lRet = Open_Default(aFileName); break;
-            case PREFERED_DEFAULT: lRet = Open_Chrome (aFileName); break;
+            case CHROME: lRet = Open_Chrome(aFileName); break;
+            case EDGE  : lRet = Open_Edge  (aFileName); break;
 
-            default: assert(false);
+            case DEFAULT_BROWSER: lRet = Open_Default(aFileName); break;
+
+            case NO_BROWSER: return;
             }
 
-            if (!lRet)
+            if (lRet)
             {
-                Utl_ThrowError("ERROR", __LINE__, "Cannot open browser");
+                mState = STATE_OPEN;
+                return;
             }
         }
 
-        mState = STATE_OPEN;
+        Utl_ThrowError("ERROR", __LINE__, "Cannot open browser (NOT TESTED)");
     }
 
-    bool Browser::Open_Chrome(const char * aFileName)
+    bool Browser::Open_Chrome(const char* aFileName)
     {
         assert(NULL != aFileName);
 
         char lCommand[1024 + 128];
 
-        int lRet = sprintf_s(lCommand, "\"%s\" --disable-background-mode --disable-plugins --start-maximized \"%s\"", OS_CHROME_EXE, aFileName);
-        assert(0                < lRet);
-        assert(sizeof(lCommand) > lRet);
+        BuildCmd_Chrome(aFileName, lCommand, sizeof(lCommand));
 
         return Open_Process(OS_CHROME_EXE, lCommand);
     }
 
-    bool Browser::Open_Process(const char * aExec, const char * aCommand)
+    bool Browser::Open_Edge(const char* aFileName)
     {
-        assert(NULL != aExec   );
+        assert(NULL != aFileName);
+
+        char lCommand[1024 + 128];
+
+        BuildCmd_Edge(aFileName, lCommand, sizeof(lCommand));
+
+        return Open_Process(OS_EDGE_EXE, lCommand);
+    }
+
+    bool Browser::Open_Process(const char* aExec, const char* aCommand)
+    {
+        assert(NULL != aExec);
         assert(NULL != aCommand);
 
         mProcess = OS_Process_Create(aExec, aCommand);
@@ -223,10 +290,7 @@ namespace HI
         return (NULL != mProcess);
     }
 
-    // NOT TESTED  Browser.Open
-    //             Open the default OS browser.
-
-    bool Browser::Open_Default(const char * aFileName)
+    bool Browser::Open_Default(const char* aFileName)
     {
         assert(NULL != aFileName);
 
@@ -235,63 +299,68 @@ namespace HI
         return (NULL != mProcess);
     }
 
-    // TESTED  Browser.Start
-    //         Start Chrome. (GenDoc.exe)
-
-    // NOT TESTED  Browser.Start
-    //             Start the default OS browser
-
-    void Browser::Start(const char * aFileName)
+    void Browser::Start(const char* aFileName)
     {
         assert(NULL != aFileName);
 
-        bool lRet;
-
-        switch (mPrefered)
+        for (unsigned int i = 0; i < NO_BROWSER; i++)
         {
-        case PREFERED_CHROME : lRet =    Start_Chrome (aFileName); break;
-        case PREFERED_DEFAULT: lRet = OS_Start_Default(aFileName); break;
+            bool lRet;
 
-        case PREFERED_NONE: return;
-
-        default: assert(false);
-        }
-
-        if (!lRet)
-        {
-            // NOT TESTED Browser.Chrome.Error
-            //            Start the second choice when starting the first
-            //            choice fails.
-
-            switch (mPrefered)
+            switch (ORDER[mPrefered][i])
             {
-            case PREFERED_CHROME : lRet = OS_Start_Default(aFileName); break;
-            case PREFERED_DEFAULT: lRet =    Start_Chrome (aFileName); break;
+            case CHROME: lRet = Start_Chrome(aFileName); break;
+            case EDGE  : lRet = Start_Edge  (aFileName); break;
 
-            default: assert(false);
+            case DEFAULT_BROWSER: lRet = OS_Start_Default(aFileName); break;
+
+            case NO_BROWSER: return;
             }
 
-            if (!lRet)
+            if (lRet)
             {
-                Utl_ThrowError("ERROR", __LINE__, "Cannot start browser");
+                return;
             }
         }
+
+        Utl_ThrowError("ERROR", __LINE__, "Cannot start browser (NOT TESTED)");
     }
 
-}
+    bool Browser::Start_Chrome(const char* aFileName)
+    {
+        assert(NULL != aFileName);
 
-// Static functions
-/////////////////////////////////////////////////////////////////////////////
+        char lCommand[1024 + 128];
 
-bool Start_Chrome(const char * aFileName)
-{
-    assert(NULL != aFileName);
+        BuildCmd_Chrome(aFileName, lCommand, sizeof(lCommand));
 
-    char lCommand[1024 + 128];
+        return OS_Start_Process(OS_CHROME_EXE, lCommand);
+    }
 
-    int lRet = sprintf_s(lCommand, "\"%s\" --disable-background-mode --disable-plugins --start-maximized \"%s\"", OS_CHROME_EXE, aFileName);
-    assert(0                < lRet);
-    assert(sizeof(lCommand) > lRet);
+    bool Browser::Start_Edge(const char* aFileName)
+    {
+        assert(NULL != aFileName);
 
-    return OS_Start_Process(OS_CHROME_EXE, lCommand);
+        char lCommand[1024 + 128];
+
+        BuildCmd_Edge(aFileName, lCommand, sizeof(lCommand));
+
+        return OS_Start_Process(OS_EDGE_EXE, lCommand);
+    }
+
+    Browser::State Browser::State_Get()
+    {
+        switch (mState)
+        {
+        case STATE_OPEN:
+            if (!OS_Process_IsRunning(mProcess))
+            {
+                mState = STATE_INIT;
+            }
+            break;
+        }
+
+        return mState;
+    }
+
 }

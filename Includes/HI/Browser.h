@@ -26,19 +26,28 @@ namespace HI
 
         typedef enum
         {
-            PREFERED_CHROME ,
-            PREFERED_DEFAULT,
-            PREFERED_NONE   ,
+            CHROME,
+            EDGE,
 
-            PREFERED_QTY
+            DEFAULT_BROWSER,
+
+            NO_BROWSER,
+
+            BROWSER_TYPE_QTY
         }
-        Prefered;
+        BrowserType;
 
         Browser();
 
         ~Browser();
 
-        void SetPrefered(Prefered aIn);
+        bool IsOpen();
+
+        void SetAppMode(bool aIn = true);
+
+        void SetKioskMode(bool aIn = true);
+
+        void SetPrefered(BrowserType aIn);
 
         /// \exception std::exception
         void Close();
@@ -86,16 +95,28 @@ namespace HI
         }
         State;
 
+        void BuildCmd_Chrome(const char* aFileName, char* aOut, unsigned int aOutSize_byte);
+        void BuildCmd_Edge  (const char* aFileName, char* aOut, unsigned int aOutSize_byte);
+
         void Open        (const char * aFileName);
         bool Open_Chrome (const char * aFileName);
         bool Open_Default(const char * aFileName);
+        bool Open_Edge   (const char * aFileName);
         bool Open_Process(const char * aExec, const char * aCommand);
 
-        void Start(const char * aFileName);
+        void Start       (const char* aFileName);
+        bool Start_Chrome(const char* aFileName);
+        bool Start_Edge  (const char* aFileName);
 
-        Prefered mPrefered;
-        void   * mProcess ;
-        State    mState   ;
+        State State_Get();
+
+        bool mAppMode  ;
+        bool mKioskMode;
+
+        BrowserType mPrefered;
+
+        void* mProcess;
+        State mState  ;
 
     };
 

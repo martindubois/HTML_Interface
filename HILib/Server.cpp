@@ -18,10 +18,12 @@
 #include <WS2tcpip.h>
 
 // ===== Includes ===========================================================
+#include <HI/Browser.h>
 #include <HI/Server.h>
 #include <HTTP.h>
 
 // ===== HILib ==============================================================
+#include "Errors.h"
 #include "OS.h"
 #include "Utils.h"
 
@@ -123,33 +125,60 @@ namespace HI
         return false;
     }
 
-    void Server::Run()
+    void Server::Run(Browser * aBrowser)
     {
         assert(INVALID_SOCKET != mSocket);
         assert(STATE_STARTED  == mState );
 
         mState = STATE_RUNNING;
 
+        TIMEVAL lTimeout;
+
+        lTimeout.tv_sec = 1;
+        lTimeout.tv_usec = 0;
+
         do
         {
             assert(INVALID_SOCKET == mConnection);
 
-            sockaddr_in lClient;
-            int         lSize_byte = sizeof(lClient);
+            fd_set lReadSet;
 
-            memset(&lClient, 0, sizeof(lClient));
+            FD_ZERO(&lReadSet);
+            FD_SET(mSocket, &lReadSet);
 
-            mConnection = accept(mSocket, reinterpret_cast<sockaddr *>(&lClient), &lSize_byte);
-            if (INVALID_SOCKET == mConnection)
+            int lRet = select(1, &lReadSet, NULL, NULL, &lTimeout);
+            switch (lRet)
             {
-                // NOT TESTED  Server.Error
-                //             accept( , ,  ) fails.
-                ReportError("ERROR  112  accept( , ,  )  failed");
-            }
-            
-            ReceiveAndProcessRequest();
+            case 0:
+                if ((NULL != aBrowser) && (!aBrowser->IsOpen()))
+                {
+                    Stop();
+                }
+                break;
 
-            CloseConnection();
+            case 1:
+                sockaddr_in lClient;
+                int         lSize_byte;
+                
+                lSize_byte = sizeof(lClient);
+
+                memset(&lClient, 0, sizeof(lClient));
+
+                mConnection = accept(mSocket, reinterpret_cast<sockaddr*>(&lClient), &lSize_byte);
+                if (INVALID_SOCKET == mConnection)
+                {
+                    ReportError(ERROR_112 "(NOT TESTED)");
+                }
+
+                ReceiveAndProcessRequest();
+
+                CloseConnection();
+                break;
+
+            case SOCKET_ERROR: ReportError(ERROR_000 " (NOT TESTED)");
+
+            default: assert(false);
+            }
         }
         while (STATE_RUNNING == mState);
 
@@ -194,17 +223,13 @@ namespace HI
         mSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
         if (INVALID_SOCKET == mSocket)
         {
-            // NOT TESTED  Server.Error
-            //             socket( , ,  ) fails
-            ReportError("ERROR  152  socket( , ,  )  failed");
+            ReportError(ERROR_152 " (NOT TESTED)");
         }
 
         int lRet = bind(mSocket, reinterpret_cast<sockaddr *>(&mLocal), sizeof(mLocal));
         if (0 != lRet)
         {
-            // NOT TESTED  Server.Error
-            //             bind( , ,  ) fails.
-            ReportError("ERROR  160  bind( , ,  )  failed", lRet);
+            ReportError(ERROR_160 " (NOT TESTED)", lRet);
         }
 
         int lSize_byte = sizeof(mBinded);
@@ -212,17 +237,13 @@ namespace HI
         lRet = getsockname(mSocket, reinterpret_cast<sockaddr *>(&mBinded), &lSize_byte);
         if (0 != lRet)
         {
-            // NOT TESTED  Server.Error
-            //             getsockname( , ,  ) fails.
-            ReportError("ERROR  170  getsockname( , ,  )  failed", lRet);
+            ReportError(ERROR_170 " (NOT TESTED)", lRet);
         }
 
         lRet = listen(mSocket, 1);
         if (0 != lRet)
         {
-            // NOT TESTED  Server.Error
-            //             listen( ,  ) fails.
-            ReportError("ERROR  178  listen( ,  )  failed", lRet);
+            ReportError(ERROR_178 " (NOT TESTED)", lRet);
         }
 
         mState = STATE_STARTED;
@@ -326,7 +347,7 @@ namespace HI
 
                 // TODO HILib.Server
                 //      Associate flags with processor in order to indicate
-                //      is GET or POST are allowed.
+                //      if GET or POST are allowed.
 
                 sprintf_s(lHeader,
                     "HTTP/1.1 %u %s\r\n"
@@ -382,9 +403,7 @@ namespace HI
         }
         else
         {
-            // NOT TESTED  Server.Error
-            //             Invalid request
-            ReportError("ERROR  299  Invalid request");
+            ReportError(ERROR_299 " (NOT TESTED)");
         }
     }
 

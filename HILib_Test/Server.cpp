@@ -1,8 +1,8 @@
 
-// Author     KMS - Martin Dubois, P.Eng.
-// Copyright  (C) 2020 KMS. All rights reserved.
-// Product    HTML_Interface
-// File       HILib_Test/Server.h
+// Author    KMS - Martin Dubois, P.Eng.
+// Copyright (C) 2020-2021 KMS. All rights reserved.
+// Product   HTML_Interface
+// File      HILib_Test/Server.h
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -86,7 +86,7 @@ KMS_TEST_BEGIN(Server_SetupB)
 
     lB0.Open(&lS0, "Tests/Server_SetupB");
 
-    lS0.Run();
+    lS0.Run(&lB0);
 
     lB0.Close();
 

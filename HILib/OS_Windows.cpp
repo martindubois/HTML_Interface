@@ -1,8 +1,8 @@
 
-// Author     KMS - Martin Dubois, P.Eng.
-// Copyright  (C) 2000 KMS. All rights reserved.
-// Product    HTML_Interface
-// File       HILib/OS_Windows.cpp
+// Author    KMS - Martin Dubois, P.Eng.
+// Copyright (C) 2020-2021 KMS. All rights reserved.
+// Product   HTML_Interface
+// File      HILib/OS_Windows.cpp
 
 // CODE REVIEW 2020-06-21 KMS - Martin Dubois, P.Eng.
 
@@ -40,7 +40,8 @@ const char * OS_BINARIES[] =
     NULL
 };
 
-const char * OS_CHROME_EXE = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe";
+const char * OS_CHROME_EXE = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
+const char * OS_EDGE_EXE   = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
 
 // Static variable
 /////////////////////////////////////////////////////////////////////////////
@@ -250,6 +251,19 @@ void * OS_Process_Create(const char * aExec, const char * aCommand)
     assert(lRetB);
 
     return lPI.hProcess;
+}
+
+bool OS_Process_IsRunning(void* aProcess)
+{
+    DWORD lExitCode;
+
+    if (GetExitCodeProcess(aProcess, &lExitCode) && (STILL_ACTIVE == lExitCode))
+    {
+        return true;
+    }
+
+    OS_Process_Close(aProcess);
+    return false;
 }
 
 void OS_Process_Terminate(void * aProcess)

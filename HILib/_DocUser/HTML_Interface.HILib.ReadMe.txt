@@ -5,6 +5,14 @@ License   https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 Product   HTML_Interface
 File      HILib/_DocUser/HTML_Interface.HILib.ReadMe.txt
 
+- HI::Browser
+	- BrowserType
+	- EDGE
+	- IsOpen
+	- SetAppMode
+	- SetKioskMode
+- HI::Server - Possible to stop on end of browser execution
+
 1.0.9 Test
 
 1.0.8 Test

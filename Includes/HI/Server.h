@@ -21,6 +21,8 @@
 namespace HI
 {
 
+    class Browser;
+
     /// \brief Server
     class Server
     {
@@ -58,7 +60,7 @@ namespace HI
         bool ParseAssignation(const char * aAssignation);
 
         /// \exception std::exception
-        void Run();
+        void Run(Browser * aBrowser = NULL);
 
         /// \exception std::exception
         void SendResponse(unsigned int aStatusCode, const char* aStatusName, const char* aContentType = NULL, unsigned int aDataSize_byte = 0, const void* aData = NULL);

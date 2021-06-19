@@ -1,8 +1,8 @@
 
-// Author     KMS - Martin Dubois, P.Eng.
-// Copyright  (C) 2000 KMS. All rights reserved.
-// Product    HTML_Interface
-// File       HILib/OS.h
+// Author    KMS - Martin Dubois, P.Eng.
+// Copyright (C) 2020-2021 KMS. All rights reserved.
+// Product   HTML_Interface
+// File      HILib/OS.h
 
 #pragma once
 
@@ -12,6 +12,7 @@
 extern const char * OS_BINARIES[];
 
 extern const char * OS_CHROME_EXE;
+extern const char * OS_EDGE_EXE;
 
 // Functions
 /////////////////////////////////////////////////////////////////////////////
@@ -36,6 +37,7 @@ extern void * OS_Open_Default(const char * aFileName);
 
 extern void   OS_Process_Close    (void * aProcess);
 extern void * OS_Process_Create   (const char * aExec, const char * aCommand);
+extern bool   OS_Process_IsRunning(void * aProcess);
 extern void   OS_Process_Terminate(void * aProcess);
 
 // ===== Socket =============================================================

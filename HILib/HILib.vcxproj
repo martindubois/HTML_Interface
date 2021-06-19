@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.h" />
+    <ClInclude Include="Errors.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="OS.h" />

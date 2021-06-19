@@ -1,8 +1,8 @@
 
-// Author     KMS - Martin Dubois, P.Eng.
-// Copyright  (C) 2020 KMS. All rights reserved.
-// Product    HTML_Interface
-// File       HILib_Test/Browser.h
+// Author    KMS - Martin Dubois, P.Eng.
+// Copyright (C) 2020-2021 KMS. All rights reserved.
+// Product   HTML_Interface
+// File      HILib_Test/Browser.h
 
 // Includes
 /////////////////////////////////////////////////////////////////////////////
@@ -25,17 +25,47 @@ KMS_TEST_BEGIN(Browser_Base)
 
     HI::Browser lB0;
 
+    KMS_TEST_ASSERT(!lB0.IsOpen());
+
     lB0.ParseArguments(1, ARG_0);
 
     lB0.Open(HI::FOLDER_STATIC, "Tests/AutoClose");
     lB0.Close();
 
-    lB0.SetPrefered(HI::Browser::PREFERED_CHROME);
+    lB0.SetPrefered(HI::Browser::CHROME);
+
+    lB0.Open(HI::FOLDER_STATIC, "Tests/AutoClose");
+    lB0.Close();
+
+    lB0.SetAppMode(true);
+
+    lB0.Open(HI::FOLDER_STATIC, "Tests/AutoClose");
+    lB0.Close();
+
+    lB0.SetKioskMode(true);
+
+    lB0.Open(HI::FOLDER_STATIC, "Tests/AutoClose");
+    lB0.Close();
+
+    lB0.SetKioskMode(false);
+    lB0.SetPrefered(HI::Browser::EDGE);
+
+    lB0.Open(HI::FOLDER_STATIC, "Tests/AutoClose");
+    lB0.Close();
+
+    lB0.SetKioskMode(true);
+
+    lB0.Open(HI::FOLDER_STATIC, "Tests/AutoClose");
+    lB0.Close();
+
+    lB0.SetPrefered(HI::Browser::DEFAULT_BROWSER);
 
     lB0.Open(HI::FOLDER_STATIC, "Tests/AutoClose");
     lB0.Close();
 
     lB0.ParseArguments(3, ARG_0);
+
+    lB0.Open(HI::FOLDER_STATIC, "DoesNotExist");
 
     lB0.Start(HI::FOLDER_STATIC, "DoesNotExist");
     lB0.Start(NULL             , "DoesNotExist");
@@ -48,5 +78,13 @@ KMS_TEST_BEGIN(Browser_SetupA)
 
     lB0.Start(HI::FOLDER_CURRENT, "DoesNotExist");
     lB0.Start(NULL              , "DoesNotExist");
+
+    lB0.SetPrefered(HI::Browser::EDGE);
+
+    lB0.Start(HI::FOLDER_CURRENT, "DoesNotExist");
+
+    lB0.SetPrefered(HI::Browser::DEFAULT_BROWSER);
+
+    lB0.Start(HI::FOLDER_CURRENT, "DoesNotExist");
 
 KMS_TEST_END
