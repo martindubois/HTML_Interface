@@ -5,23 +5,8 @@ License   https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 Product   HTML_Interface
 File      _DocUser/HTML_Interface.ReadMe.txt
 
-1.0.10 Test
-
-1.0.9 Test
-
-1.0.8 Test
-
-1.0.7 Dev
-
-1.0.6 Dev
-
-1.0.5 Dev
+1.1.0
 - Includes/HTTP.h
-
-1.0.4 Dev
-- Export KmsCopy.exe and use it when importing
-
-1.0.3 Dev
 
 1.0.2
 - Visual Studio 2019

@@ -5,47 +5,31 @@ License   https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode
 Product   HTML_Interface
 File      HILib/_DocUser/HTML_Interface.HILib.ReadMe.txt
 
-1.0.10 Test
-- HI::Browser
+1.1.0
+- HI::Browser::
 	- BrowserType
 	- EDGE
 	- IsOpen
 	- SetAppMode
 	- SetKioskMode
-- HI::Server - Possible to stop on end of browser execution
-
-1.0.9 Test
-
-1.0.8 Test
-- HI::Server - Does not wait request forever
-
-1.0.7 Dev
-- HI::Server::SendResponse
-
-1.0.6 Dev
 - HI::Server
+	- Possible to stop on end of browser execution
+	- Does not wait request forever
 	- Processes OPTIONS request
 	- Include "Access-Control-Allow-Origin: *" in response header
-
-1.0.5 Dev
-- HI::Server::SendData
-
-1.0.4 Dev
-- HI::Server::GetLocalPort
-- HI::Server::SetLocalPort
-
-1.0.3 Dev
-- HI::Server::SetPort
+	- ::GetLocalPort
+	- ::SetLocalPort
+	- ::SendData
+	- ::SendResponse
 
 1.0.2
 - HI::Diagram
-	- SetBackgroundColor
 	- Uniforme margin
+	- ::SetBackgroundColor
 - HI::Shape
-	- SetNameOnImage
-	- SetTypeOnImage
-	- TYPE_IMAGE
+	- ::SetNameOnImage
+	- ::SetTypeOnImage
+	- ::TYPE_IMAGE
 - HI::XML_Document - Attribute with units
-- VisualStudio 2019
 
 1.0.1
